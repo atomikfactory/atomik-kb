@@ -3,7 +3,7 @@
 # 22.04, 24.04, Debian 12 and anything newer. Driven by scripts/package/linux.ps1, which
 # passes the versions below from rust-toolchain.toml and package.json (the defaults
 # only matter for a manual `docker build`).
-FROM ubuntu:22.04
+FROM ubuntu:25.10
 
 ARG RUST_VERSION=1.99.0
 ARG NODE_VERSION=25.5.0
