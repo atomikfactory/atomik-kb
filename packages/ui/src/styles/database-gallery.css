@@ -1,0 +1,216 @@
+/*
+ * The gallery layout (ADR-0054), agent D: the card grid, the previews, the "New page" card.
+ *
+ * Its own file so that the agents of the batch do not edit one 11,000-line stylesheet at once; `index.css` loads it after
+ * `app.css`, so its rules win a tie with the older ones. Colours and spacing come from the variables of `app.css`.
+ *
+ * Every rule starts with `.page-editor-content`, as the older layouts' rules do: the editor's own `ul` and `li` rules (padding, margin)
+ * would win a tie, and the grid and its cards are a list.
+ *
+ * The grid is `auto-fill` with a minimum card width the view sets (`--gallery-card-width`: 160, 240 or 320 px for S, M and
+ * L), so the cards fill the row and a narrow window (a side peek, a phone) draws fewer of them. The colours and gradients of
+ * a cover come from the `[data-cover-color]` and `[data-cover-gradient]` rules of `app.css`, as for the page banner.
+ */
+
+.page-editor-content .page-gallery {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.page-editor-content .page-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--gallery-card-width, 240px), 100%), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-editor-content .page-gallery-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.page-editor-content .page-gallery-card:hover,
+.page-editor-content .page-gallery-card:focus-within {
+  border-color: var(--text-muted);
+}
+
+.page-editor-content .page-gallery-card:hover {
+  box-shadow: 0 1px 4px rgba(16, 24, 40, 0.12);
+}
+
+/* The picture area: a fixed shape, so a row of cards lines up whatever the pictures are. */
+.page-editor-content .page-gallery-preview {
+  flex: none;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* A colour or a gradient cover takes its background from the rules of `app.css`; the rest waits on a neutral one. */
+.page-editor-content .page-gallery-preview:not([data-cover-color], [data-cover-gradient]) {
+  background: var(--surface);
+}
+
+/* A card with no picture: the page's icon, large and centred, on the same neutral ground (the area keeps the picture's shape). */
+.page-editor-content .page-gallery-preview[data-preview="icon"] {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+}
+
+.page-editor-content .page-gallery-preview-icon {
+  display: inline-grid;
+  place-items: center;
+  /* An emoji follows the font size; the icons of the set and the picture are 1em wide. */
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.page-editor-content .page-gallery-preview-icon svg,
+.page-editor-content .page-gallery-preview-icon .page-icon-image {
+  width: 1em;
+  height: 1em;
+}
+
+.page-editor-content .page-gallery-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.page-editor-content .page-gallery-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px 10px;
+}
+
+/* The title button: the icon and the title, two lines at most. */
+.page-editor-content .page-gallery-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: start;
+  cursor: pointer;
+}
+
+.page-editor-content .page-gallery-title:focus-visible,
+.page-editor-content .page-gallery-new-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.page-editor-content .page-gallery-card:hover .page-gallery-name {
+  text-decoration: underline;
+}
+
+.page-editor-content .page-gallery-title .page-icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 1.4em;
+  color: var(--text-muted);
+}
+
+.page-editor-content .page-gallery-title .page-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.page-editor-content .page-gallery-name {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.page-editor-content .page-gallery-prop {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* "New page": a card of the grid with a dashed edge and no picture. */
+.page-editor-content .page-gallery-new {
+  background: transparent;
+  border-style: dashed;
+}
+
+.page-editor-content .page-gallery-new-button {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 5rem;
+  padding: 12px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.page-editor-content .page-gallery-new-button:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-gallery-new-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.page-editor-content .page-gallery-new-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-editor-content .page-gallery-card {
+    transition: none;
+  }
+}
+
+/* On paper a card stays whole and the "New page" card is left out. */
+@media print {
+  .page-editor-content .page-gallery-card {
+    break-inside: avoid;
+  }
+
+  .page-editor-content .page-gallery-new {
+    display: none;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "targets": ["deb"],
+    "linux": {
+      "deb": {
+        "section": "utils",
+        "priority": "optional",
+        "depends": ["libayatana-appindicator3-1"],
+        "recommends": ["gnome-keyring"]
+      }
+    }
+  }
+}

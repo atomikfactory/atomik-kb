@@ -1,0 +1,70 @@
+{
+  "name": "@atomik-kb/ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared React UI for atomik-kb (desktop and web shells). Talks to the core only through @atomik-kb/core-client.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles/index.css"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "fixtures": "vitest run --config vitest.fixtures.config.ts"
+  },
+  "dependencies": {
+    "@atomik-kb/core-client": "workspace:*",
+    "@excalidraw/excalidraw": "0.18.1",
+    "@floating-ui/dom": "^1.8.0",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-code-block-lowlight": "3.31.4",
+    "@tiptap/extension-details": "3.31.4",
+    "@tiptap/extension-list": "3.31.4",
+    "@tiptap/extension-mention": "3.31.4",
+    "@tiptap/extension-table": "3.31.4",
+    "@tiptap/extension-text-style": "3.31.4",
+    "@tiptap/extension-unique-id": "3.31.4",
+    "@tiptap/extensions": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/react": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
+    "@tiptap/suggestion": "3.31.4",
+    "katex": "0.16.47",
+    "lib0": "^0.2.119",
+    "loro-crdt": "1.16.2",
+    "lowlight": "^3.3.0",
+    "lucide-react": "1.48.0",
+    "mermaid": "12.1.0",
+    "pdfjs-dist": "6.3.289",
+    "unicode-emoji-json": "0.9.0",
+    "zustand": "^5.0.15"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^29.1.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^4.1.11"
+  }
+}

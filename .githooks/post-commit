@@ -1,0 +1,41 @@
+#!/bin/sh
+# post-commit: rebuild the Windows installer in the background when a commit changes the app.
+# Enable with scripts/package/install-hooks.ps1. Skip once with KB_SKIP_INSTALLER=1.
+# Auto-install after the build: KB_AUTO_INSTALL=1 or `git config atomik.autoInstall true`.
+# Never fails the commit: every path exits 0.
+
+[ "$KB_SKIP_INSTALLER" = "1" ] && exit 0
+
+# Windows only (Git for Windows reports MINGW*/MSYS*).
+case "$(uname -s 2>/dev/null)" in
+  MINGW*|MSYS*|CYGWIN*) ;;
+  *) exit 0 ;;
+esac
+
+gitdir=$(git rev-parse --git-dir 2>/dev/null) || exit 0
+# Not while a rebase, merge, cherry-pick or revert is in progress.
+for p in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
+  [ -e "$gitdir/$p" ] && exit 0
+done
+
+# Only commits that touch the app or its dependency locks.
+git diff-tree --no-commit-id --name-only -r --root HEAD 2>/dev/null |
+  grep -E '^(apps/|packages/|crates/|adapters/|Cargo\.lock$|pnpm-lock\.yaml$)' >/dev/null || exit 0
+
+args=""
+if [ "$KB_AUTO_INSTALL" = "1" ] || [ "$(git config --get atomik.autoInstall 2>/dev/null)" = "true" ]; then
+  args="-Install"
+fi
+
+root=$(git rev-parse --show-toplevel) || exit 0
+cd "$root" || exit 0
+[ -f scripts/package/auto-build.ps1 ] || exit 0
+
+# Git exports these to hooks; the build runs git in another worktree, where they would point
+# at this one's index (".git/index" resolved inside .build/installer).
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_PREFIX GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_REFLOG_ACTION
+
+# Detached, hidden; the commit returns at once.
+cmd.exe //c start "" powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden \
+  -File scripts/package/auto-build.ps1 $args >/dev/null 2>&1 </dev/null &
+exit 0

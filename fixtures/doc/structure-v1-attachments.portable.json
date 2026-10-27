@@ -1,0 +1,151 @@
+{
+  "attachments": {
+    "a7012132-4354-4576-8798-a9bacbdced01": {
+      "chunkSize": 4194304,
+      "chunks": [
+        "25283f0211646b7e4d50a7aab98c93e6f5f8cfd221343b0e1d60777a495ca3b6"
+      ],
+      "createdAt": 1700000000030,
+      "createdBy": "de010e1e-2e3e-4e5e-ae7e-8e9eaebece01",
+      "hash": "beb3a4998afff0e5d6cb3c312217087d6e635449baafa09586fbece1d2c7382d",
+      "mime": "image/png",
+      "name": "Diagram of the sync flow.png",
+      "size": 48213,
+      "v": 1
+    },
+    "a7022132-4354-4576-8798-a9bacbdced02": {
+      "chunkSize": 4194304,
+      "chunks": [
+        "4a47506d7e0b0411223fc8c5d6e3fc899a97a0bd4e5b5461720f18152633ccd9",
+        "2f2235081b6e6174475aada0b38699ecfff2c5d82b3e3104176a7d704356a9bc",
+        "808d9aa7b4c1cedbe8f5020f1c293643505d6a7784919eabb8c5d2dfecf90613"
+      ],
+      "createdAt": 1700000000032,
+      "createdBy": "de010e1e-2e3e-4e5e-ae7e-8e9eaebece01",
+      "hash": "d1dccbf6e5909f8ab9a4535e4d786712010c3b26d5c0cffae994838ebda85742",
+      "mime": "application/pdf",
+      "name": "Quarterly report — ünïcödé.pdf",
+      "size": 9437184,
+      "v": 1
+    },
+    "a7032132-4354-4576-8798-a9bacbdced03": {
+      "chunkSize": 4194304,
+      "chunks": [
+        "6f6275485b2e2134071aede0f3c6d9acbfb285986b7e7144572a3d300316e9fc"
+      ],
+      "createdAt": 1700000000033,
+      "createdBy": "de010e1e-2e3e-4e5e-ae7e-8e9eaebece01",
+      "hash": "f4f9eed3c0b5baaf9c81767b685d423724291e03f0e5eadfccb1a6ab988d7267",
+      "mime": "text/plain",
+      "name": "empty.txt",
+      "size": 0,
+      "v": 1
+    },
+    "a7042132-4354-4576-8798-a9bacbdced04": {
+      "chunkSize": 4194304,
+      "chunks": [
+        "94998eb3a0d5dacffce1161b083d225744497e6390858abfacd1c6cbf8ed1207",
+        "f1fcebd6c5b0bfaa9984737e6d584732212c1b06f5e0efdac9b4a3ae9d887762"
+      ],
+      "createdAt": 1700000000035,
+      "createdBy": "de020e1e-2e3e-4e5e-ae7e-8e9eaebece02",
+      "hash": "0f0215283b4e4154677a8d8093a6b9ccdfd2e5f80b1e1124374a5d506376899c",
+      "mime": "image/jpeg",
+      "name": "Photo.jpg",
+      "size": 4194304,
+      "v": 1
+    }
+  },
+  "format": 1,
+  "pages": [
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000006,
+          "id": "70050102-0304-4506-8708-090a0b0c0d05",
+          "title": "Notes — ünïcödé ✓",
+          "updatedAt": 1700000000006
+        },
+        {
+          "children": [],
+          "createdAt": 1700000000005,
+          "id": "70040102-0304-4506-8708-090a0b0c0d04",
+          "title": "Specs",
+          "updatedAt": 1700000000011
+        }
+      ],
+      "createdAt": 1700000000002,
+      "icon": "📁",
+      "id": "70020102-0304-4506-8708-090a0b0c0d02",
+      "title": "Projects 2026",
+      "updatedAt": 1700000000024
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000023,
+          "id": "700b0102-0304-4506-8708-090a0b0c0d0b",
+          "title": "From the phone",
+          "updatedAt": 1700000000023
+        }
+      ],
+      "createdAt": 1700000000001,
+      "id": "70010102-0304-4506-8708-090a0b0c0d01",
+      "title": "Inbox ✉",
+      "updatedAt": 1700000000022
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000009,
+      "icon": "🧪",
+      "id": "70080102-0304-4506-8708-090a0b0c0d08",
+      "title": "Scratch",
+      "updatedAt": 1700000000025
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000018,
+      "id": "700a0102-0304-4506-8708-090a0b0c0d0a",
+      "title": "Recovered",
+      "updatedAt": 1700000000020
+    }
+  ],
+  "space": {
+    "createdAt": 1700000000000,
+    "icon": "🏠",
+    "id": "5a011122-3344-4566-b788-99aabbccdd01",
+    "name": "Personal"
+  },
+  "tombstones": {
+    "70090102-0304-4506-8708-090a0b0c0d09": 1700000000017
+  },
+  "trash": [
+    {
+      "children": [],
+      "createdAt": 1700000000004,
+      "id": "70030102-0304-4506-8708-090a0b0c0d03",
+      "title": "Atomik",
+      "trashedAt": 1700000000014,
+      "trashedFrom": "70020102-0304-4506-8708-090a0b0c0d02",
+      "updatedAt": 1700000000014
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000008,
+          "id": "70070102-0304-4506-8708-090a0b0c0d07",
+          "title": "Old idea",
+          "updatedAt": 1700000000008
+        }
+      ],
+      "createdAt": 1700000000007,
+      "id": "70060102-0304-4506-8708-090a0b0c0d06",
+      "title": "Archive",
+      "trashedAt": 1700000000013,
+      "updatedAt": 1700000000013
+    }
+  ]
+}

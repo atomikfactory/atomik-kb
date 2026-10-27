@@ -1,0 +1,44 @@
+[package]
+name = "kb-server"
+description = "The zero-knowledge sync server (ADR-0021): accounts from device logs, device-signature authentication, the per-account feed with chain hash, snapshots, heads, chunks; axum + rusqlite, one binary."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "kb-server"
+path = "src/main.rs"
+
+[dependencies]
+kb-types = { workspace = true }
+kb-crypto = { workspace = true }
+kb-keys = { workspace = true }
+kb-sync = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "sync", "signal", "net"] }
+axum = { workspace = true }
+tower-http = { workspace = true }
+futures-util = { workspace = true }
+# The same SQLite build as the native storage adapter, so the workspace links one
+# libsqlite3-sys; the server stores ciphertext and never sets a key.
+rusqlite = { workspace = true, features = ["bundled-sqlcipher-vendored-openssl"] }
+getrandom = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+kb-sync = { workspace = true, features = ["testing"] }
+kb-net = { workspace = true }
+reqwest = { workspace = true }
+tempfile = { workspace = true }
+# A WebSocket client for the `/v1/ws` tests (the version kb-net already locks).
+tokio-tungstenite = { workspace = true }

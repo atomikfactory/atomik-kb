@@ -1,0 +1,53 @@
+/*
+ * Linked sources of a database block (ADR-0058, `docs/architecture/database-power-ups.md` section 2): the link to the source page
+ * under the heading, the "no longer available" state with its chooser, and the parent title in the page picker.
+ */
+
+.page-editor-content .page-list-source-link {
+  max-width: 100%;
+  margin-right: auto;
+  padding: 0 4px;
+  overflow: hidden;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.8em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-source-link:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-source-link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.page-editor-content .page-list-missing {
+  display: grid;
+  gap: 8px;
+}
+
+.page-editor-content .page-list-missing-chooser {
+  width: min(260px, 100%);
+  padding: 0 6px;
+}
+
+.page-editor-content .page-list-missing-chooser .page-list-select {
+  width: 100%;
+  max-width: none;
+}
+
+.page-source-parent {
+  margin-left: auto;
+  overflow: hidden;
+  font-size: 0.8em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

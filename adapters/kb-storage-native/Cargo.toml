@@ -1,0 +1,49 @@
+[package]
+name = "kb-storage-native"
+description = "Native platform adapter: SQLCipher file opener, OS keystore, install id, clock and RNG"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-keys = { workspace = true }
+kb-storage = { workspace = true }
+kb-core = { workspace = true }
+kb-crypto = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+getrandom = { workspace = true }
+zeroize = { workspace = true }
+# The UTC offset of the local clock, which the reminders need (`SystemClock::local_offset_seconds`).
+chrono = { workspace = true }
+
+# OS keystore, on the keyring ecosystem (keyring 4.x): `keyring-core` is the API and
+# each platform has its own credential-store crate. The `keyring` crate itself is not
+# used: its `v1` mode picks the store for us (on Windows with Enterprise persistence,
+# which roams with a domain profile; we need Local) and without a feature it does not
+# compile. Its own docs tell applications that want control to link keyring-core and
+# the stores directly, which is what `src/keystore.rs` does.
+keyring-core = "1"
+
+[target.'cfg(windows)'.dependencies]
+# No `search` feature: we never enumerate credentials (drops the `regex` dependency).
+windows-native-keyring-store = { version = "1.1", default-features = false }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+apple-native-keyring-store = { version = "1", default-features = false, features = ["keychain"] }
+
+# Linux and the other Unixes with a freedesktop Secret Service (GNOME Keyring, KWallet).
+# zbus is pure Rust: no libdbus on the build machine; `crypto-rust` avoids OpenSSL.
+[target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
+zbus-secret-service-keyring-store = { version = "1", features = ["crypto-rust"] }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

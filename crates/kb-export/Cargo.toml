@@ -1,0 +1,24 @@
+[package]
+name = "kb-export"
+description = "Export of atomik-kb pages to files: Markdown with front matter, HTML, CSV, whiteboards, the export layout (ADR-0036)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-model = { workspace = true }
+serde_json = { workspace = true }
+percent-encoding = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+# Tests read back what is written: the front matter as YAML, the file flavour as CommonMark, the
+# HTML as a DOM.
+yaml-rust2 = { workspace = true }
+pulldown-cmark = { workspace = true }
+scraper = { workspace = true }
+
+[lints]
+workspace = true

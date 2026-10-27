@@ -1,0 +1,2079 @@
+{
+ "schema": [
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    },
+    {
+     "id": "t3",
+     "name": "green"
+    }
+   ]
+  },
+  {
+   "id": "rel",
+   "name": "Rel",
+   "kind": "relation"
+  },
+  {
+   "id": "hours",
+   "name": "Hours",
+   "kind": "number"
+  },
+  {
+   "id": "who",
+   "name": "Who",
+   "kind": "person"
+  },
+  {
+   "id": "crew",
+   "name": "Crew",
+   "kind": "person"
+  },
+  {
+   "id": "done",
+   "name": "Done",
+   "kind": "checkbox"
+  },
+  {
+   "id": "score",
+   "name": "Score",
+   "kind": "number"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Main",
+   "values": {
+    "tags": {
+     "kind": "multi_select",
+     "value": [
+      "t1",
+      "t2",
+      "t3"
+     ]
+    },
+    "rel": {
+     "kind": "relation",
+     "value": [
+      "pb",
+      "pa",
+      "pc"
+     ]
+    },
+    "who": {
+     "kind": "person",
+     "value": [
+      "bob",
+      "ada2",
+      "ada"
+     ]
+    },
+    "crew": {
+     "kind": "person",
+     "value": [
+      "cy",
+      "bob",
+      "ada"
+     ]
+    },
+    "done": {
+     "kind": "checkbox",
+     "value": true
+    },
+    "score": {
+     "kind": "number",
+     "value": 7
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Empty",
+   "values": {}
+  },
+  {
+   "id": "pa",
+   "title": "Alpha",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 1
+    }
+   }
+  },
+  {
+   "id": "pb",
+   "title": "Beta",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 2
+    }
+   }
+  },
+  {
+   "id": "pc",
+   "title": "Charlie",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 3
+    }
+   }
+  }
+ ],
+ "people": [
+  {
+   "id": "ada",
+   "name": "Ada",
+   "email": "ada@example.com"
+  },
+  {
+   "id": "ada2",
+   "name": "Ada",
+   "email": "ada2@example.com"
+  },
+  {
+   "id": "bob",
+   "name": "Bob",
+   "email": "bob@example.com"
+  },
+  {
+   "id": "cy",
+   "name": "Cy",
+   "email": "cy@example.com"
+  }
+ ],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "at beyond the end is empty",
+   "expression": "at([1, 2, 3], 5)",
+   "result": null
+  },
+  {
+   "name": "at before the start is empty",
+   "expression": "at([1, 2, 3], -4)",
+   "result": null
+  },
+  {
+   "name": "at truncates the index",
+   "expression": "at([1, 2, 3], 1.9)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "at truncates a negative index toward zero",
+   "expression": "at([1, 2, 3], -1.9)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "at with an empty index is empty",
+   "expression": "at([1, 2, 3], at([1], 3))",
+   "result": null
+  },
+  {
+   "name": "first of an empty list is empty",
+   "expression": "first([])",
+   "result": null
+  },
+  {
+   "name": "first",
+   "expression": "first([4, 5])",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "last",
+   "expression": "last([1, 2])",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "last of an empty list is empty",
+   "expression": "last([])",
+   "result": null
+  },
+  {
+   "name": "slice from the end",
+   "expression": "slice([1, 2, 3, 4], -2)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 4
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice to nothing is empty",
+   "expression": "slice([1, 2, 3], 1, 1)",
+   "result": null
+  },
+  {
+   "name": "slice past the end is empty",
+   "expression": "slice([1, 2, 3], 5)",
+   "result": null
+  },
+  {
+   "name": "slice clamps a negative start",
+   "expression": "slice([1, 2, 3], -10, 2)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice truncates its arguments",
+   "expression": "slice([1, 2, 3], 0.9, 2.9)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat several lists",
+   "expression": "concat([1], [2, 3], [])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat an empty list first takes the type of the next",
+   "expression": "concat([], [1])",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat an empty list last",
+   "expression": "concat([1], [])",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat one list",
+   "expression": "concat([1, 2])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat a multi-select and a literal",
+   "expression": "concat(prop(\"Tags\"), [\"black\"])",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "black"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort texts by code point",
+   "expression": "sort([\"b\", \"a\", \"C\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "C"
+     },
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort numbers",
+   "expression": "sort([3, 1, 2])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort negative and fractional numbers",
+   "expression": "sort([0.5, -2, 10, -0.5])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": -2
+     },
+     {
+      "type": "number",
+      "data": -0.5
+     },
+     {
+      "type": "number",
+      "data": 0.5
+     },
+     {
+      "type": "number",
+      "data": 10
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort booleans false first",
+   "expression": "sort([true, false, true])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort dates",
+   "expression": "sort([parseDate(\"2026-02-01\"), parseDate(\"2026-01-01\")])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-01-01"
+      }
+     },
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-02-01"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort dates by instant",
+   "expression": "sort([parseDate(\"2026-01-01T10:00\"), parseDate(\"2026-01-01\"), parseDate(\"2025-12-31T23:59\")]).map(format(current)).join(\"|\")",
+   "result": {
+    "type": "text",
+    "data": "December 31, 2025 11:59 PM|January 1, 2026|January 1, 2026 10:00 AM"
+   }
+  },
+  {
+   "name": "sort puts empties last",
+   "expression": "sort([3, at([1], 5), 2]).map(format(current)).join(\"|\")",
+   "result": {
+    "type": "text",
+    "data": "2|3|"
+   }
+  },
+  {
+   "name": "sort astral characters after high BMP ones",
+   "expression": "sort([\"😀\", \"ｱ\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "ｱ"
+     },
+     {
+      "type": "text",
+      "data": "😀"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort is stable",
+   "expression": "sort([parseDate(\"2026-01-01T00:00\"), parseDate(\"2026-01-01\")]).map(format(current)).join(\"|\")",
+   "result": {
+    "type": "text",
+    "data": "January 1, 2026 12:00 AM|January 1, 2026"
+   }
+  },
+  {
+   "name": "sort the multi-select",
+   "expression": "sort(prop(\"Tags\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort pages by title",
+   "expression": "sort(prop(\"Rel\")).map(current.prop(\"Name\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Alpha"
+     },
+     {
+      "type": "text",
+      "data": "Beta"
+     },
+     {
+      "type": "text",
+      "data": "Charlie"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort pages and read a property",
+   "expression": "sort(prop(\"Rel\")).map(current.prop(\"Hours\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort pages keeps them pages",
+   "expression": "sort(prop(\"Rel\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "page",
+      "data": "pa"
+     },
+     {
+      "type": "page",
+      "data": "pb"
+     },
+     {
+      "type": "page",
+      "data": "pc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort people by name",
+   "expression": "sort(prop(\"Crew\")).map(email(current))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "ada@example.com"
+     },
+     {
+      "type": "text",
+      "data": "bob@example.com"
+     },
+     {
+      "type": "text",
+      "data": "cy@example.com"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort people keeps them people",
+   "expression": "sort(prop(\"Crew\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "person",
+      "data": "ada"
+     },
+     {
+      "type": "person",
+      "data": "bob"
+     },
+     {
+      "type": "person",
+      "data": "cy"
+     }
+    ]
+   }
+  },
+  {
+   "name": "reverse",
+   "expression": "reverse([1, 2, 3])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique keeps the first",
+   "expression": "unique([1, 1, 2, 1])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique is case sensitive",
+   "expression": "unique([\"a\", \"A\", \"a\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "A"
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique keeps one empty item",
+   "expression": "unique([1, at([1], 5), at([1], 5)]).length()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "unique treats zero and negative zero alike",
+   "expression": "unique([0, -0, 1])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 0
+     },
+     {
+      "type": "number",
+      "data": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique of dates compares instants",
+   "expression": "unique([parseDate(\"2026-01-01\"), parseDate(\"2026-01-01T00:00\")]).length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "unique of pages",
+   "expression": "unique(concat(prop(\"Rel\"), prop(\"Rel\")))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "page",
+      "data": "pb"
+     },
+     {
+      "type": "page",
+      "data": "pa"
+     },
+     {
+      "type": "page",
+      "data": "pc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique of people",
+   "expression": "unique(concat(prop(\"Who\"), prop(\"Who\"))).length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "includes a text",
+   "expression": "includes([\"a\"], \"a\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes nothing",
+   "expression": "includes([1, 2], 3)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "includes in an empty list",
+   "expression": "includes([], 1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "includes in a multi-select",
+   "expression": "includes(prop(\"Tags\"), \"red\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes an empty item",
+   "expression": "includes([1, at([1], 5)], at([1], 5))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes a page",
+   "expression": "includes(prop(\"Rel\"), prop(\"Rel\").first())",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "flat keeps one level",
+   "expression": "flat([1, 2])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "filter by index",
+   "expression": "[1, 2, 3].filter(index > 0)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "filter to nothing is empty",
+   "expression": "[1, 2, 3].filter(current > 5)",
+   "result": null
+  },
+  {
+   "name": "map with current and index",
+   "expression": "[1, 2].map(current * 10 + index)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 10
+     },
+     {
+      "type": "number",
+      "data": 21
+     }
+    ]
+   }
+  },
+  {
+   "name": "map index",
+   "expression": "[1, 2, 3].map(index)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 0
+     },
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "an inner list function hides the outer current",
+   "expression": "[1, 2].map([10, 20].map(current).sum() + current)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 31
+     },
+     {
+      "type": "number",
+      "data": 32
+     }
+    ]
+   }
+  },
+  {
+   "name": "an inner list function hides the outer index",
+   "expression": "[5, 6].map([7].map(current + index).sum())",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 7
+     },
+     {
+      "type": "number",
+      "data": 7
+     }
+    ]
+   }
+  },
+  {
+   "name": "the outer index is back after the inner list function",
+   "expression": "[5, 6].map([7].map(current).sum() + index)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 7
+     },
+     {
+      "type": "number",
+      "data": 8
+     }
+    ]
+   }
+  },
+  {
+   "name": "let carries the outer item inside",
+   "expression": "[1, 2].map(let(x, current, [10, 20].map(current + x).sum()))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 32
+     },
+     {
+      "type": "number",
+      "data": 34
+     }
+    ]
+   }
+  },
+  {
+   "name": "find",
+   "expression": "[\"a\", \"b\"].find(current == \"b\")",
+   "result": {
+    "type": "text",
+    "data": "b"
+   }
+  },
+  {
+   "name": "find nothing is empty",
+   "expression": "[\"a\", \"b\"].find(current == \"z\")",
+   "result": null
+  },
+  {
+   "name": "findIndex",
+   "expression": "[\"a\", \"b\"].findIndex(current == \"b\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "findIndex nothing",
+   "expression": "[\"a\", \"b\"].findIndex(current == \"z\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "some",
+   "expression": "[1, 2].some(current > 1)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "some nothing",
+   "expression": "[1, 2].some(current > 5)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "some of an empty list",
+   "expression": "[].some(current)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "every",
+   "expression": "[1, 2].every(current > 0)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "every fails",
+   "expression": "[1, 2].every(current > 1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "every of an empty list",
+   "expression": "every([], current > 1)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "count the items",
+   "expression": "[1, 2, 3].count()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "count counts empty items",
+   "expression": "[1, at([1], 5)].count()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "count with a condition",
+   "expression": "[1, 2, 3].count(current > 1)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "count of an empty list",
+   "expression": "[].count()",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a condition that is empty is false",
+   "expression": "[1, 2, 3].filter(at([true], 5))",
+   "result": null
+  },
+  {
+   "name": "a list literal in a list",
+   "expression": "[[1, 2].length(), 3]",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "a list function on the multi-select",
+   "expression": "prop(\"Tags\").map(upper(current))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "RED"
+     },
+     {
+      "type": "text",
+      "data": "BLUE"
+     },
+     {
+      "type": "text",
+      "data": "GREEN"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a method on the multi-select",
+   "expression": "prop(\"Tags\").includes(\"blue\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "filter the multi-select",
+   "expression": "prop(\"Tags\").filter(length(current) > 3)",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     }
+    ]
+   }
+  },
+  {
+   "name": "first letters of the tags",
+   "expression": "prop(\"Tags\").map(substring(current, 0, 1)).join(\"\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "rbg"
+   }
+  },
+  {
+   "name": "reverse the multi-select",
+   "expression": "reverse(prop(\"Tags\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "read a property of every related page",
+   "expression": "prop(\"Rel\").map(current.prop(\"Hours\"))",
+   "page": "p1",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "sum over the relation",
+   "expression": "prop(\"Rel\").map(current.prop(\"Hours\")).sum()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "mean over the relation",
+   "expression": "prop(\"Rel\").map(current.prop(\"Hours\")).mean()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "filter pages and read their titles",
+   "expression": "prop(\"Rel\").filter(current.prop(\"Hours\") > 1).map(current.prop(\"Name\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Beta"
+     },
+     {
+      "type": "text",
+      "data": "Charlie"
+     }
+    ]
+   }
+  },
+  {
+   "name": "find a page",
+   "expression": "prop(\"Rel\").find(current.prop(\"Hours\") == 1)",
+   "page": "p1",
+   "type": {
+    "base": "page",
+    "list": false
+   },
+   "result": {
+    "type": "page",
+    "data": "pa"
+   }
+  },
+  {
+   "name": "findIndex over pages",
+   "expression": "prop(\"Rel\").findIndex(current.prop(\"Name\") == \"Alpha\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "some over pages",
+   "expression": "prop(\"Rel\").some(current.prop(\"Hours\") > 2)",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "every over pages",
+   "expression": "prop(\"Rel\").every(current.prop(\"Hours\") > 1)",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "count pages",
+   "expression": "prop(\"Rel\").count(current.prop(\"Hours\") > 1)",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "the last page's title",
+   "expression": "at(prop(\"Rel\"), -1).prop(\"Name\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Charlie"
+   }
+  },
+  {
+   "name": "format a list of pages",
+   "expression": "format(prop(\"Rel\"))",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Beta, Alpha, Charlie"
+   }
+  },
+  {
+   "name": "two pages are equal by id",
+   "expression": "prop(\"Rel\").first() == prop(\"Rel\").at(0)",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "two pages differ",
+   "expression": "prop(\"Rel\").first() == prop(\"Rel\").last()",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the id of a related page is not this page's",
+   "expression": "prop(\"Rel\").first().id() != id()",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the id of a related page read two ways",
+   "expression": "prop(\"Rel\").first().id() == id(prop(\"Rel\").first())",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the id inside a list function is this page's",
+   "expression": "prop(\"Rel\").map(id()).unique().length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "the empty relation sums to zero",
+   "expression": "prop(\"Rel\").map(current.prop(\"Hours\")).sum()",
+   "page": "p2",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the first of an empty relation is empty",
+   "expression": "prop(\"Rel\").first()",
+   "page": "p2",
+   "result": null
+  },
+  {
+   "name": "a property of no page is empty",
+   "expression": "prop(\"Rel\").first().prop(\"Name\")",
+   "page": "p2",
+   "result": null
+  },
+  {
+   "name": "format of no page is empty",
+   "expression": "format(prop(\"Rel\").first())",
+   "page": "p2",
+   "result": null
+  },
+  {
+   "name": "a page reached through an empty relation has no id",
+   "expression": "prop(\"Rel\").first().id()",
+   "page": "p2",
+   "result": null
+  },
+  {
+   "name": "names of the people",
+   "expression": "prop(\"Who\").map(name(current)).join(\", \")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Bob, Ada, Ada"
+   }
+  },
+  {
+   "name": "unique names",
+   "expression": "prop(\"Who\").map(name(current)).unique()",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Bob"
+     },
+     {
+      "type": "text",
+      "data": "Ada"
+     }
+    ]
+   }
+  },
+  {
+   "name": "count the people",
+   "expression": "prop(\"Who\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "two people differ",
+   "expression": "prop(\"Who\").first() == prop(\"Who\").last()",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "no people",
+   "expression": "prop(\"Who\").length()",
+   "page": "p2",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the name of an unknown person is empty",
+   "expression": "name(prop(\"Who\").at(9))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "if chooses the true branch",
+   "expression": "if(true, 1, 2)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "if chooses the false branch",
+   "expression": "if(false, 1, 2)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "if with an empty condition takes the false branch",
+   "expression": "if(at([true], 5), 1, 2)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ifs falls to the else",
+   "expression": "ifs(false, 1, false, 2, 3)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "ifs takes the second",
+   "expression": "ifs(false, 1, true, 2, 3)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ifs takes the first that holds",
+   "expression": "ifs(true, 1, true, 2, 3)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "and with three",
+   "expression": "and(true, true, false)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "and all true",
+   "expression": "and(true, true, true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "or with three",
+   "expression": "or(false, false, true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "or all false",
+   "expression": "or(false, false, false)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "and with an empty boolean",
+   "expression": "and(at([true], 5), true)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "or with an empty boolean",
+   "expression": "or(at([true], 5), true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not of an empty boolean",
+   "expression": "not(at([true], 5))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not as a method",
+   "expression": "true.not()",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "and as a method",
+   "expression": "true.and(false)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "or as a method",
+   "expression": "false.or(true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the operators and the keywords agree",
+   "expression": "true && false || true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the keywords",
+   "expression": "true and false or true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not twice",
+   "expression": "not not true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "bang",
+   "expression": "!false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not takes a whole comparison",
+   "expression": "not 1 == 2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "and binds tighter than or",
+   "expression": "true or false and false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "parentheses over precedence",
+   "expression": "(true or false) and false",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "a ternary is right associative",
+   "expression": "false ? 1 : true ? 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a ternary in the then branch",
+   "expression": "true ? false ? 1 : 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a ternary takes a comparison",
+   "expression": "1 < 2 ? 10 : 20",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "empty of the empty text",
+   "expression": "empty(\"\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of the empty list",
+   "expression": "empty([])",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of false",
+   "expression": "empty(false)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of true",
+   "expression": "empty(true)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of one",
+   "expression": "empty(1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of a list with items",
+   "expression": "empty(prop(\"Tags\"))",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of an empty multi-select",
+   "expression": "empty(prop(\"Tags\"))",
+   "page": "p2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of a list of empty items",
+   "expression": "empty([\"\"])",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of an empty value",
+   "expression": "empty(at([1], 5))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "equal",
+   "expression": "equal(1, 1)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unequal",
+   "expression": "unequal(\"a\", \"b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "lists compare item by item",
+   "expression": "[1, 2] == [1, 2]",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "lists compare in order",
+   "expression": "[1, 2] == [2, 1]",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "two empty lists are equal",
+   "expression": "[] == []",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty and a full list differ",
+   "expression": "[1] == []",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty list is unequal to a full one",
+   "expression": "[1] != []",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "two empty values are equal",
+   "expression": "at([1], 5) == at([1], 5)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty value and a number are not equal",
+   "expression": "at([1], 5) == 1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "a comparison of an empty value is false",
+   "expression": "at([1], 5) < 1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "a greater or equal comparison of an empty value is false",
+   "expression": "at([1], 5) >= 1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "let shadows",
+   "expression": "let(x, 1, let(x, 2, x))",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "let nests",
+   "expression": "let(x, 1, let(y, 2, x + y))",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "lets sees the names before",
+   "expression": "lets(a, 1, b, a + 1, b)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "lets may rebind a name",
+   "expression": "lets(a, 1, a, a + 1, a)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "let binds a list",
+   "expression": "let(x, [1, 2], x.length())",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "let binds a page",
+   "expression": "let(r, prop(\"Rel\").first(), r.prop(\"Hours\"))",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "let names are free of the properties",
+   "expression": "let(Score, 3, Score * prop(\"Score\"))",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 21
+   }
+  },
+  {
+   "name": "an empty list is a list of text",
+   "expression": "[]",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "an open list takes the type it meets",
+   "expression": "if(true, [], prop(\"Tags\"))",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "the first of an open list plus a number",
+   "expression": "first([]) + 1",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "map over an open list",
+   "expression": "[].map(current)",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "ifs with lists",
+   "expression": "ifs(false, [1], true, [], [2])",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "a list of booleans",
+   "expression": "[1, 2].map(current > 1)",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "the type of a relation",
+   "expression": "prop(\"Rel\")",
+   "page": "p1",
+   "type": {
+    "base": "page",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "page",
+      "data": "pb"
+     },
+     {
+      "type": "page",
+      "data": "pa"
+     },
+     {
+      "type": "page",
+      "data": "pc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the type of people",
+   "expression": "prop(\"Who\")",
+   "page": "p1",
+   "type": {
+    "base": "person",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "person",
+      "data": "bob"
+     },
+     {
+      "type": "person",
+      "data": "ada2"
+     },
+     {
+      "type": "person",
+      "data": "ada"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the type of a checkbox",
+   "expression": "prop(\"Done\")",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": false
+   },
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the type of a comparison",
+   "expression": "prop(\"Score\") > 3",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": false
+   },
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the type of a text plus a number",
+   "expression": "\"n=\" + prop(\"Score\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "n=7"
+   }
+  },
+  {
+   "name": "the type of a sum",
+   "expression": "1 + 1",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "an unset number plus text",
+   "expression": "\"n=\" + prop(\"Score\")",
+   "page": "p2",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "n="
+   }
+  },
+  {
+   "name": "an item of an open list used as text",
+   "expression": "\"x\" + first([])",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  }
+ ]
+}

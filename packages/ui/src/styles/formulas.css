@@ -1,0 +1,328 @@
+/*
+ * Formulas (ADR-0055): the formula editor's dialog (the code field, the completion list, the reference, the preview), the
+ * formula settings of the schema dialog and a formula's value in the properties panel. Theme tokens only: the syntax
+ * colours are the code block's (`--hljs-*`), so both themes are covered.
+ */
+
+.formula-dialog {
+  width: min(980px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.formula-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .formula-editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.formula-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* The code field: the mirror and the textarea share one grid cell, so the cell is as tall as the longer of the two. */
+.formula-code {
+  display: grid;
+  max-height: 40vh;
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.formula-code:focus-within {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+.formula-code[data-invalid] {
+  border-color: var(--danger);
+}
+
+.formula-mirror,
+.formula-input {
+  grid-area: 1 / 1;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 10px;
+  border: 0;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: normal;
+  tab-size: 2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.formula-mirror {
+  color: var(--text);
+  pointer-events: none;
+}
+
+.formula-mirror code {
+  font: inherit;
+}
+
+.formula-input {
+  align-self: stretch;
+  width: 100%;
+  min-height: 6.5em;
+  color: transparent;
+  caret-color: var(--text);
+  background: transparent;
+  outline: none;
+  overflow: hidden;
+  resize: none;
+}
+
+/* The textarea is drawn over the mirror and its own text is transparent: the selection must let the mirror's text show. */
+.formula-input::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.formula-token-number {
+  color: var(--hljs-literal);
+}
+
+.formula-token-string {
+  color: var(--hljs-string);
+}
+
+.formula-token-property {
+  color: var(--hljs-name);
+}
+
+.formula-token-function {
+  color: var(--hljs-title);
+}
+
+.formula-token-keyword {
+  color: var(--hljs-keyword);
+}
+
+.formula-token-operator,
+.formula-token-punct {
+  color: var(--text-muted);
+}
+
+.formula-token-comment {
+  color: var(--hljs-comment);
+  font-style: italic;
+}
+
+.formula-token-error {
+  color: var(--danger);
+}
+
+.formula-token-error-range {
+  text-decoration: underline wavy var(--danger);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+/* The completion list under the field */
+.formula-completions {
+  max-height: 200px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.formula-completion {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.formula-completion:hover {
+  background: var(--surface-hover);
+}
+
+.formula-completion[aria-selected="true"] {
+  background: var(--selected);
+}
+
+.formula-completion-label {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.formula-completion-detail {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.formula-status p {
+  margin: 0;
+}
+
+.formula-warning {
+  margin: 0;
+  padding: 6px 10px;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.formula-preview {
+  padding: 4px 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.formula-preview-page {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+}
+
+.formula-preview-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+}
+
+.formula-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* The reference of the functions */
+.formula-reference {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  max-height: 60vh;
+}
+
+.formula-reference .manage-options-title {
+  margin: 0;
+}
+
+/* `.input` grows along its flex container's main axis, which is the height here. */
+.formula-reference-filter {
+  flex: none;
+}
+
+.formula-reference-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.formula-reference-category {
+  margin: 10px 0 4px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.formula-reference-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.formula-reference-item {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 6px 8px;
+  color: var(--text);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.formula-reference-item:hover {
+  background: var(--surface-hover);
+}
+
+.formula-reference-item code {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.formula-reference-name {
+  font-weight: 600;
+}
+
+.formula-reference-signature {
+  color: var(--text-muted);
+}
+
+.formula-reference-description {
+  font-size: 0.9rem;
+}
+
+.formula-reference-example {
+  justify-self: start;
+  padding: 1px 6px;
+  background: var(--code-bg);
+  border-radius: 4px;
+}
+
+/* The settings of a formula in the schema dialog */
+.manage-formula {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.formula-readout {
+  align-self: stretch;
+  max-height: 160px;
+  margin: 0;
+  padding: 8px 10px;
+  overflow: auto;
+  background: var(--code-bg);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.formula-readout code {
+  font: inherit;
+}

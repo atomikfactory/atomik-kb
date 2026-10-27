@@ -1,0 +1,253 @@
+/*
+ * The page history dialog (ADR-0057, `docs/architecture/page-history.md` section 7): a large dialog with the selected version at the
+ * left (the preview, drawn by `history/VersionPreview.tsx`, styled in `page-history-preview.css`) and the list of versions at the
+ * right, grouped by day, with the restore button under it.
+ */
+
+.dialog.history-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(1100px, 100%);
+  height: min(85vh, 100%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.history-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  outline: none;
+}
+
+.history-header {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 16px 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.history-title {
+  flex: none;
+  margin: 0;
+}
+
+.history-page {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-close {
+  align-self: center;
+}
+
+.history-main {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  min-height: 0;
+}
+
+/* The preview is a bordered card with its own header and scroll (`page-history-preview.css`): this part only gives it room. */
+.history-preview {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.history-version-heading {
+  flex: none;
+  margin: 0;
+  padding: 14px 16px 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.history-preview > p,
+.history-preview > .history-error {
+  margin: 0;
+  padding: 0 16px 10px 20px;
+}
+
+.history-preview-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 16px 16px 20px;
+}
+
+/* The version before stays drawn while the next one is read. */
+.history-preview-body.is-loading {
+  opacity: 0.55;
+}
+
+.history-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+}
+
+.history-side > p,
+.history-side > .history-error {
+  margin: 12px 14px;
+}
+
+.history-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.history-error p {
+  margin: 0;
+}
+
+.history-list-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 6px 8px;
+  overflow: auto;
+}
+
+.history-list {
+  border-radius: 6px;
+  outline: none;
+}
+
+.history-list:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.history-group-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 8px 4px;
+  color: var(--text-muted);
+  background: var(--surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.history-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.history-row:hover {
+  background: var(--surface-hover);
+}
+
+.history-row[aria-selected="true"] {
+  background: var(--selected);
+}
+
+.history-row-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-row-time {
+  font-weight: 500;
+}
+
+.history-row-author,
+.history-row-title {
+  overflow: hidden;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-badge {
+  padding: 0 6px;
+  color: var(--text-muted);
+  background: var(--chip-bg);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.history-badge-current {
+  color: var(--accent-text);
+  background: var(--accent);
+}
+
+.history-more {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px;
+}
+
+.history-more p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.history-actions {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.history-actions:empty {
+  display: none;
+}
+
+.history-actions p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.history-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* A narrow window stacks the two parts: the preview above, the list under it. */
+@media (max-width: 760px) {
+  .history-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .history-side {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "attachments": {},
+  "favorites": {},
+  "links": {
+    "1c017a31-4253-6475-8697-a8b9cadbec01": {
+      "created_at": 1700000000080,
+      "created_by": "ac01c001-0203-4405-8607-08090a0b0c01",
+      "page": "70030102-0304-4506-8708-090a0b0c0d03",
+      "v": 1
+    },
+    "1c027a31-4253-6475-8697-a8b9cadbec02": {
+      "created_at": 1700000000081,
+      "created_by": "ac02c001-0203-4405-8607-08090a0b0c02",
+      "expires_at": 1700604800081,
+      "page": "70030102-0304-4506-8708-090a0b0c0d03",
+      "v": 1
+    },
+    "1c037a31-4253-6475-8697-a8b9cadbec03": {
+      "created_at": 1700000000082,
+      "created_by": "ac01c001-0203-4405-8607-08090a0b0c01",
+      "expires_at": 1702592000082,
+      "page": "70050102-0304-4506-8708-090a0b0c0d05",
+      "v": 1
+    },
+    "1c057a31-4253-6475-8697-a8b9cadbec05": {
+      "created_at": 1700000000090,
+      "created_by": "ac02c001-0203-4405-8607-08090a0b0c02",
+      "page": "70020102-0304-4506-8708-090a0b0c0d02",
+      "v": 1
+    }
+  },
+  "pages": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "fractional_index": "8010F0",
+              "id": "38@90013924589569",
+              "index": 0,
+              "meta": {
+                "created_at": 1700000000008,
+                "id": "70070102-0304-4506-8708-090a0b0c0d07",
+                "title": "Old idea",
+                "updated_at": 1700000000008
+              },
+              "parent": "33@90013924589569"
+            }
+          ],
+          "fractional_index": "802C61",
+          "id": "33@90013924589569",
+          "index": 0,
+          "meta": {
+            "created_at": 1700000000007,
+            "id": "70060102-0304-4506-8708-090a0b0c0d06",
+            "title": "Archive",
+            "trashed_at": 1700000000013,
+            "updated_at": 1700000000013
+          },
+          "parent": "4@90013924589569"
+        },
+        {
+          "children": [],
+          "fractional_index": "81803750",
+          "id": "18@90013924589569",
+          "index": 1,
+          "meta": {
+            "created_at": 1700000000004,
+            "id": "70030102-0304-4506-8708-090a0b0c0d03",
+            "title": "Atomik",
+            "trashed_at": 1700000000014,
+            "trashed_from": "70020102-0304-4506-8708-090a0b0c0d02",
+            "updated_at": 1700000000014
+          },
+          "parent": "4@90013924589569"
+        }
+      ],
+      "fractional_index": "804121",
+      "id": "4@90013924589569",
+      "index": 0,
+      "meta": {
+        "kind": "trash"
+      },
+      "parent": null
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "fractional_index": "7F80F20C",
+          "id": "28@90013924589569",
+          "index": 0,
+          "meta": {
+            "created_at": 1700000000006,
+            "id": "70050102-0304-4506-8708-090a0b0c0d05",
+            "title": "Notes — ünïcödé ✓",
+            "updated_at": 1700000000006
+          },
+          "parent": "11@90013924589569"
+        },
+        {
+          "children": [],
+          "fractional_index": "7F81805322",
+          "id": "23@90013924589569",
+          "index": 1,
+          "meta": {
+            "created_at": 1700000000005,
+            "id": "70040102-0304-4506-8708-090a0b0c0d04",
+            "title": "Specs",
+            "updated_at": 1700000000011
+          },
+          "parent": "11@90013924589569"
+        }
+      ],
+      "fractional_index": "82807505",
+      "id": "11@90013924589569",
+      "index": 1,
+      "meta": {
+        "created_at": 1700000000002,
+        "icon": "📁",
+        "id": "70020102-0304-4506-8708-090a0b0c0d02",
+        "title": "Projects 2026",
+        "updated_at": 1700000000024
+      },
+      "parent": null
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "fractional_index": "801986",
+          "id": "0@90013924589570",
+          "index": 0,
+          "meta": {
+            "created_at": 1700000000023,
+            "id": "700b0102-0304-4506-8708-090a0b0c0d0b",
+            "title": "From the phone",
+            "updated_at": 1700000000023
+          },
+          "parent": "6@90013924589569"
+        }
+      ],
+      "fractional_index": "828180DC66",
+      "id": "6@90013924589569",
+      "index": 2,
+      "meta": {
+        "created_at": 1700000000001,
+        "id": "70010102-0304-4506-8708-090a0b0c0d01",
+        "title": "Inbox ✉",
+        "updated_at": 1700000000022
+      },
+      "parent": null
+    },
+    {
+      "children": [],
+      "fractional_index": "8380EFD9",
+      "id": "43@90013924589569",
+      "index": 3,
+      "meta": {
+        "created_at": 1700000000009,
+        "icon": "🧪",
+        "id": "70080102-0304-4506-8708-090a0b0c0d08",
+        "title": "Scratch",
+        "updated_at": 1700000000025
+      },
+      "parent": null
+    },
+    {
+      "children": [],
+      "fractional_index": "8480F152",
+      "id": "80@90013924589569",
+      "index": 4,
+      "meta": {
+        "created_at": 1700000000018,
+        "id": "700a0102-0304-4506-8708-090a0b0c0d0a",
+        "title": "Recovered",
+        "updated_at": 1700000000020
+      },
+      "parent": null
+    }
+  ],
+  "properties": {},
+  "space": {
+    "created_at": 1700000000000,
+    "icon": "🏠",
+    "id": "5a011122-3344-4566-b788-99aabbccdd01",
+    "name": "Personal"
+  },
+  "tombstones": {
+    "70090102-0304-4506-8708-090a0b0c0d09": 1700000000017
+  }
+}

@@ -1,0 +1,459 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "tasks",
+   "name": "Tasks",
+   "kind": "relation"
+  },
+  {
+   "id": "owner",
+   "name": "Owner",
+   "kind": "person"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "price": {
+     "kind": "number",
+     "value": 3
+    },
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p2"
+     ]
+    },
+    "owner": {
+     "kind": "person",
+     "value": [
+      "ada"
+     ]
+    },
+    "note": {
+     "kind": "text",
+     "value": "n"
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Task A",
+   "values": {}
+  }
+ ],
+ "people": [
+  {
+   "id": "ada",
+   "name": "Ada",
+   "email": "ada@example.com"
+  }
+ ],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "an unknown variable in a lambda",
+   "expression": "[1, 2].map(foo)",
+   "error": "unknown_variable",
+   "at": 11
+  },
+  {
+   "name": "an unknown function in a lambda",
+   "expression": "[1].map(unknownFn(current))",
+   "error": "unknown_function",
+   "at": 8
+  },
+  {
+   "name": "current is gone after the lambda",
+   "expression": "[1].map(current).length() + current",
+   "error": "unknown_variable",
+   "at": 28
+  },
+  {
+   "name": "index is gone after the lambda",
+   "expression": "[1].count() + index",
+   "error": "unknown_variable",
+   "at": 14
+  },
+  {
+   "name": "current in the list argument is the outer one",
+   "expression": "[1, 2].map([10, 20].filter(current > 10).length() + current)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "a variable named like an unknown function",
+   "expression": "current(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "if needs three arguments",
+   "expression": "if(true, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "if with four arguments",
+   "expression": "if(true, 1, 2, 3)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "not takes one",
+   "expression": "not(true, false)",
+   "error": "syntax",
+   "at": 8
+  },
+  {
+   "name": "not as a method takes none",
+   "expression": "true.not(false)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a method call keeps the receiver in the count",
+   "expression": "[1].at()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a method call with too many arguments",
+   "expression": "[1].first(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "the call is the range of an arity error",
+   "expression": "1 + round()",
+   "error": "arity",
+   "at": 4
+  },
+  {
+   "name": "unknown function inside an argument",
+   "expression": "abs(foo(1))",
+   "error": "unknown_function",
+   "at": 4
+  },
+  {
+   "name": "an arity error comes before the arguments are checked",
+   "expression": "abs(foo(1), 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "the first error in reading order",
+   "expression": "foo(1) + bar(2)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "an unknown variable before an unknown function",
+   "expression": "x + bar(2)",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "negating a boolean",
+   "expression": "-true",
+   "error": "type",
+   "at": 1
+  },
+  {
+   "name": "not of a number",
+   "expression": "not 1",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "bang of a number",
+   "expression": "!1",
+   "error": "type",
+   "at": 1
+  },
+  {
+   "name": "a number and a boolean",
+   "expression": "1 and true",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a boolean and a number",
+   "expression": "true and 1",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "a boolean or a text",
+   "expression": "true or \"x\"",
+   "error": "type",
+   "at": 8
+  },
+  {
+   "name": "not as a method on a number",
+   "expression": "1.not()",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "equality of a number and a boolean",
+   "expression": "1 == true",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "equality of lists of different types",
+   "expression": "[1] == [\"a\"]",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "equality of a number and a list",
+   "expression": "1 == [1]",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "equality of two dates",
+   "expression": "now() == today()",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "lists are not ordered",
+   "expression": "[1] < [2]",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "pages are not ordered",
+   "expression": "prop(\"Tasks\").first() < prop(\"Tasks\").first()",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "people are not ordered",
+   "expression": "prop(\"Owner\").first() > prop(\"Owner\").first()",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a boolean and a number are not comparable",
+   "expression": "true < 1",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "a text and a number are not comparable",
+   "expression": "\"a\" < 1",
+   "error": "type",
+   "at": 6
+  },
+  {
+   "name": "pages can be equal",
+   "expression": "prop(\"Tasks\").first() == prop(\"Tasks\").first()",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "people can be equal",
+   "expression": "prop(\"Owner\").first() == prop(\"Owner\").first()",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a page is not a person",
+   "expression": "prop(\"Tasks\").first() == prop(\"Owner\").first()",
+   "error": "type"
+  },
+  {
+   "name": "a condition of a text",
+   "expression": "if(\"a\", 1, 2)",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "an equality of a text and an empty list",
+   "expression": "\"a\" == []",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "name needs a person",
+   "expression": "name(1)",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "email needs a person",
+   "expression": "email(\"a\")",
+   "error": "type",
+   "at": 6
+  },
+  {
+   "name": "name of a list of people",
+   "expression": "name(prop(\"Owner\"))",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "id needs a page",
+   "expression": "id(1)",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "id of a list of pages",
+   "expression": "id(prop(\"Tasks\"))",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "id as a method",
+   "expression": "prop(\"Tasks\").first().id() == id(prop(\"Tasks\").first())",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "name of a person",
+   "expression": "name(prop(\"Owner\").first())",
+   "result": {
+    "type": "text",
+    "data": "Ada"
+   }
+  },
+  {
+   "name": "name of nobody",
+   "expression": "name(at(prop(\"Owner\"), 5))",
+   "result": null
+  },
+  {
+   "name": "an empty person has an empty name",
+   "expression": "name(at(prop(\"Owner\"), 5)) == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a page method on a person",
+   "expression": "prop(\"Owner\").first().prop(\"Name\")",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a template",
+   "expression": "`a`",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a single quote string",
+   "expression": "'a'",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a semicolon",
+   "expression": "1;",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "a curly brace",
+   "expression": "{1}",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "an at sign",
+   "expression": "@a",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a hash",
+   "expression": "1 # 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "a tilde",
+   "expression": "~1",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a not equal in the SQL style",
+   "expression": "1 <> 2",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "a double bang",
+   "expression": "!!!1",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "a unicode letter is not an identifier",
+   "expression": "é + 1",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a digit starts no identifier",
+   "expression": "1abc",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "a colon alone",
+   "expression": ":",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a question alone",
+   "expression": "?",
+   "error": "syntax",
+   "at": 0
+  }
+ ]
+}

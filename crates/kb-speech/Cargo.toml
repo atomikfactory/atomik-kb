@@ -1,0 +1,26 @@
+[package]
+name = "kb-speech"
+description = "Local dictation rules of atomik-kb (ADR-0053): the model catalog, the sidecar frame protocol, the VAD and cap policy, phrase joining, WAV encoding and the shell-webview types. Pure; no I/O, no sherpa."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[features]
+default = []
+# Generates TypeScript definitions when running `cargo test -p kb-speech --features ts` (into
+# `packages/core-client/src/generated/`, see `.cargo/config.toml`).
+ts = ["dep:ts-rs"]
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+ts-rs = { workspace = true, optional = true }
+
+[dev-dependencies]
+# Only to check that `wav::encode_wav` makes what `ai_transcribe` accepts.
+kb-ai = { workspace = true }
+
+[lints]
+workspace = true

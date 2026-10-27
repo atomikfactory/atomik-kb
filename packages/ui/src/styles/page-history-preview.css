@@ -1,0 +1,232 @@
+/*
+ * The version preview of the page history (ADR-0057, `docs/architecture/page-history.md` section 8, `history/VersionPreview.tsx`): a
+ * version of a page drawn read-only with what differs from the page now. The page itself is drawn by the rules of `app.css`
+ * (the preview's editor has the class `page-editor-content`); this file adds the header, the legend and the colours of the
+ * differences. Colours are tokens of the theme below, in light and dark, and nothing says what differs by colour alone: an
+ * added block and a removed one have a bar at their side, a removed one is struck through, an added run is underlined,
+ * and a changed block is outlined (the runs are `ins` and `del` elements, which screen readers announce).
+ */
+
+:root {
+  --history-added-bg: #e1f3e5;
+  --history-added-line: #2b8a3e;
+  --history-removed-bg: #fdeaec;
+  --history-removed-line: #c92a2a;
+  --history-changed-line: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --history-added-bg: #1d3325;
+    --history-added-line: #51cf66;
+    --history-removed-bg: #3b2327;
+    --history-removed-line: #ff8787;
+  }
+}
+
+:root[data-theme="dark"] {
+  --history-added-bg: #1d3325;
+  --history-added-line: #51cf66;
+  --history-removed-bg: #3b2327;
+  --history-removed-line: #ff8787;
+}
+
+/* The preview: a header (toggle, legend, summary) over a body that scrolls */
+
+.version-preview {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.version-preview-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 18px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.version-preview-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.version-preview-toggle:has(input:disabled) {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.version-preview-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  list-style: none;
+}
+
+.version-preview-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.version-preview-swatch {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.version-preview-legend .is-added .version-preview-swatch {
+  background: var(--history-added-bg);
+  border-color: var(--history-added-line);
+}
+
+.version-preview-legend .is-removed .version-preview-swatch {
+  background: var(--history-removed-bg);
+  border-color: var(--history-removed-line);
+}
+
+.version-preview-legend .is-removed .version-preview-swatch::after {
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  left: 1px;
+  height: 1px;
+  background: var(--history-removed-line);
+  content: "";
+}
+
+.version-preview-legend .is-changed .version-preview-swatch {
+  border: 2px solid var(--history-changed-line);
+}
+
+.version-preview-summary {
+  margin: 0 0 0 auto;
+  font-size: 0.85rem;
+}
+
+.version-preview-scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 24px 32px 28px;
+  overflow: auto;
+}
+
+.version-preview-scroll:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.version-preview-title {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.version-preview-title.is-untitled {
+  color: var(--text-muted);
+}
+
+.version-preview-content {
+  cursor: default;
+}
+
+/* Blocks: the outermost block of an added, removed or changed part carries the class and a bar at its side */
+
+.version-preview-content .history-diff {
+  border-radius: 4px;
+}
+
+.version-preview-content .history-diff-added {
+  background: var(--history-added-bg);
+  box-shadow: -4px 0 0 var(--history-added-line);
+}
+
+.version-preview-content .history-diff-removed {
+  background: var(--history-removed-bg);
+  box-shadow: -4px 0 0 var(--history-removed-line);
+}
+
+.version-preview-content .history-diff-removed,
+.version-preview-content .history-diff-removed * {
+  text-decoration: line-through;
+  text-decoration-color: var(--history-removed-line);
+}
+
+.version-preview-content .history-diff-removed :is(img, .attachment-card, .history-placeholder) {
+  opacity: 0.65;
+}
+
+.version-preview-content .history-diff-changed {
+  outline: 2px solid var(--history-changed-line);
+  outline-offset: 2px;
+}
+
+/* Runs inside a changed text block */
+
+.version-preview-content .history-run {
+  border-radius: 2px;
+  text-decoration-thickness: 2px;
+}
+
+.version-preview-content ins.history-run-added {
+  background: var(--history-added-bg);
+  text-decoration: underline;
+  text-decoration-color: var(--history-added-line);
+  text-underline-offset: 2px;
+}
+
+.version-preview-content del.history-run-removed {
+  background: var(--history-removed-bg);
+  text-decoration: line-through;
+  text-decoration-color: var(--history-removed-line);
+}
+
+/* A replacement is the page's words struck out and then the version's: a gap keeps them from reading as one word */
+
+.version-preview-content del.history-run-removed + ins.history-run-added {
+  margin-inline-start: 0.25em;
+}
+
+/* Blocks the preview draws without a live view */
+
+.version-preview-content .history-placeholder {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.version-preview-content [data-type="mathBlock"] {
+  padding: 8px 12px;
+  font-family: var(--mono);
+  white-space: pre-wrap;
+  background: var(--code-bg);
+  border-radius: 6px;
+}
+
+.version-preview-error {
+  margin: 12px 0;
+}

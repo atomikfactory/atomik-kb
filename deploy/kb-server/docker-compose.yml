@@ -1,0 +1,75 @@
+# kb-server behind Caddy (automatic HTTPS). From this directory:
+#
+#   export KB_DOMAIN=sync.example.org            # DNS A/AAAA record pointing here
+#   export KB_INVITE_TOKENS=$(openssl rand -hex 24)
+#   docker compose up -d --build
+#
+# Ports 80 and 443 must reach this host (certificate issuance and renewal).
+# kb-server is not published on the host: only Caddy talks to it.
+
+services:
+  kb-server:
+    build:
+      context: ../..
+      dockerfile: deploy/kb-server/Dockerfile
+    image: atomik-kb-server:latest
+    restart: unless-stopped
+    environment:
+      # Comma-separated; needed only to create accounts. Rotate by changing it and
+      # restarting: existing accounts are not affected.
+      KB_SERVER_INVITE_TOKENS: ${KB_INVITE_TOKENS:?set KB_INVITE_TOKENS}
+      KB_SERVER_ACCOUNT_QUOTA_BYTES: ${KB_ACCOUNT_QUOTA_BYTES:-10737418240}
+      KB_SERVER_PRUNE_GRACE_DAYS: ${KB_PRUNE_GRACE_DAYS:-7}
+      # Optional: refuse devices whose last session is older than this many days.
+      KB_SERVER_IDLE_DEVICE_DAYS: ${KB_IDLE_DEVICE_DAYS:-}
+      # Shared spaces (protocol v2): accounts that share invites may create on this server,
+      # over all time (0: none), and per inviting account.
+      KB_SERVER_SHARE_SIGNUPS: ${KB_SHARE_SIGNUPS:-20}
+      KB_SERVER_SHARE_SIGNUPS_PER_ACCOUNT: ${KB_SHARE_SIGNUPS_PER_ACCOUNT:-5}
+      # Caddy's address on the network below: requests from it are rate-limited by the
+      # client address Caddy puts in X-Forwarded-For. Keep it in step with caddy's
+      # ipv4_address.
+      KB_SERVER_TRUSTED_PROXIES: ${KB_TRUSTED_PROXIES:-172.30.0.10}
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - kb-data:/data
+    networks:
+      - kb
+    expose:
+      - "8787"
+    # SIGTERM lets the server finish its requests and close server.db cleanly.
+    stop_grace_period: 30s
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - kb-server
+    environment:
+      KB_DOMAIN: ${KB_DOMAIN:?set KB_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      kb:
+        # A fixed address, so kb-server can trust exactly this container.
+        ipv4_address: 172.30.0.10
+
+networks:
+  kb:
+    ipam:
+      config:
+        # Change it (and the two addresses above) if it clashes with a network on
+        # this host.
+        - subnet: 172.30.0.0/24
+
+volumes:
+  # server.db (with its -wal and -shm files): back this up, see README.md.
+  kb-data:
+  caddy-data:
+  caddy-config:

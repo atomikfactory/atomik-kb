@@ -1,0 +1,14 @@
+# Normalise line endings: LF in the repository, LF in working copies on every OS.
+* text=auto eol=lf
+
+# Binary fixtures and assets
+*.db binary
+*.bin binary
+*.png binary
+*.ico binary
+*.icns binary
+*.woff2 binary
+
+# Git hooks and shell scripts must keep LF (run by Git for Windows' sh).
+.githooks/* text eol=lf
+*.sh text eol=lf

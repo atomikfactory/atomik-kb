@@ -1,0 +1,99 @@
+[package]
+name = "atomik-kb-desktop"
+description = "atomik-kb desktop shell (Tauri 2): a thin adapter over kb-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+publish = false
+
+[lib]
+# Distinct from the binary name, so the two never collide in target/ on Windows.
+name = "atomik_kb_desktop_lib"
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+# Local AI (ADR-0037): the Ollama wire types, prompts, endpoint policy and transcript cleanup;
+# the shell does the HTTP calls (`ai_client`), the rules live in the pure crate.
+kb-ai = { workspace = true }
+kb-core = { workspace = true }
+kb-crypto = { workspace = true }
+# Google Drive backups (ADR-0059): the protocol as values; the shell carries the requests over reqwest.
+kb-drive = { workspace = true }
+# The `Keystore` trait: the refresh token of Google Drive and an own client's secret live in the OS keystore
+# (`drive_host`, entries `gdrive:<install id>` and `gdrive-client:<install id>`).
+kb-keys = { workspace = true }
+# The sync driver (ADR-0021): `HttpRemote` and the loop the shell hosts while the core is
+# ready; `kb-sync` for the page types its `SyncHost` methods carry.
+kb-net = { workspace = true }
+kb-storage-native = { workspace = true }
+# Local dictation (ADR-0053): the model catalog, the frame protocol of the `kb-speech` sidecar, the phrase
+# rules and the types of the dictation commands. The recognizer is NOT linked here: it runs in the sidecar
+# process (`adapters/kb-speech-native`), so the shell and its test executables never load onnxruntime.
+kb-speech = { workspace = true }
+# The SHA-256 of each downloaded or imported model file, computed on the stream (`speech_host::models`).
+sha2 = { workspace = true }
+kb-sync = { workspace = true }
+kb-types = { workspace = true }
+# "Image from URL" (ADR-0028): one explicit, https-only download per command, by the shell
+# (`url_import`); the webview never loads a remote image. No `stream` feature is needed:
+# `Response::chunk` reads the body piece by piece.
+reqwest = { workspace = true }
+# The MCP server (ADR-0037, `mcp_host`): axum on 127.0.0.1 only, and the timers and the cancellation of
+# the AI streams (`ai_client`, `ai_host`, `ai_indexer`) run on the runtime tauri already owns.
+# The Google sign-in's loopback listener and its tiny HTTP reader (`drive_host`) need `io-util`.
+axum = { workspace = true }
+tokio = { workspace = true, features = ["io-util", "macros", "net", "rt", "sync", "time"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tauri = { workspace = true }
+# Native file dialogs for the backup commands (`backup_export`, `backup_import`). Only the
+# shell's own Rust code opens them; no `dialog:*` permission is granted to the webview.
+tauri-plugin-dialog = { workspace = true }
+# Opens http, https and mailto links in the system browser or mail client. Only the
+# shell's own `open_external` command calls it; no `opener:*` permission is granted.
+tauri-plugin-opener = { workspace = true }
+# Shows the OS notification of a due reminder (ADR-0024). Only the shell's own Rust code calls it
+# (the title is the page's, the body the block's text, both of which stay on this machine); no
+# `notification:*` permission is granted to the webview.
+tauri-plugin-notification = { workspace = true }
+# Deep links (ADR-0040): registers the `atomik-kb` scheme with the OS (the installers, and a dev
+# registration in debug builds) and hands the shell the URLs the app was opened with. Only the shell's
+# own Rust code uses it; no `deep-link:*` permission is granted to the webview.
+tauri-plugin-deep-link = { workspace = true }
+# One running app (ADR-0040): a second launch (a link clicked while the app runs) forwards its
+# arguments to the first, which comes to the front; the second process exits. Registered first.
+tauri-plugin-single-instance = { workspace = true }
+# The quick-capture shortcut (ADR-0040): registered from Rust only (`shortcut`, `desktop`), with a handler
+# that tells the UI to make a page; no `global-shortcut:*` permission is granted to the webview.
+tauri-plugin-global-shortcut = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# Import and export (ADR-0036): the `.zip` writer of an export archive and the reader of an
+# import source (a Notion or atomik-kb export). Deflate only; the core never sees a zip.
+zip = { workspace = true }
+# The app-lock passphrase and the recovery kit text are `Zeroizing<String>` from the moment
+# they are deserialised out of the IPC message; `serde` lets a command take them as such.
+zeroize = { workspace = true, features = ["serde"] }
+
+[dev-dependencies]
+# The end-to-end tests of import and export (`tests/import_export_core.rs`) open the real core over
+# a plain SQLite file and an in-memory chunk store, with the deterministic clock and RNG.
+kb-storage = { workspace = true }
+kb-types = { workspace = true, features = ["testing"] }
+tempfile = { workspace = true }
+# Stub web servers on 127.0.0.1 for the tests of `url_import`, `ai_client` and `ai_host` (the way
+# `kb-net`'s tests stub the sync server) are built with `axum`, a normal dependency since the MCP host;
+# `futures-util` builds a body without a Content-Length.
+futures-util = { workspace = true }
+# The mock runtime (`tauri::test`) lets the tests send real IPC messages to the commands.
+tauri = { workspace = true, features = ["test"] }
+# An in-process `kb-server` on a loopback port for the end-to-end test of shared spaces through the shell
+# (`tests/shared_spaces.rs`): two real cores behind `AppState`, the v2 driver and the invite task between them.
+kb-server = { workspace = true }
+
+[lints]
+workspace = true

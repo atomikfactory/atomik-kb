@@ -1,0 +1,1048 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "hours",
+   "name": "Hours",
+   "kind": "number"
+  },
+  {
+   "id": "tasks",
+   "name": "Tasks",
+   "kind": "relation"
+  },
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "price": {
+     "kind": "number",
+     "value": 3
+    },
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p2",
+      "p3",
+      "p4"
+     ]
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Task A",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 5
+    }
+   }
+  },
+  {
+   "id": "p3",
+   "title": "Task B",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 2.5
+    }
+   }
+  },
+  {
+   "id": "p4",
+   "title": "",
+   "values": {}
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "add",
+   "expression": "add(2, 3)",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "subtract",
+   "expression": "subtract(2, 3)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "multiply",
+   "expression": "multiply(2, 3.5)",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "divide",
+   "expression": "divide(7, 2)",
+   "result": {
+    "type": "number",
+    "data": 3.5
+   }
+  },
+  {
+   "name": "divide by zero",
+   "expression": "divide(7, 0)",
+   "result": null
+  },
+  {
+   "name": "mod function",
+   "expression": "mod(-7, 3)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "mod method",
+   "expression": "(7).mod(4)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "abs",
+   "expression": "abs(-3.5)",
+   "result": {
+    "type": "number",
+    "data": 3.5
+   }
+  },
+  {
+   "name": "abs method",
+   "expression": "(-2).abs()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ceil",
+   "expression": "ceil(1.2)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ceil negative",
+   "expression": "ceil(-1.2)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "floor",
+   "expression": "floor(1.8)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "floor negative",
+   "expression": "floor(-1.2)",
+   "result": {
+    "type": "number",
+    "data": -2
+   }
+  },
+  {
+   "name": "sqrt",
+   "expression": "sqrt(16)",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "sqrt of a negative is empty",
+   "expression": "sqrt(-1)",
+   "result": null
+  },
+  {
+   "name": "cbrt",
+   "expression": "cbrt(27)",
+   "result": {
+    "type": "number",
+    "data": 3
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "cbrt negative",
+   "expression": "cbrt(-8)",
+   "result": {
+    "type": "number",
+    "data": -2
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "exp zero",
+   "expression": "exp(0)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "exp one",
+   "expression": "exp(1)",
+   "result": {
+    "type": "number",
+    "data": 2.718281828459045
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "exp overflow is empty",
+   "expression": "exp(1000)",
+   "result": null
+  },
+  {
+   "name": "ln one",
+   "expression": "ln(1)",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "ln e",
+   "expression": "ln(e())",
+   "result": {
+    "type": "number",
+    "data": 1
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "ln zero is empty",
+   "expression": "ln(0)",
+   "result": null
+  },
+  {
+   "name": "ln negative is empty",
+   "expression": "ln(-1)",
+   "result": null
+  },
+  {
+   "name": "log10",
+   "expression": "log10(1000)",
+   "result": {
+    "type": "number",
+    "data": 3
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "log10 zero is empty",
+   "expression": "log10(0)",
+   "result": null
+  },
+  {
+   "name": "log2",
+   "expression": "log2(8)",
+   "result": {
+    "type": "number",
+    "data": 3
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "log2 1024",
+   "expression": "log2(1024)",
+   "result": {
+    "type": "number",
+    "data": 10
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "sign negative",
+   "expression": "sign(-5)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "sign zero",
+   "expression": "sign(0)",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "sign positive",
+   "expression": "sign(2.5)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "pi",
+   "expression": "pi()",
+   "result": {
+    "type": "number",
+    "data": 3.141592653589793
+   }
+  },
+  {
+   "name": "e",
+   "expression": "e()",
+   "result": {
+    "type": "number",
+    "data": 2.718281828459045
+   }
+  },
+  {
+   "name": "pi in a formula",
+   "expression": "round(pi() * 100)",
+   "result": {
+    "type": "number",
+    "data": 314
+   }
+  },
+  {
+   "name": "pow with a fraction",
+   "expression": "pow(9, 0.5)",
+   "result": {
+    "type": "number",
+    "data": 3
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "pow of a tiny result",
+   "expression": "pow(10, -2)",
+   "result": {
+    "type": "number",
+    "data": 0.01
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "round up",
+   "expression": "round(2.5)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "round down",
+   "expression": "round(2.4)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "round a small negative",
+   "expression": "round(-0.4)",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "round negative half goes up",
+   "expression": "round(-0.5)",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "round places",
+   "expression": "round(1234.5678, 2)",
+   "result": {
+    "type": "number",
+    "data": 1234.57
+   },
+   "tolerance": 1e-12
+  },
+  {
+   "name": "round negative places",
+   "expression": "round(1234.5678, -2)",
+   "result": {
+    "type": "number",
+    "data": 1200
+   }
+  },
+  {
+   "name": "round negative places 3",
+   "expression": "round(1550, -2)",
+   "result": {
+    "type": "number",
+    "data": 1600
+   }
+  },
+  {
+   "name": "round places are clamped",
+   "expression": "round(5, 20)",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "round a long fraction to ten places",
+   "expression": "round(1.23456789012345, 15)",
+   "result": {
+    "type": "number",
+    "data": 1.2345678901
+   }
+  },
+  {
+   "name": "round zero places",
+   "expression": "round(2.5, 0)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "round places are truncated",
+   "expression": "round(2.567, 1.9)",
+   "result": {
+    "type": "number",
+    "data": 2.6
+   }
+  },
+  {
+   "name": "round negative one places",
+   "expression": "round(-1.005, 2)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "round overflow is empty",
+   "expression": "round(1e308, 2)",
+   "result": null
+  },
+  {
+   "name": "round method",
+   "expression": "(2.5).round()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "round with text places",
+   "expression": "round(1, \"a\")",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "round arity",
+   "expression": "round(1, 2, 3)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "toNumber of true",
+   "expression": "toNumber(true)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "toNumber of false",
+   "expression": "toNumber(false)",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "toNumber of a number",
+   "expression": "toNumber(5)",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "toNumber with an exponent",
+   "expression": "toNumber(\"1e3\")",
+   "result": {
+    "type": "number",
+    "data": 1000
+   }
+  },
+  {
+   "name": "toNumber without a leading zero",
+   "expression": "toNumber(\"-.5\")",
+   "result": {
+    "type": "number",
+    "data": -0.5
+   }
+  },
+  {
+   "name": "toNumber with a plus",
+   "expression": "toNumber(\"+7\")",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "toNumber of the empty text",
+   "expression": "toNumber(\"\")",
+   "result": null
+  },
+  {
+   "name": "toNumber with a unit",
+   "expression": "toNumber(\"12px\")",
+   "result": null
+  },
+  {
+   "name": "toNumber of hex",
+   "expression": "toNumber(\"0x10\")",
+   "result": null
+  },
+  {
+   "name": "toNumber of Infinity",
+   "expression": "toNumber(\"Infinity\")",
+   "result": null
+  },
+  {
+   "name": "toNumber of NaN",
+   "expression": "toNumber(\"NaN\")",
+   "result": null
+  },
+  {
+   "name": "toNumber trims white space",
+   "expression": "toNumber(\" \\n 3 \\t\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "toNumber of two numbers",
+   "expression": "toNumber(\"1 2\")",
+   "result": null
+  },
+  {
+   "name": "toNumber with a comma",
+   "expression": "toNumber(\"1,5\")",
+   "result": null
+  },
+  {
+   "name": "toNumber of an overflow is empty",
+   "expression": "toNumber(\"1e999\")",
+   "result": null
+  },
+  {
+   "name": "toNumber of a date is its timestamp",
+   "expression": "toNumber(parseDate(\"1970-01-01T02:00\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "toNumber of a later date",
+   "expression": "toNumber(parseDate(\"1970-01-02\"))",
+   "result": {
+    "type": "number",
+    "data": 79200000
+   }
+  },
+  {
+   "name": "toNumber of a list",
+   "expression": "toNumber([1])",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "toNumber method",
+   "expression": "\"4.5\".toNumber() * 2",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "toNumber of an unset number",
+   "page": "p4",
+   "expression": "toNumber(prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "min of scalars",
+   "expression": "min(3, 1, 2)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "max of scalars and a list",
+   "expression": "max(3, [1, 9], 2)",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "min of nothing",
+   "expression": "min([])",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "max of two empty lists",
+   "expression": "max([], [])",
+   "result": null
+  },
+  {
+   "name": "sum of mixed",
+   "expression": "sum(1, [2, 3], [])",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "sum arity",
+   "expression": "sum()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "mean",
+   "expression": "mean(1, 2)",
+   "result": {
+    "type": "number",
+    "data": 1.5
+   }
+  },
+  {
+   "name": "mean of a list",
+   "expression": "mean([1, 2, 3, 4])",
+   "result": {
+    "type": "number",
+    "data": 2.5
+   }
+  },
+  {
+   "name": "median odd",
+   "expression": "median([3, 1, 2])",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "median even",
+   "expression": "median(4, 1)",
+   "result": {
+    "type": "number",
+    "data": 2.5
+   }
+  },
+  {
+   "name": "median single",
+   "expression": "median([5])",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "sum of hours through a relation",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).sum()",
+   "result": {
+    "type": "number",
+    "data": 7.5
+   }
+  },
+  {
+   "name": "mean skips empties",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).mean()",
+   "result": {
+    "type": "number",
+    "data": 3.75
+   }
+  },
+  {
+   "name": "min skips empties",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).min()",
+   "result": {
+    "type": "number",
+    "data": 2.5
+   }
+  },
+  {
+   "name": "max skips empties",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).max()",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "median skips empties",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).median()",
+   "result": {
+    "type": "number",
+    "data": 3.75
+   }
+  },
+  {
+   "name": "count keeps empties",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).count()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "min of text is a type error",
+   "expression": "min(\"a\", \"b\")",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "min of mixed kinds",
+   "expression": "min(1, parseDate(\"2026-01-01\"))",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "sum of dates is a type error",
+   "expression": "sum(parseDate(\"2026-01-01\"))",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "min of a list and scalars",
+   "expression": "min([1], 2, [3])",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "sum of only empties",
+   "page": "p4",
+   "expression": "sum([prop(\"Price\")])",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "max skips an empty scalar",
+   "page": "p4",
+   "expression": "max(prop(\"Price\"), 3)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "sum overflow is empty",
+   "expression": "sum(1e308, 1e308)",
+   "result": null
+  },
+  {
+   "name": "sum method on a literal list",
+   "expression": "[1, 2, 3].sum()",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "mean of nothing",
+   "expression": "mean(prop(\"Tasks\").filter(false).map(current.prop(\"Hours\")))",
+   "result": null
+  },
+  {
+   "name": "sum order",
+   "expression": "sum(0.1, 0.2, 0.3)",
+   "result": {
+    "type": "number",
+    "data": 0.6000000000000001
+   }
+  },
+  {
+   "name": "overflow is empty",
+   "expression": "1e308 * 10",
+   "result": null
+  },
+  {
+   "name": "negative overflow is empty",
+   "expression": "-1e308 * 10",
+   "result": null
+  },
+  {
+   "name": "float product",
+   "expression": "0.1 * 3",
+   "result": {
+    "type": "number",
+    "data": 0.30000000000000004
+   }
+  },
+  {
+   "name": "division",
+   "expression": "5 / 2",
+   "result": {
+    "type": "number",
+    "data": 2.5
+   }
+  },
+  {
+   "name": "one third",
+   "expression": "1 / 3",
+   "result": {
+    "type": "number",
+    "data": 0.3333333333333333
+   }
+  },
+  {
+   "name": "zero over zero",
+   "expression": "0 / 0",
+   "result": null
+  },
+  {
+   "name": "an overflowing chain stays empty",
+   "expression": "1e308 * 10 + 1",
+   "result": null
+  },
+  {
+   "name": "negative zero reads as zero",
+   "expression": "0 * -1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "large integer",
+   "expression": "2 ^ 53",
+   "result": {
+    "type": "number",
+    "data": 9007199254740992
+   }
+  },
+  {
+   "name": "empty plus",
+   "page": "p4",
+   "expression": "prop(\"Price\") + 1",
+   "result": null
+  },
+  {
+   "name": "minus an empty",
+   "page": "p4",
+   "expression": "-prop(\"Price\")",
+   "result": null
+  },
+  {
+   "name": "abs of an empty",
+   "page": "p4",
+   "expression": "abs(prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "round of an empty",
+   "page": "p4",
+   "expression": "round(prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "round with an empty places",
+   "page": "p4",
+   "expression": "round(1.5, prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "empty to a power",
+   "page": "p4",
+   "expression": "prop(\"Price\") ^ 2",
+   "result": null
+  },
+  {
+   "name": "sqrt of an empty",
+   "page": "p4",
+   "expression": "sqrt(prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "min of an empty scalar only",
+   "page": "p4",
+   "expression": "min(prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "an empty compared in arithmetic keeps the type",
+   "page": "p4",
+   "expression": "prop(\"Price\") * 2",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "sum with an empty scalar",
+   "page": "p4",
+   "expression": "sum(prop(\"Price\"), 1)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "abs of a text",
+   "expression": "abs(\"a\")",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "abs of a boolean",
+   "expression": "abs(true)",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "add arity",
+   "expression": "add(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "pi takes nothing",
+   "expression": "pi(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "sqrt needs one",
+   "expression": "sqrt()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a number plus a list",
+   "expression": "1 + [1]",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a list minus a number",
+   "expression": "[1] - 1",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a text minus a number",
+   "expression": "\"a\" - 1",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a number times a text",
+   "expression": "2 * \"a\"",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a date plus a number",
+   "expression": "today() + 1",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "two dates minus",
+   "expression": "now() - now()",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "negating a text",
+   "expression": "-\"a\"",
+   "error": "type",
+   "at": 1
+  },
+  {
+   "name": "power of a text",
+   "expression": "2 ^ \"a\"",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "chain keeps the number type",
+   "expression": "1 + 2 * 3 - 4",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "a chain with a text in the middle",
+   "expression": "1 + 2 + \"a\" + 3 + 4",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "3a34"
+   }
+  },
+  {
+   "name": "a chain with a text then a minus",
+   "expression": "1 + \"a\" - 2",
+   "error": "type",
+   "at": 0
+  }
+ ]
+}

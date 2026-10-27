@@ -1,0 +1,371 @@
+/*
+ * The dashboard layout (ADR-0055, `docs/architecture/dashboards.md` section 3), agent E: the grid of widgets, a widget's frame (header,
+ * "…" menu, drop indicator), the number, the embedded view and the settings panel. The charts' own rules are `database-charts.css`.
+ *
+ * Its own file, loaded by `index.css` after `app.css`, so that its rules win a tie with the older ones. Colours and spacing come from the
+ * variables of `app.css`, which have a light and a dark value: nothing here is a colour of its own. Every rule of the block starts
+ * with `.page-editor-content`, as the other layouts' do (the editor's own element rules would win a tie).
+ *
+ * The dashboard is a container (`container-type: inline-size`): its grid has four columns, two below 720 px and one below 420 px (a span
+ * above the columns there are becomes all of them), so it works in the side peek and on a phone.
+ */
+
+.page-editor-content .page-dashboard {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: dashboard;
+}
+
+.page-editor-content .page-dashboard-empty {
+  margin: 0;
+  padding: 4px 0 0;
+  color: var(--text-muted);
+}
+
+.page-editor-content .page-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* ---- A widget ---- */
+
+.page-editor-content .page-dashboard-widget {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  grid-column: span 1;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.page-editor-content .page-dashboard-widget[data-w="2"] {
+  grid-column: span 2;
+}
+
+.page-editor-content .page-dashboard-widget[data-w="3"] {
+  grid-column: span 3;
+}
+
+.page-editor-content .page-dashboard-widget[data-w="4"] {
+  grid-column: span 4;
+}
+
+.page-editor-content .page-dashboard-widget[data-dragging] {
+  opacity: 0.5;
+}
+
+/*
+ * The drop indicator: an accent bar on the edge of the widget the dropped one would go before (its left edge), or after the last
+ * widget (its right edge). It is inside the widget, which clips what overflows it.
+ */
+.page-editor-content .page-dashboard-widget[data-drop="before"]::before,
+.page-editor-content .page-dashboard-widget[data-drop="after"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.page-editor-content .page-dashboard-widget[data-drop="before"]::before {
+  left: 0;
+}
+
+.page-editor-content .page-dashboard-widget[data-drop="after"]::after {
+  right: 0;
+}
+
+/* While a widget is dragged: the grab cursor everywhere, and no text is selected by the pointer. */
+.page-editor-content .page-dashboard[data-dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.page-editor-content .page-dashboard-widget-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 6px 0 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* The header is the handle (an editable editor only). */
+.page-editor-content .page-dashboard-widget-header[data-draggable] {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.page-editor-content .page-dashboard-widget-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.9em;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-dashboard-widget-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-editor-content .page-dashboard-action {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-dashboard-widget-body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* ---- A number ---- */
+
+.page-editor-content .page-dashboard-number {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 8px 12px;
+}
+
+.page-editor-content .page-dashboard-number-value {
+  margin: 0;
+  color: var(--text);
+  font-size: 2.25rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.page-editor-content .page-dashboard-number-value[data-empty] {
+  color: var(--text-muted);
+}
+
+/* ---- A chart: the body is measured and the chart drawn at its size (`database-charts.css`) ---- */
+
+.page-editor-content .page-dashboard-widget[data-kind="chart"] .page-dashboard-widget-body {
+  padding: 4px 8px 8px;
+  overflow: hidden;
+}
+
+.page-editor-content .page-dashboard-chart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- An embedded view ---- */
+
+.page-editor-content .page-dashboard-embedded {
+  min-width: 0;
+  padding: 4px 8px 8px;
+}
+
+/* ---- A widget that has nothing to show (a view that was deleted, a widget of a newer version) ---- */
+
+.page-editor-content .page-dashboard-message {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 8px 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.page-editor-content .page-dashboard-message p {
+  margin: 0;
+}
+
+/* ---- The "Add widget" tile ---- */
+
+.page-editor-content .page-dashboard-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  grid-column: span 1;
+  height: 96px;
+  min-width: 0;
+  padding: 0 12px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* On its own (an empty dashboard) the tile is wider. */
+.page-editor-content .page-dashboard-add:only-child {
+  grid-column: span 2;
+}
+
+.page-editor-content .page-dashboard-add:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+  border-style: solid;
+}
+
+.page-editor-content .page-dashboard-add:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.page-editor-content .page-dashboard-add:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.page-editor-content .page-dashboard-add svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* ---- The menu of a widget (a floating panel in the page's body) ---- */
+
+.page-dashboard-menu {
+  min-width: 240px;
+}
+
+.page-dashboard-menu-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+}
+
+.page-dashboard-menu-label {
+  flex: none;
+  min-width: 52px;
+  color: var(--text-muted);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.page-dashboard-menu-choices {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 2px;
+}
+
+.page-dashboard-menu-choice {
+  flex: 1 1 0;
+  padding: 3px 6px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.page-dashboard-menu-choice:hover {
+  background: var(--surface-hover);
+}
+
+.page-dashboard-menu-choice[aria-checked="true"] {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.page-dashboard-menu-choice:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* ---- The settings panel of a widget ---- */
+
+.page-list-popover.page-dashboard-settings {
+  width: 300px;
+}
+
+.page-dashboard-settings .page-dashboard-input {
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.9em;
+}
+
+.page-dashboard-settings .page-dashboard-input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.page-dashboard-settings .page-dashboard-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* The button that opens the filter editor: the label, and the number of filters at the end. */
+.page-dashboard-settings .page-dashboard-filter-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+
+.page-dashboard-hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+
+/* ---- Narrow dashboards (the side peek, a phone) ---- */
+
+@container dashboard (max-width: 719px) {
+  .page-editor-content .page-dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-editor-content .page-dashboard-widget[data-w="3"],
+  .page-editor-content .page-dashboard-widget[data-w="4"] {
+    grid-column: span 2;
+  }
+}
+
+@container dashboard (max-width: 419px) {
+  .page-editor-content .page-dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-editor-content .page-dashboard-widget[data-w],
+  .page-editor-content .page-dashboard-add,
+  .page-editor-content .page-dashboard-add:only-child {
+    grid-column: span 1;
+  }
+}

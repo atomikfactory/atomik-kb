@@ -1,0 +1,346 @@
+/*
+ * Templates (ADR-0056, `docs/architecture/templates.md` section 6): the Templates entry of the sidebar and its panel, the picker for a
+ * page made from a template, the banner of a template page, the placeholders of the properties panel, the favourites' template mark and
+ * the look of relative mentions. Theme tokens only (`app.css` defines them).
+ */
+
+/* The Templates entry, above the trash, in the same block */
+
+.templates-entry {
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.templates-entry + .trash {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.templates-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.templates-toggle:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.templates-toggle-label {
+  flex: 1;
+}
+
+/* "New page" and "New page from template…" side by side */
+
+.tree-end {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tree-end > .tree-new {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+
+/* The compact picker: a menu of templates and starters */
+
+.template-picker {
+  width: min(320px, calc(100vw - 16px));
+  max-height: min(420px, calc(100vh - 16px));
+}
+
+.template-picker-heading {
+  margin: 0;
+  padding: 6px 10px 2px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.template-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-picker-text {
+  display: grid;
+  min-width: 0;
+}
+
+.template-picker-title,
+.template-picker-hint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.template-picker-hint {
+  font-size: 0.8rem;
+}
+
+.template-picker-empty {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+
+/* The Templates panel */
+
+.dialog.templates-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  max-height: min(640px, calc(100vh - 32px));
+}
+
+.templates-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.templates-header .subtitle {
+  margin-bottom: 0.5rem;
+}
+
+.templates-help {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+
+.templates-error {
+  margin: 0 0 8px;
+}
+
+.templates-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.templates-empty {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+
+.templates-group + .templates-group {
+  margin-top: 12px;
+}
+
+.templates-group-title {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.template-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.template-item {
+  display: grid;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.template-item:hover {
+  background: var(--surface-hover);
+}
+
+.template-item[aria-busy="true"] {
+  opacity: 0.6;
+}
+
+.template-item-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.template-item-text {
+  display: grid;
+  min-width: 0;
+}
+
+.template-item-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.template-item-description {
+  font-size: 0.85rem;
+}
+
+.template-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-left: 24px;
+}
+
+/* The banner of a template page, above the title */
+
+.template-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.template-banner-icon {
+  display: inline-grid;
+  color: var(--accent);
+}
+
+.template-banner-text {
+  flex: 1;
+  min-width: 12em;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.template-banner-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* In the narrow side peek: the text on a line of its own, then the buttons */
+
+.template-banner.is-compact {
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  gap: 6px 8px;
+}
+
+.template-banner.is-compact .template-banner-text {
+  flex-basis: calc(100% - 28px);
+  min-width: 0;
+  font-size: 0.85rem;
+}
+
+.template-banner.is-compact .template-banner-actions {
+  gap: 8px;
+}
+
+.template-banner-notice {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* The mark of a favourite that is a template */
+
+.template-mark {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
+/* Placeholders in the properties panel */
+
+.property-value.has-placeholders {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.property-value.has-placeholders > .property-editor {
+  flex: 1;
+}
+
+.template-placeholder-button {
+  margin-top: 2px;
+}
+
+.template-placeholder-chip {
+  cursor: default;
+}
+
+.template-placeholder-label {
+  color: var(--text);
+}
+
+.template-filled-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px;
+  color: var(--accent);
+  background: var(--selected);
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.template-filled-mark svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.template-placeholder-clear {
+  margin-left: 4px;
+}
+
+/* Relative mentions: "Today", "Now" and "Me" that are filled in when a page is made from the template */
+
+.date-mention.is-relative,
+.person-mention.is-relative {
+  color: var(--accent);
+  background: var(--selected);
+}
+
+.date-mention-relative,
+.person-mention-relative {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25em;
+  color: var(--accent);
+}
+
+.date-mention-relative svg,
+.person-mention-relative svg {
+  width: 0.8em;
+  height: 0.8em;
+}
+
+.date-picker-relative .button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--selected);
+  border-color: var(--accent);
+}

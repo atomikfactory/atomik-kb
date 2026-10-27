@@ -1,0 +1,918 @@
+// Vendored from loro-prosemirror 0.4.4 (https://github.com/loro-dev/loro-prosemirror,
+// commit 0e036a9). MIT License: Copyright (c) 2019 Kevin Jahns, Copyright (c) 2024
+// LORO; see LICENSE-loro-prosemirror. Local changes are marked "atomik-kb patch" and
+// listed in VENDORED.md.
+
+import { simpleDiff } from "lib0/diff";
+import { equalityDeep } from "lib0/function";
+import {
+  type ContainerID,
+  type Delta,
+  isContainer,
+  type LoroDoc,
+  type LoroEventBatch,
+  LoroList,
+  LoroMap,
+  LoroText,
+  type LoroTree,
+  type Value,
+} from "loro-crdt";
+// atomik-kb patch (a): ProseMirror from @tiptap/pm, the instance Tiptap uses.
+import type { Attrs, Mark, Node, Schema } from "@tiptap/pm/model";
+import {
+  type EditorState,
+  type Selection,
+  TextSelection,
+} from "@tiptap/pm/state";
+import type { EditorView } from "@tiptap/pm/view";
+
+export type LoroChildrenListType = LoroList<
+  LoroMap<LoroNodeContainerType> | LoroText
+>;
+export type LoroNodeContainerType = {
+  [CHILDREN_KEY]: LoroChildrenListType;
+  [ATTRIBUTES_KEY]: LoroMap;
+  [NODE_NAME_KEY]: string;
+};
+
+export type LoroDocType = LoroDoc<{
+  doc: LoroMap<LoroNodeContainerType>;
+  data: LoroMap;
+}>;
+export type LoroNode = LoroMap<LoroNodeContainerType>;
+export type LoroContainer =
+  | LoroChildrenListType
+  | LoroMap<LoroNodeContainerType>
+  | LoroText
+  | LoroTree;
+export type LoroType = LoroContainer | Value;
+
+// Mapping from a Loro Container ID to a ProseMirror non-text node
+// or to the children of a ProseMirror text node.
+//
+// - For an non-text, it will be a LoroMap mapping to a Node
+// - For a text, it will be a LoroText mapping to several Nodes.
+//   (PM stores rich text as arrays of text nodes, each one with its marks,
+//   and that's why we have some conversion utilities between both)
+//
+// So ContainerID should always be of a LoroMap or a LoroText.
+// Anything else is considered an error.
+//
+// A PM non-text node, it has attributes and children, which represents as a
+// LoroMap with a `"attributes": LoroMap` and a `"children": LoroList` inside
+// of it. Both that attributes and children are just part of the parent LoroMap
+// structure, which is mapped to an actual node.
+//
+// See also: https://prosemirror.net/docs/guide/#doc.data_structures
+export type LoroNodeMapping = Map<ContainerID, Node | Node[]>;
+
+export const ROOT_DOC_KEY = "doc";
+export const ATTRIBUTES_KEY = "attributes";
+export const CHILDREN_KEY = "children";
+export const NODE_NAME_KEY = "nodeName";
+/**
+ * Maps PM non-text nodes to their corresponding Loro Container IDs.
+ */
+export const WEAK_NODE_TO_LORO_CONTAINER_MAPPING = new WeakMap<
+  Node,
+  ContainerID
+>();
+
+export function updateLoroToPmState(
+  doc: LoroDocType,
+  mapping: LoroNodeMapping,
+  editorState: EditorState,
+  containerId?: ContainerID,
+) {
+  const node = editorState.doc;
+  const map = containerId
+    ? (doc.getContainerById(containerId) as LoroMap<LoroNodeContainerType>)
+    : doc.getMap(ROOT_DOC_KEY);
+
+  let isInit = false;
+  if (map.get("nodeName") == null) {
+    doc.commit();
+    isInit = true;
+    map.set("nodeName", node.type.name);
+  }
+
+  updateLoroMap(map, node, mapping);
+  if (isInit) {
+    doc.commit({ origin: "sys:init" });
+  } else {
+    doc.commit({ origin: "loroSyncPlugin" });
+  }
+}
+
+export function createNodeFromLoroObj(
+  schema: Schema,
+  obj: LoroNode,
+  mapping: LoroNodeMapping,
+): Node;
+export function createNodeFromLoroObj(
+  schema: Schema,
+  obj: LoroText,
+  mapping: LoroNodeMapping,
+): Node[];
+export function createNodeFromLoroObj(
+  schema: Schema,
+  obj: LoroNode | LoroText,
+  mapping: LoroNodeMapping,
+): Node | Node[] | null {
+  let retval: Node | Node[] | null = mapping.get(obj.id) ?? null;
+  if (retval != null) {
+    return retval;
+  }
+
+  if (obj instanceof LoroMap) {
+    const attributes = getLoroMapAttributes(obj);
+    const children = getLoroMapChildren(obj);
+
+    const nodeName = obj.get("nodeName");
+    if (nodeName == null || typeof nodeName !== "string") {
+      throw new Error("Invalid nodeName");
+    }
+
+    const mappedChildren = children
+      .toArray()
+      .flatMap((child) =>
+        // atomik-kb patch (t): typed cast instead of `any`.
+        createNodeFromLoroObj(schema, child as LoroNode, mapping),
+      )
+      .filter((n) => n !== null);
+
+    const attrs = attributes.toJSON();
+    try {
+      retval = schema.node(nodeName, attrs, mappedChildren);
+      WEAK_NODE_TO_LORO_CONTAINER_MAPPING.set(retval, obj.id);
+    } catch (e) {
+      // An error occurred while creating the node.
+      // This is probably a result of a concurrent action.
+      // atomik-kb patch (r): concurrent edits can leave content the schema does
+      // not accept (a list item that starts with a callout, an empty list).
+      // Upstream dropped such a node from the view, and the next write deleted
+      // it from the document. Keep it instead: completed where ProseMirror can
+      // (`createAndFill`), as it is otherwise. Unknown node names still fail.
+      const type = schema.nodes[nodeName];
+      try {
+        retval =
+          type == null
+            ? null
+            : (type.createAndFill(attrs, mappedChildren) ??
+              type.create(attrs, mappedChildren));
+      } catch {
+        retval = null;
+      }
+      if (retval == null) {
+        console.error(e);
+      } else {
+        WEAK_NODE_TO_LORO_CONTAINER_MAPPING.set(retval, obj.id);
+      }
+    }
+  } else if (obj instanceof LoroText) {
+    retval = [];
+    for (const delta of obj.toDelta()) {
+      if (delta.insert == null) {
+        continue;
+      }
+
+      try {
+        const marks = [];
+        for (const [markName, mark] of Object.entries(delta.attributes ?? {})) {
+          const markAttrs = valueToAttrs(mark);
+          marks.push(schema.mark(markName, markAttrs ?? undefined));
+        }
+        retval.push(schema.text(delta.insert, marks));
+      } catch (e) {
+        // An error occurred while creating the node.
+        // This is probably a result of a concurrent action.
+        console.error(e);
+      }
+    }
+  } else {
+    /* v8 ignore next */
+    throw new Error("Invalid LoroType");
+  }
+
+  if (retval != null) {
+    if (!Array.isArray(retval)) {
+      WEAK_NODE_TO_LORO_CONTAINER_MAPPING.set(retval, obj.id);
+    }
+    mapping.set(obj.id, retval);
+  } else {
+    mapping.delete(obj.id);
+  }
+
+  return retval;
+}
+
+export function createLoroChild(
+  parentList: LoroChildrenListType,
+  pos: number | null,
+  nodeOrNodeList: Node | Node[],
+  mapping: LoroNodeMapping,
+): LoroText | LoroMap {
+  return Array.isArray(nodeOrNodeList)
+    ? createLoroText(parentList, pos, nodeOrNodeList, mapping)
+    : createLoroMap(parentList, pos, nodeOrNodeList, mapping);
+}
+
+export function createLoroText(
+  parentList: LoroList,
+  pos: number | null,
+  nodes: Node[],
+  mapping: LoroNodeMapping,
+): LoroText {
+  const obj = parentList
+    .insertContainer(pos ?? parentList.length, new LoroText())
+    .getAttached()!;
+
+  const delta: Delta<string>[] = nodes.map((node) => ({
+    insert: node.text!,
+    attributes: nodeMarksToAttributes(node.marks),
+  }));
+  obj.applyDelta(delta);
+
+  mapping.set(obj.id, nodes);
+  return obj;
+}
+
+export function updateLoroText(
+  obj: LoroText,
+  nodes: Node[],
+  mapping: LoroNodeMapping,
+) {
+  mapping.set(obj.id, nodes);
+
+  const content = nodes.map((p) => ({
+    insert: p.text!,
+    attributes: nodeMarksToAttributes(p.marks),
+  }));
+  const { insert, remove, index } = simpleDiff(
+    obj.toString(),
+    content.map((c) => c.insert).join(""),
+  );
+  if (remove > 0) {
+    obj.delete(index, remove);
+  }
+  if (insert.length) {
+    obj.insert(index, insert);
+  }
+
+  // Only apply marks over the ranges where the LoroText still disagrees with
+  // ProseMirror. Loro records every mark/unmark op it is asked to apply, even
+  // ones that don't change the visible styles (they still carry meaning under
+  // concurrent editing), so re-asserting the marks of the whole text on every
+  // change would emit style ops on every keystroke. After the text diff above,
+  // inserts already inherit the styles configured by `configLoroTextStyle`, so
+  // typing, deleting, and plain pastes need no style ops at all.
+  const styles = diffTextStyles(obj.toDelta(), content);
+  if (styles != null) {
+    obj.applyDelta(styles);
+  }
+}
+
+/**
+ * Computes the minimal delta that restyles `current` (what the LoroText
+ * holds) as `content` (what ProseMirror wants). The text of both sides must
+ * already be equal. Returns null when the styles already agree everywhere.
+ */
+function diffTextStyles(
+  current: Delta<string>[],
+  content: { insert: string; attributes: { [key: string]: Attrs } }[],
+): Delta<string>[] | null {
+  const styles: Delta<string>[] = [];
+  let i = 0;
+  let iUsed = 0;
+  let j = 0;
+  let jUsed = 0;
+  while (i < current.length && j < content.length) {
+    // atomik-kb patch (t): `!` for noUncheckedIndexedAccess (indices are in range).
+    const currentRun = current[i]!;
+    const contentRun = content[j]!;
+    if (currentRun.insert == null) {
+      i += 1;
+      continue;
+    }
+
+    const length = Math.min(
+      currentRun.insert.length - iUsed,
+      contentRun.insert.length - jUsed,
+    );
+    if (length > 0) {
+      const patch = attributesPatch(
+        currentRun.attributes ?? {},
+        contentRun.attributes,
+      );
+      styles.push(
+        patch != null
+          ? { retain: length, attributes: patch }
+          : { retain: length },
+      );
+    }
+
+    iUsed += length;
+    if (iUsed === currentRun.insert.length) {
+      i += 1;
+      iUsed = 0;
+    }
+    jUsed += length;
+    if (jUsed === contentRun.insert.length) {
+      j += 1;
+      jUsed = 0;
+    }
+  }
+
+  while (styles.length > 0 && styles[styles.length - 1]!.attributes == null) {
+    styles.pop();
+  }
+  return styles.length > 0 ? styles : null;
+}
+
+/**
+ * Computes the attribute changes that turn `current` into `wanted`, or null
+ * if they are already equal.
+ */
+function attributesPatch(
+  current: { [key: string]: Value | Attrs },
+  wanted: { [key: string]: Attrs },
+): { [key: string]: Attrs | null } | null {
+  let patch: { [key: string]: Attrs | null } | null = null;
+  for (const [key, attrs] of Object.entries(wanted)) {
+    if (!equalityDeep(current[key], attrs)) {
+      patch = patch ?? {};
+      patch[key] = attrs;
+    }
+  }
+  for (const key of Object.keys(current)) {
+    if (!(key in wanted) && current[key] != null) {
+      patch = patch ?? {};
+      patch[key] = null;
+    }
+  }
+  return patch;
+}
+
+function nodeMarksToAttributes(marks: readonly Mark[]): {
+  [key: string]: Attrs;
+} {
+  const pattrs: { [key: string]: Attrs } = {};
+  for (const mark of marks) {
+    // atomik-kb patch (g): `null` mark attributes are not stored, like `null`
+    // node attributes (ADR-0016): a link mark is stored as `{ href }`.
+    pattrs[mark.type.name] = withoutNullAttrs(mark.attrs);
+  }
+  return pattrs;
+}
+
+// atomik-kb patch (g).
+function withoutNullAttrs(attrs: Attrs): Attrs {
+  const result: { [key: string]: unknown } = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (value !== null) {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+function valueToAttrs(value: Value | Attrs | null | undefined): Attrs | null {
+  if (
+    value != null &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    !(value instanceof Uint8Array)
+  ) {
+    return value as Attrs;
+  }
+  return null;
+}
+
+function eqLoroTextNodes(obj: LoroText, nodes: Node[]) {
+  const delta = obj.toDelta();
+  return (
+    delta.length === nodes.length &&
+    delta.every(
+      (delta, i) =>
+        delta.insert === nodes[i]!.text &&
+        Object.keys(delta.attributes || {}).length === nodes[i]!.marks.length &&
+        nodes[i]!.marks.every((mark) => {
+          const attrs = valueToAttrs((delta.attributes || {})[mark.type.name]);
+          return attrs != null && eqAttrs(attrs, mark.attrs);
+        }),
+    )
+  );
+}
+
+// TODO: extract code about equality into a single file
+/**
+ * Whether the loro object is equal to the node.
+ */
+function eqLoroObjNode(obj: LoroType, node: Node | Node[]): boolean {
+  if (obj instanceof LoroMap) {
+    if (Array.isArray(node) || !eqNodeName(obj, node)) {
+      return false;
+    }
+
+    const loroChildren = getLoroMapChildren(obj);
+    const normalizedContent = normalizeNodeContent(node);
+    return (
+      loroChildren.length === normalizedContent.length &&
+      eqAttrs(getLoroMapAttributes(obj).toJSON(), node.attrs) &&
+      normalizedContent.every((childNode, i) =>
+        eqLoroObjNode(loroChildren.get(i)!, childNode),
+      )
+    );
+  }
+
+  return (
+    obj instanceof LoroText && Array.isArray(node) && eqLoroTextNodes(obj, node)
+  );
+}
+
+function eqAttrs(attrs1: Attrs, attrs2: Attrs) {
+  const keys = Object.keys(attrs1).filter((key) => attrs1[key] !== null);
+  let eq =
+    keys.length ===
+    Object.keys(attrs2).filter((key) => attrs2[key] !== null).length;
+  for (let i = 0; eq && i < keys.length; i++) {
+    const key = keys[i]!;
+    const l = attrs1[key];
+    const r = attrs2[key];
+    eq =
+      l === r ||
+      (typeof l === "object" &&
+        l !== null &&
+        typeof r === "object" &&
+        r !== null &&
+        eqAttrs(l, r));
+  }
+  return eq;
+}
+
+function eqNodeName(obj: LoroMap, node: Node | Node[]): boolean {
+  return !Array.isArray(node) && obj.get("nodeName") === node.type.name;
+}
+
+/**
+ * Checks if two nodes (or arrays of nodes) are equal.
+ * - If both are the same object, returns true.
+ * - If both are single nodes, uses their .eq() method.
+ * - If both are arrays, checks that they have the same length and each corresponding node is equal.
+ */
+function eqMappedNode(
+  mapped: Node | Node[] | undefined,
+  node: Node | Node[] | undefined,
+): boolean {
+  // If both are the same reference, they are equal
+  if (mapped === node) {
+    return true;
+  }
+
+  // If both are single nodes (not arrays), compare using .eq()
+  if (!Array.isArray(mapped) && !Array.isArray(node) && node) {
+    return mapped?.eq(node) ?? false;
+  }
+
+  // If both are arrays, check length and each element
+  if (Array.isArray(mapped) && Array.isArray(node)) {
+    if (mapped.length !== node.length) {
+      return false;
+    }
+    for (let i = 0; i < mapped.length; i++) {
+      if (!node[i]!.eq(mapped[i]!)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Otherwise, not equal
+  return false;
+}
+
+function normalizeNodeContent(node: Node): (Node | Node[])[] {
+  const res: (Node | Node[])[] = [];
+  let textNodes: Node[] | null = null;
+
+  node.content.forEach((node, _offset, _i) => {
+    if (node.isText) {
+      if (textNodes == null) {
+        textNodes = [];
+        res.push(textNodes);
+      }
+      textNodes.push(node);
+    } else {
+      res.push(node);
+      textNodes = null;
+    }
+  });
+
+  return res;
+}
+
+function computeChildEqualityFactor(
+  obj: LoroNode,
+  node: Node,
+  mapping: LoroNodeMapping,
+): {
+  factor: number;
+  foundMappedChild: boolean;
+} {
+  const loroChildren = getLoroMapChildren(obj);
+  const loroChildLength = loroChildren.length;
+
+  const nodeChildren = normalizeNodeContent(node);
+  const nodeChildLength = nodeChildren.length;
+
+  const minLength = Math.min(loroChildLength, nodeChildLength);
+  let left = 0;
+  let right = 0;
+
+  let foundMappedChild = false;
+  for (; left < minLength; left++) {
+    const leftLoro = loroChildren.get(left);
+    const leftNode = nodeChildren[left];
+    if (
+      eqMappedNode(
+        leftLoro != null && isContainer(leftLoro)
+          ? mapping.get(leftLoro.id)
+          : undefined,
+        leftNode,
+      )
+    ) {
+      foundMappedChild = true; // good match!
+    } else if (
+      leftLoro == null ||
+      leftNode == null ||
+      !eqLoroObjNode(leftLoro, leftNode)
+    ) {
+      break;
+    }
+  }
+  for (; left + right < minLength; right++) {
+    const rightLoro = loroChildren.get(loroChildLength - right - 1);
+    const rightNode = nodeChildren[nodeChildLength - right - 1];
+    if (
+      eqMappedNode(
+        rightLoro != null && isContainer(rightLoro)
+          ? mapping.get(rightLoro.id)
+          : undefined,
+        rightNode,
+      )
+    ) {
+      foundMappedChild = true; // good match!
+    } else if (
+      rightLoro == null ||
+      rightNode == null ||
+      !eqLoroObjNode(rightLoro, rightNode)
+    ) {
+      break;
+    }
+  }
+  return {
+    factor: left + right,
+    foundMappedChild,
+  };
+}
+
+export function createLoroMap(
+  parentList: LoroChildrenListType,
+  pos: number | null,
+  node: Node,
+  mapping: LoroNodeMapping,
+): LoroMap {
+  const obj = parentList
+    .insertContainer(pos ?? parentList.length, new LoroMap())
+    .getAttached()! as LoroNode;
+
+  obj.set("nodeName", node.type.name);
+
+  const attrs = getLoroMapAttributes(obj);
+  for (const [key, value] of Object.entries(node.attrs)) {
+    if (value !== null) {
+      attrs.set(key, value);
+    }
+  }
+
+  const children = getLoroMapChildren(obj);
+  normalizeNodeContent(node).forEach((child, _i) =>
+    createLoroChild(children, null, child, mapping),
+  );
+
+  WEAK_NODE_TO_LORO_CONTAINER_MAPPING.set(node, obj.id);
+  mapping.set(obj.id, node);
+  return obj;
+}
+
+export function updateLoroMap(
+  obj: LoroNode,
+  node: Node,
+  mapping: LoroNodeMapping,
+) {
+  mapping.set(obj.id, node);
+  WEAK_NODE_TO_LORO_CONTAINER_MAPPING.set(node, obj.id);
+
+  if (!eqNodeName(obj, node)) {
+    throw new Error("node name mismatch!");
+  }
+
+  updateLoroMapAttributes(obj, node, mapping);
+  updateLoroMapChildren(obj, node, mapping);
+}
+
+export function getLoroMapAttributes(
+  obj: LoroMap,
+): LoroMap<{ [key: string]: string }> {
+  return obj.getOrCreateContainer(ATTRIBUTES_KEY, new LoroMap());
+}
+
+export function updateLoroMapAttributes(
+  obj: LoroMap,
+  node: Node,
+  _mapping: LoroNodeMapping,
+): void {
+  const attrs = getLoroMapAttributes(obj);
+  const keys = new Set(attrs.keys());
+
+  const pAttrs = node.attrs;
+  for (const [key, value] of Object.entries(pAttrs)) {
+    if (value !== null) {
+      if (!equalityDeep(attrs.get(key), value)) {
+        attrs.set(key, value);
+      }
+    } else if (keys.has(key)) {
+      // atomik-kb patch (d), upstream PR #84: deleting an absent key still
+      // records a delete op, so only delete keys that exist.
+      attrs.delete(key);
+    }
+    keys.delete(key);
+  }
+
+  // remove all keys that are no longer in pAttrs
+  for (const key of keys) {
+    attrs.delete(key);
+  }
+}
+
+export function getLoroMapChildren(obj: LoroNode): LoroChildrenListType {
+  return obj.getOrCreateContainer(CHILDREN_KEY, new LoroList());
+}
+
+export function updateLoroMapChildren(
+  obj: LoroNode,
+  node: Node,
+  mapping: LoroNodeMapping,
+): void {
+  const loroChildren = getLoroMapChildren(obj);
+  const loroChildLength = loroChildren.length;
+
+  const nodeChildren = normalizeNodeContent(node);
+  const nodeChildLength = nodeChildren.length;
+
+  const minLength = Math.min(nodeChildLength, loroChildLength);
+  let left = 0;
+  let right = 0;
+
+  // find number of matching elements from left
+  for (; left < minLength; left++) {
+    const leftLoro = loroChildren.get(left);
+    const leftNode = nodeChildren[left];
+    if (leftLoro == null || leftNode == null) {
+      break;
+    }
+
+    if (isContainer(leftLoro) && mapping.get(leftLoro.id) !== leftNode) {
+      if (
+        eqMappedNode(mapping.get(leftLoro.id), leftNode) ||
+        eqLoroObjNode(leftLoro, leftNode)
+      ) {
+        // We need to refresh all the mappings under this node
+        if (!Array.isArray(leftNode)) {
+          updateLoroMap(leftLoro as LoroNode, leftNode as Node, mapping);
+        }
+      } else {
+        break;
+      }
+    }
+  }
+
+  // find number of matching elements from right
+  for (; right + left < minLength; right++) {
+    const rightLoro = loroChildren.get(loroChildLength - right - 1);
+    const rightNode = nodeChildren[nodeChildLength - right - 1];
+    if (rightLoro == null || rightNode == null) {
+      break;
+    }
+
+    if (isContainer(rightLoro) && mapping.get(rightLoro.id) !== rightNode) {
+      if (
+        eqMappedNode(mapping.get(rightLoro.id), rightNode) ||
+        eqLoroObjNode(rightLoro, rightNode)
+      ) {
+        // We need to refresh all the mappings under this node
+        if (!Array.isArray(rightNode)) {
+          updateLoroMap(rightLoro as LoroNode, rightNode as Node, mapping);
+        }
+      } else {
+        break;
+      }
+    }
+  }
+
+  // try to compare and update
+  while (
+    loroChildLength - left - right > 0 &&
+    nodeChildLength - left - right > 0
+  ) {
+    const leftLoro = loroChildren.get(left);
+    const leftNode = nodeChildren[left]!;
+    const rightLoro = loroChildren.get(loroChildLength - right - 1);
+    const rightNode = nodeChildren[nodeChildLength - right - 1]!;
+
+    if (leftLoro instanceof LoroText && Array.isArray(leftNode)) {
+      if (!eqLoroTextNodes(leftLoro, leftNode)) {
+        updateLoroText(leftLoro, leftNode, mapping);
+      }
+      left += 1;
+    } else {
+      let updateLeft =
+        leftLoro instanceof LoroMap && eqNodeName(leftLoro, leftNode);
+      let updateRight =
+        rightLoro instanceof LoroMap && eqNodeName(rightLoro, rightNode);
+
+      if (updateLeft && updateRight) {
+        // decide which which element to update
+        const leftEquality = computeChildEqualityFactor(
+          leftLoro as LoroNode,
+          leftNode as Node,
+          mapping,
+        );
+        const rightEquality = computeChildEqualityFactor(
+          rightLoro as LoroNode,
+          rightNode as Node,
+          mapping,
+        );
+
+        if (leftEquality.foundMappedChild && !rightEquality.foundMappedChild) {
+          updateRight = false;
+        } else if (
+          rightEquality.foundMappedChild &&
+          !leftEquality.foundMappedChild
+        ) {
+          updateLeft = false;
+        } else if (leftEquality.factor < rightEquality.factor) {
+          updateLeft = false;
+        } else {
+          updateRight = false;
+        }
+      }
+
+      if (updateLeft) {
+        updateLoroMap(leftLoro as LoroNode, leftNode as Node, mapping);
+        left += 1;
+      } else if (updateRight) {
+        updateLoroMap(rightLoro as LoroNode, rightNode as Node, mapping);
+        right += 1;
+      } else {
+        // recreate the element at left
+        const child = loroChildren.get(left);
+        if (isContainer(child)) {
+          mapping.delete(child.id);
+        }
+        loroChildren.delete(left, 1);
+        createLoroChild(loroChildren, left, leftNode, mapping);
+        left += 1;
+      }
+    }
+  }
+
+  const loroDelLength = loroChildLength - left - right;
+  if (
+    loroChildLength === 1 &&
+    nodeChildLength === 0 &&
+    loroChildren.get(0) instanceof LoroText
+  ) {
+    // Only delete the content of the LoroText to retain remote changes on the same LoroText object
+    // Otherwise, the LoroText object will be deleted and all the concurrent edits to the same LoroText object will be lost
+    const loroText = loroChildren.get(0) as LoroText;
+    mapping.delete(loroText.id);
+    loroText.delete(0, loroText.length);
+  } else if (loroDelLength > 0) {
+    loroChildren
+      .toArray()
+      .slice(left, left + loroDelLength)
+      .filter(isContainer)
+      .forEach((type) => mapping.delete((type as LoroContainer).id));
+    loroChildren.delete(left, loroDelLength);
+  }
+
+  if (left + right < nodeChildLength) {
+    nodeChildren
+      .slice(left, nodeChildLength - right)
+      .forEach((nodeChild, i) =>
+        createLoroChild(loroChildren, left + i, nodeChild, mapping),
+      );
+  }
+}
+
+export function clearChangedNodes(
+  doc: LoroDocType,
+  event: LoroEventBatch,
+  mapping: LoroNodeMapping,
+) {
+  for (const e of event.events) {
+    const obj = doc.getContainerById(e.target);
+    mapping.delete(obj!.id);
+
+    let parentObj = obj!.parent();
+    while (parentObj) {
+      mapping.delete(parentObj!.id);
+      parentObj = parentObj!.parent();
+    }
+  }
+}
+
+/**
+ * Set a text selection between the given anchor and head positions. This
+ * function will ignore out-of-bounds positions, and find a valid selection near
+ * the given positions.
+ */
+export function safeSetSelection(
+  view: EditorView,
+  anchor: number,
+  head?: number,
+): void {
+  // atomik-kb patch (d), upstream PR #85: the bounds check moved to
+  // `safeSelection`, which `updateNodeOnLoroEvent` also uses.
+  const selection = safeSelection(view.state.doc, anchor, head);
+  if (selection == null) {
+    return;
+  }
+  view.dispatch(view.state.tr.setSelection(selection));
+}
+
+/**
+ * atomik-kb patch (d), upstream PR #85: a text selection between the given
+ * anchor and head positions of `doc`, or null when a position is out of bounds.
+ */
+export function safeSelection(
+  doc: Node,
+  anchor: number,
+  head?: number,
+): Selection | null {
+  const docSize = doc.content.size;
+  if (
+    anchor < 0 ||
+    anchor > docSize ||
+    (head != null && (head < 0 || head > docSize))
+  ) {
+    return null;
+  }
+
+  const $anchor = doc.resolve(anchor);
+  const $head = head != null ? doc.resolve(head) : undefined;
+
+  return TextSelection.between($anchor, $head || $anchor);
+}
+
+/**
+ * atomik-kb patch (e): the node and mark names in the Loro document that the
+ * schema does not know. The binding cannot represent them (it drops what it
+ * cannot create), so an editor that meets one must never write to the document.
+ */
+export function findUnknownNames(
+  schema: Schema,
+  obj: LoroNode,
+): { nodes: string[]; marks: string[] } {
+  const nodes = new Set<string>();
+  const marks = new Set<string>();
+  const visit = (current: LoroNode | LoroText): void => {
+    if (current instanceof LoroText) {
+      for (const delta of current.toDelta()) {
+        for (const markName of Object.keys(delta.attributes ?? {})) {
+          if (!(markName in schema.marks)) {
+            marks.add(markName);
+          }
+        }
+      }
+      return;
+    }
+    const nodeName: unknown = current.get(NODE_NAME_KEY);
+    if (typeof nodeName === "string" && !(nodeName in schema.nodes)) {
+      nodes.add(nodeName);
+    }
+    const children: unknown = current.get(CHILDREN_KEY);
+    if (children instanceof LoroList) {
+      for (const child of children.toArray()) {
+        if (child instanceof LoroMap) {
+          visit(child as LoroNode);
+        } else if (child instanceof LoroText) {
+          visit(child);
+        }
+      }
+    }
+  };
+  visit(obj);
+  return { nodes: [...nodes].sort(), marks: [...marks].sort() };
+}

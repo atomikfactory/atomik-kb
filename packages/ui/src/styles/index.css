@@ -1,0 +1,21 @@
+/*
+ * The stylesheet of the UI (`@atomik-kb/ui/styles.css`): `app.css`, then the parts of the database views (ADR-0054), each in a file
+ * of its own. The order matters: a part overrides `app.css` where the two say the same thing.
+ */
+
+@import "./app.css";
+@import "./database-views.css";
+@import "./database-calendar.css";
+@import "./database-gallery.css";
+@import "./database-feed.css";
+@import "./database-peek.css";
+@import "./database-dashboard.css";
+@import "./database-charts.css";
+@import "./database-sources.css";
+@import "./database-bulk.css";
+@import "./formulas.css";
+@import "./templates.css";
+@import "./template-button.css";
+@import "./page-history.css";
+@import "./page-history-preview.css";
+@import "./restore-wizard.css";

@@ -1,0 +1,429 @@
+{
+ "schema": [
+  {
+   "id": "tasks",
+   "name": "Tasks",
+   "kind": "relation"
+  },
+  {
+   "id": "done",
+   "name": "Done",
+   "kind": "checkbox"
+  },
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    }
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Main",
+   "values": {
+    "done": {
+     "kind": "checkbox",
+     "value": true
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Second",
+   "values": {
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p3"
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3",
+   "title": "Third",
+   "values": {
+    "done": {
+     "kind": "checkbox",
+     "value": true
+    }
+   }
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "the length of an empty text is zero",
+   "expression": "length(at([\"a\"], 5))",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an empty text contains the empty text",
+   "expression": "contains(at([\"a\"], 5), \"\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text does not contain a letter",
+   "expression": "contains(at([\"a\"], 5), \"x\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the empty pattern matches an empty text",
+   "expression": "test(at([\"a\"], 5), \"^$\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text split by a comma is one empty item",
+   "expression": "split(at([\"a\"], 5), \",\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "an empty text split into characters is nothing",
+   "expression": "split(at([\"a\"], 5), \"\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an empty text plus a text",
+   "expression": "at([\"a\"], 5) + \"x\"",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "a text plus an empty text",
+   "expression": "\"x\" + at([\"a\"], 5)",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "an empty text upper cased is empty",
+   "expression": "upper(at([\"a\"], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "a substring of an empty text is empty",
+   "expression": "substring(at([\"a\"], 5), 0, 3)",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty text is not the empty text",
+   "expression": "at([\"a\"], 5) == \"\"",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty text is not unequal to itself",
+   "expression": "at([\"a\"], 5) != at([\"a\"], 5)",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty text and a text are unequal",
+   "expression": "at([\"a\"], 5) != \"a\"",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text is empty",
+   "expression": "empty(at([\"a\"], 5))",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text formats to the empty text",
+   "expression": "format(at([\"a\"], 5)) == \"\"",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text in a list formats as nothing",
+   "expression": "format([\"a\", at([\"a\"], 5), \"b\"])",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "a, , b"
+   }
+  },
+  {
+   "name": "an empty text padded",
+   "expression": "padStart(at([\"a\"], 5), 3, \"0\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "000"
+   }
+  },
+  {
+   "name": "an empty text repeated",
+   "expression": "repeat(at([\"a\"], 5), 3)",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "the title of no page has no length",
+   "expression": "length(prop(\"Tasks\").first().prop(\"Name\"))",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the title of no page plus a text",
+   "expression": "prop(\"Tasks\").first().prop(\"Name\") + \"!\"",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "!"
+   }
+  },
+  {
+   "name": "a checkbox of no page is false",
+   "expression": "if(prop(\"Tasks\").first().prop(\"Done\"), 1, 2)",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a checkbox of no page is empty",
+   "expression": "empty(prop(\"Tasks\").first().prop(\"Done\"))",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the relation of no page has no length",
+   "expression": "length(prop(\"Tasks\").first().prop(\"Tasks\"))",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the relation of no page joins to nothing",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").map(current.prop(\"Name\")).join(\",\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "the relation of no page counts nothing",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").count()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the tags of no page include nothing",
+   "expression": "prop(\"Tasks\").first().prop(\"Tags\").includes(\"red\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the relation of no page is empty",
+   "expression": "empty(prop(\"Tasks\").first().prop(\"Tasks\"))",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty number repeats nothing",
+   "expression": "repeat(\"a\", at([1], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty number is no substring start",
+   "expression": "substring(\"abc\", at([1], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty number is no pad length",
+   "expression": "padStart(\"a\", at([1], 5), \"0\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty number is no round place",
+   "expression": "round(1.5, at([1], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty number is no slice start",
+   "expression": "slice([1, 2], at([1], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty date is no date to add to",
+   "expression": "dateAdd(prop(\"Due\"), 1, \"days\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an empty unit adds nothing",
+   "expression": "dateAdd(today(), 1, at([\"days\"], 5))",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "unique dates compare by instant",
+   "expression": "unique([parseDate(\"2026-01-01\"), parseDate(\"2026-01-01T00:00\")]).length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "includes compares dates by instant",
+   "expression": "includes([parseDate(\"2026-01-01\")], parseDate(\"2026-01-01T00:00\"))",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "lists of dates compare by instant",
+   "expression": "[parseDate(\"2026-01-01\")] == [parseDate(\"2026-01-01T00:00\")]",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "sort is stable for equal dates",
+   "expression": "sort([parseDate(\"2026-01-01T00:00\"), parseDate(\"2026-01-01\")]).map(format(current)).join(\"|\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "January 1, 2026 12:00 AM|January 1, 2026"
+   }
+  },
+  {
+   "name": "a name that is not a function may be a variable",
+   "expression": "let(style, 1, style)",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "the title keyword reads the title of a related page",
+   "expression": "prop(\"Tasks\").first().prop(\"title\")",
+   "page": "p2",
+   "result": {
+    "type": "text",
+    "data": "Third"
+   }
+  },
+  {
+   "name": "the title label reads the title of a related page",
+   "expression": "prop(\"Tasks\").first().prop(\"Name\")",
+   "page": "p2",
+   "result": {
+    "type": "text",
+    "data": "Third"
+   }
+  },
+  {
+   "name": "a nested list function over its budget is empty",
+   "expression": "split(repeat(\"a\", 5000), \"\").map(split(repeat(\"a\", 5000), \"\").map(current).length()).length()",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "a nested list function under its budget runs",
+   "expression": "split(repeat(\"a\", 30), \"\").map(split(repeat(\"a\", 30), \"\").count()).sum()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 900
+   }
+  }
+ ]
+}

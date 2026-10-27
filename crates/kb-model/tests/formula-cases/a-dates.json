@@ -1,0 +1,2163 @@
+{
+ "schema": [
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  },
+  {
+   "id": "when",
+   "name": "When",
+   "kind": "date"
+  },
+  {
+   "id": "created",
+   "name": "Created",
+   "kind": "created_time"
+  },
+  {
+   "id": "edited",
+   "name": "Edited",
+   "kind": "last_edited_time"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "created": "2026-12-31T22:00",
+   "edited": "2027-01-01T01:15",
+   "values": {
+    "due": {
+     "kind": "date",
+     "value": {
+      "date": "2026-10-25"
+     }
+    },
+    "when": {
+     "kind": "date",
+     "value": {
+      "date": "2026-10-25",
+      "time": "14:45"
+     }
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Empty",
+   "values": {}
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-12-31T23:30",
+  "offsetMinutes": -300
+ },
+ "cases": [
+  {
+   "name": "now is local",
+   "expression": "now()",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-12-31",
+     "time": "23:30"
+    }
+   }
+  },
+  {
+   "name": "today is the local day",
+   "expression": "today()",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-12-31"
+    }
+   }
+  },
+  {
+   "name": "now formatted",
+   "expression": "formatDate(now(), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-12-31 23:30"
+   }
+  },
+  {
+   "name": "now has a time and today has none",
+   "expression": "dateBetween(now(), today(), \"minutes\")",
+   "result": {
+    "type": "number",
+    "data": 1410
+   }
+  },
+  {
+   "name": "the day of today",
+   "expression": "day(today())",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "a week ahead crosses the year",
+   "expression": "formatDate(dateAdd(today(), 1, \"weeks\"), \"YYYY-MM-DD\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-07"
+   }
+  },
+  {
+   "name": "tomorrow",
+   "expression": "formatDate(dateAdd(now(), 1, \"days\"), \"YYYY-MM-DD\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-01"
+   }
+  },
+  {
+   "name": "the time after an hour",
+   "expression": "dateAdd(now(), 1, \"hours\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2027-01-01",
+     "time": "00:30"
+    }
+   }
+  },
+  {
+   "name": "timestamp of the local epoch",
+   "expression": "timestamp(parseDate(\"1970-01-01T00:00\"))",
+   "result": {
+    "type": "number",
+    "data": 18000000
+   }
+  },
+  {
+   "name": "fromTimestamp zero is the evening before",
+   "expression": "formatDate(fromTimestamp(0), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "1969-12-31 19:00"
+   }
+  },
+  {
+   "name": "fromTimestamp keeps seconds in arithmetic",
+   "expression": "formatDate(fromTimestamp(1000000000000), \"YYYY-MM-DD HH:mm:ss\")",
+   "result": {
+    "type": "text",
+    "data": "2001-09-08 20:46:40"
+   }
+  },
+  {
+   "name": "fromTimestamp has a time",
+   "expression": "fromTimestamp(1000000000000)",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2001-09-08",
+     "time": "20:46"
+    }
+   }
+  },
+  {
+   "name": "timestamp keeps the milliseconds",
+   "expression": "timestamp(fromTimestamp(1700000000123))",
+   "result": {
+    "type": "number",
+    "data": 1700000000123
+   }
+  },
+  {
+   "name": "timestamp of a day",
+   "expression": "timestamp(parseDate(\"2026-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 1798693200000
+   }
+  },
+  {
+   "name": "fromTimestamp truncates a fraction",
+   "expression": "timestamp(fromTimestamp(1700000000123.9))",
+   "result": {
+    "type": "number",
+    "data": 1700000000123
+   }
+  },
+  {
+   "name": "fromTimestamp of a huge number is empty",
+   "expression": "fromTimestamp(1e30)",
+   "result": null
+  },
+  {
+   "name": "fromTimestamp after year 9999 is empty",
+   "expression": "fromTimestamp(300000000000000)",
+   "result": null
+  },
+  {
+   "name": "fromTimestamp of an unset number",
+   "expression": "fromTimestamp(1 / 0)",
+   "result": null
+  },
+  {
+   "name": "timestamp of an unset date",
+   "page": "p2",
+   "expression": "timestamp(prop(\"Due\"))",
+   "result": null
+  },
+  {
+   "name": "created time is a local date",
+   "expression": "formatDate(prop(\"Created\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-12-31 22:00"
+   }
+  },
+  {
+   "name": "edited time is a local date",
+   "expression": "formatDate(prop(\"Edited\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-01 01:15"
+   }
+  },
+  {
+   "name": "created time is a date with a time",
+   "expression": "prop(\"Created\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-12-31",
+     "time": "22:00"
+    }
+   }
+  },
+  {
+   "name": "edited minus created",
+   "expression": "dateBetween(prop(\"Edited\"), prop(\"Created\"), \"minutes\")",
+   "result": {
+    "type": "number",
+    "data": 195
+   }
+  },
+  {
+   "name": "now minus created",
+   "expression": "dateBetween(now(), prop(\"Created\"), \"hours\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "an unknown creation time is empty",
+   "page": "p2",
+   "expression": "prop(\"Created\")",
+   "result": null
+  },
+  {
+   "name": "parseDate a day",
+   "expression": "formatDate(parseDate(\"2026-10-18\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-10-18 00:00"
+   }
+  },
+  {
+   "name": "parseDate a day is a date without a time",
+   "expression": "parseDate(\"2026-10-18\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-18"
+    }
+   }
+  },
+  {
+   "name": "parseDate with a T",
+   "expression": "parseDate(\"2026-10-18T09:30\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-18",
+     "time": "09:30"
+    }
+   }
+  },
+  {
+   "name": "parseDate with a space",
+   "expression": "parseDate(\"2026-10-18 09:30\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-18",
+     "time": "09:30"
+    }
+   }
+  },
+  {
+   "name": "parseDate with seconds drops them on output",
+   "expression": "parseDate(\"2026-10-18T09:30:45\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-18",
+     "time": "09:30"
+    }
+   }
+  },
+  {
+   "name": "parseDate keeps the seconds in arithmetic",
+   "expression": "formatDate(parseDate(\"2026-10-18T09:30:45\"), \"HH:mm:ss\")",
+   "result": {
+    "type": "text",
+    "data": "09:30:45"
+   }
+  },
+  {
+   "name": "seconds count in a difference",
+   "expression": "dateBetween(parseDate(\"2026-10-18T09:30:45\"), parseDate(\"2026-10-18T09:30\"), \"minutes\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a leap day",
+   "expression": "parseDate(\"2024-02-29\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2024-02-29"
+    }
+   }
+  },
+  {
+   "name": "the year 2000 is a leap year",
+   "expression": "parseDate(\"2000-02-29\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2000-02-29"
+    }
+   }
+  },
+  {
+   "name": "the year 1900 is not",
+   "expression": "parseDate(\"1900-02-29\")",
+   "result": null
+  },
+  {
+   "name": "a bad leap day",
+   "expression": "parseDate(\"2025-02-29\")",
+   "result": null
+  },
+  {
+   "name": "a bad day of the month",
+   "expression": "parseDate(\"2026-02-30\")",
+   "result": null
+  },
+  {
+   "name": "a bad month",
+   "expression": "parseDate(\"2026-13-01\")",
+   "result": null
+  },
+  {
+   "name": "month zero",
+   "expression": "parseDate(\"2026-00-10\")",
+   "result": null
+  },
+  {
+   "name": "day zero",
+   "expression": "parseDate(\"2026-10-00\")",
+   "result": null
+  },
+  {
+   "name": "the empty text",
+   "expression": "parseDate(\"\")",
+   "result": null
+  },
+  {
+   "name": "hour 25",
+   "expression": "parseDate(\"2026-10-18T25:00\")",
+   "result": null
+  },
+  {
+   "name": "hour 24",
+   "expression": "parseDate(\"2026-10-18T24:00\")",
+   "result": null
+  },
+  {
+   "name": "minute 60",
+   "expression": "parseDate(\"2026-10-18T09:60\")",
+   "result": null
+  },
+  {
+   "name": "second 60",
+   "expression": "parseDate(\"2026-10-18T09:30:60\")",
+   "result": null
+  },
+  {
+   "name": "a european date",
+   "expression": "parseDate(\"18/10/2026\")",
+   "result": null
+  },
+  {
+   "name": "a time zone suffix",
+   "expression": "parseDate(\"2026-10-18T09:30Z\")",
+   "result": null
+  },
+  {
+   "name": "a short month",
+   "expression": "parseDate(\"2026-1-5\")",
+   "result": null
+  },
+  {
+   "name": "a leading space",
+   "expression": "parseDate(\" 2026-10-18\")",
+   "result": null
+  },
+  {
+   "name": "a trailing space",
+   "expression": "parseDate(\"2026-10-18 \")",
+   "result": null
+  },
+  {
+   "name": "a one digit hour",
+   "expression": "parseDate(\"2026-10-18T9:30\")",
+   "result": null
+  },
+  {
+   "name": "a date and a dot",
+   "expression": "parseDate(\"2026.10.18\")",
+   "result": null
+  },
+  {
+   "name": "the first year",
+   "expression": "parseDate(\"0001-01-01\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "0001-01-01"
+    }
+   }
+  },
+  {
+   "name": "the last day",
+   "expression": "parseDate(\"9999-12-31T23:59\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "9999-12-31",
+     "time": "23:59"
+    }
+   }
+  },
+  {
+   "name": "parseDate of a number is a type error",
+   "expression": "parseDate(20261018)",
+   "error": "type",
+   "at": 10
+  },
+  {
+   "name": "year",
+   "expression": "year(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 2026
+   }
+  },
+  {
+   "name": "month",
+   "expression": "month(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "date",
+   "expression": "date(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 18
+   }
+  },
+  {
+   "name": "day of a sunday",
+   "expression": "day(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "day of a monday",
+   "expression": "day(parseDate(\"2026-10-19\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "day of a thursday",
+   "expression": "day(parseDate(\"1970-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "day before the epoch",
+   "expression": "day(parseDate(\"1969-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "hour",
+   "expression": "hour(parseDate(\"2026-10-18T13:45\"))",
+   "result": {
+    "type": "number",
+    "data": 13
+   }
+  },
+  {
+   "name": "minute",
+   "expression": "minute(parseDate(\"2026-10-18T13:45\"))",
+   "result": {
+    "type": "number",
+    "data": 45
+   }
+  },
+  {
+   "name": "hour of a day without a time",
+   "expression": "hour(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "parts as methods",
+   "expression": "parseDate(\"2026-10-18\").month()",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "an unset date has no year",
+   "page": "p2",
+   "expression": "year(prop(\"Due\"))",
+   "result": null
+  },
+  {
+   "name": "year of a text is a type error",
+   "expression": "year(\"2026\")",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "ISO week of 2021-01-03",
+   "expression": "week(parseDate(\"2021-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2021-01-03",
+   "expression": "day(parseDate(\"2021-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "ISO week of 2021-01-04",
+   "expression": "week(parseDate(\"2021-01-04\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2021-01-04",
+   "expression": "day(parseDate(\"2021-01-04\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2020-12-31",
+   "expression": "week(parseDate(\"2020-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2020-12-31",
+   "expression": "day(parseDate(\"2020-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "ISO week of 2026-12-31",
+   "expression": "week(parseDate(\"2026-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2026-12-31",
+   "expression": "day(parseDate(\"2026-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "ISO week of 2024-12-30",
+   "expression": "week(parseDate(\"2024-12-30\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2024-12-30",
+   "expression": "day(parseDate(\"2024-12-30\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2023-01-01",
+   "expression": "week(parseDate(\"2023-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 52
+   }
+  },
+  {
+   "name": "ISO weekday of 2023-01-01",
+   "expression": "day(parseDate(\"2023-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "ISO week of 2026-01-01",
+   "expression": "week(parseDate(\"2026-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2026-01-01",
+   "expression": "day(parseDate(\"2026-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "ISO week of 2015-12-31",
+   "expression": "week(parseDate(\"2015-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2015-12-31",
+   "expression": "day(parseDate(\"2015-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "ISO week of 2016-01-03",
+   "expression": "week(parseDate(\"2016-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2016-01-03",
+   "expression": "day(parseDate(\"2016-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "ISO week of 2016-01-04",
+   "expression": "week(parseDate(\"2016-01-04\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2016-01-04",
+   "expression": "day(parseDate(\"2016-01-04\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2018-12-31",
+   "expression": "week(parseDate(\"2018-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2018-12-31",
+   "expression": "day(parseDate(\"2018-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2019-12-30",
+   "expression": "week(parseDate(\"2019-12-30\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2019-12-30",
+   "expression": "day(parseDate(\"2019-12-30\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2027-01-03",
+   "expression": "week(parseDate(\"2027-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 53
+   }
+  },
+  {
+   "name": "ISO weekday of 2027-01-03",
+   "expression": "day(parseDate(\"2027-01-03\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "ISO week of 2000-01-01",
+   "expression": "week(parseDate(\"2000-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 52
+   }
+  },
+  {
+   "name": "ISO weekday of 2000-01-01",
+   "expression": "day(parseDate(\"2000-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "ISO week of 2026-10-18",
+   "expression": "week(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 42
+   }
+  },
+  {
+   "name": "ISO weekday of 2026-10-18",
+   "expression": "day(parseDate(\"2026-10-18\"))",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "ISO week of 2020-02-29",
+   "expression": "week(parseDate(\"2020-02-29\"))",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "ISO weekday of 2020-02-29",
+   "expression": "day(parseDate(\"2020-02-29\"))",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "ISO week of 1999-12-31",
+   "expression": "week(parseDate(\"1999-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 52
+   }
+  },
+  {
+   "name": "ISO weekday of 1999-12-31",
+   "expression": "day(parseDate(\"1999-12-31\"))",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "ISO week of 0001-01-01",
+   "expression": "week(parseDate(\"0001-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 0001-01-01",
+   "expression": "day(parseDate(\"0001-01-01\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO week of 2024-06-15",
+   "expression": "week(parseDate(\"2024-06-15\"))",
+   "result": {
+    "type": "number",
+    "data": 24
+   }
+  },
+  {
+   "name": "ISO weekday of 2024-06-15",
+   "expression": "day(parseDate(\"2024-06-15\"))",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "ISO week of 2025-12-29",
+   "expression": "week(parseDate(\"2025-12-29\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ISO weekday of 2025-12-29",
+   "expression": "day(parseDate(\"2025-12-29\"))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "add a month to a leap January",
+   "expression": "formatDate(dateAdd(parseDate(\"2024-01-31\"), 1, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2024-02-29 00:00"
+   }
+  },
+  {
+   "name": "add thirteen months",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-31\"), 13, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-02-28 00:00"
+   }
+  },
+  {
+   "name": "add a year to a leap day",
+   "expression": "formatDate(dateAdd(parseDate(\"2024-02-29\"), 1, \"years\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2025-02-28 00:00"
+   }
+  },
+  {
+   "name": "add four years to a leap day",
+   "expression": "formatDate(dateAdd(parseDate(\"2024-02-29\"), 4, \"years\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2028-02-29 00:00"
+   }
+  },
+  {
+   "name": "add four months to the end of October",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-10-31\"), 4, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-02-28 00:00"
+   }
+  },
+  {
+   "name": "subtract a month from the end of March",
+   "expression": "formatDate(dateSubtract(parseDate(\"2026-03-31\"), 1, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-02-28 00:00"
+   }
+  },
+  {
+   "name": "add a month across the year",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-12-15\"), 1, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-15 00:00"
+   }
+  },
+  {
+   "name": "subtract two months across the year",
+   "expression": "formatDate(dateSubtract(parseDate(\"2026-01-15\"), 2, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2025-11-15 00:00"
+   }
+  },
+  {
+   "name": "add a day across the year",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-12-31\"), 1, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-01 00:00"
+   }
+  },
+  {
+   "name": "add a day across February",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-02-28\"), 1, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-03-01 00:00"
+   }
+  },
+  {
+   "name": "add a day across a leap February",
+   "expression": "formatDate(dateAdd(parseDate(\"2024-02-28\"), 1, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2024-02-29 00:00"
+   }
+  },
+  {
+   "name": "add minutes across the year",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-12-31T23:30\"), 45, \"minutes\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-01-01 00:15"
+   }
+  },
+  {
+   "name": "add hours to a day",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-01\"), 36, \"hours\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-01-02 12:00"
+   }
+  },
+  {
+   "name": "add weeks",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-01\"), 2, \"weeks\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-01-15 00:00"
+   }
+  },
+  {
+   "name": "add a quarter",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-01\"), 1, \"quarters\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-04-01 00:00"
+   }
+  },
+  {
+   "name": "add a quarter at the end of November",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-11-30\"), 1, \"quarters\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-02-28 00:00"
+   }
+  },
+  {
+   "name": "add a fractional count truncates",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-01\"), 1.9, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-01-02 00:00"
+   }
+  },
+  {
+   "name": "add a negative fractional count truncates",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-01\"), -1.9, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2025-12-31 00:00"
+   }
+  },
+  {
+   "name": "subtract a negative adds",
+   "expression": "formatDate(dateSubtract(parseDate(\"2026-01-01\"), -3, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-01-04 00:00"
+   }
+  },
+  {
+   "name": "add a month keeps the time",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-01-31T10:45\"), 1, \"months\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-02-28 10:45"
+   }
+  },
+  {
+   "name": "add a year to a time",
+   "expression": "formatDate(dateAdd(parseDate(\"2026-06-15T08:05\"), 1, \"years\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2027-06-15 08:05"
+   }
+  },
+  {
+   "name": "subtract a year across a leap day",
+   "expression": "formatDate(dateSubtract(parseDate(\"2024-02-29\"), 1, \"years\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2023-02-28 00:00"
+   }
+  },
+  {
+   "name": "subtract a day across the epoch",
+   "expression": "formatDate(dateSubtract(parseDate(\"1970-01-01\"), 1, \"days\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "1969-12-31 00:00"
+   }
+  },
+  {
+   "name": "subtract a year before the first one is empty",
+   "expression": "dateSubtract(parseDate(\"0001-01-15\"), 12, \"months\")",
+   "result": null
+  },
+  {
+   "name": "add hours gives a time",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 36, \"hours\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-02",
+     "time": "12:00"
+    }
+   }
+  },
+  {
+   "name": "add minutes gives a time",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 90, \"minutes\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-01",
+     "time": "01:30"
+    }
+   }
+  },
+  {
+   "name": "add days keeps no time",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1, \"days\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-02"
+    }
+   }
+  },
+  {
+   "name": "add days keeps the time",
+   "expression": "dateAdd(parseDate(\"2026-01-01T07:00\"), 1, \"days\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-02",
+     "time": "07:00"
+    }
+   }
+  },
+  {
+   "name": "an unknown unit is empty",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1, \"day\")",
+   "result": null
+  },
+  {
+   "name": "units are case sensitive",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1, \"Days\")",
+   "result": null
+  },
+  {
+   "name": "the unit may be computed",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1, \"da\" + \"ys\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-02"
+    }
+   }
+  },
+  {
+   "name": "past the last day is empty",
+   "expression": "dateAdd(parseDate(\"9999-12-31\"), 1, \"days\")",
+   "result": null
+  },
+  {
+   "name": "before the first day is empty",
+   "expression": "dateAdd(parseDate(\"0001-01-01\"), -1, \"days\")",
+   "result": null
+  },
+  {
+   "name": "year zero is not a date",
+   "expression": "parseDate(\"0000-06-15\")",
+   "result": null
+  },
+  {
+   "name": "a huge count is empty",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1e30, \"days\")",
+   "result": null
+  },
+  {
+   "name": "a huge month count is empty",
+   "expression": "dateAdd(parseDate(\"2026-01-01\"), 1e15, \"months\")",
+   "result": null
+  },
+  {
+   "name": "an unset date plus a day is empty",
+   "page": "p2",
+   "expression": "dateAdd(prop(\"Due\"), 1, \"days\")",
+   "result": null
+  },
+  {
+   "name": "an unset count is empty",
+   "expression": "dateAdd(prop(\"Due\"), 1 / 0, \"days\")",
+   "result": null
+  },
+  {
+   "name": "add to a property with a time",
+   "expression": "dateAdd(prop(\"When\"), 30, \"minutes\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-25",
+     "time": "15:15"
+    }
+   }
+  },
+  {
+   "name": "add months to a property",
+   "expression": "dateAdd(prop(\"Due\"), 1, \"months\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-11-25"
+    }
+   }
+  },
+  {
+   "name": "dateAdd method",
+   "expression": "prop(\"Due\").dateAdd(1, \"weeks\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-11-01"
+    }
+   }
+  },
+  {
+   "name": "dateSubtract method",
+   "expression": "prop(\"Due\").dateSubtract(25, \"days\")",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-09-30"
+    }
+   }
+  },
+  {
+   "name": "dateAdd needs a date",
+   "expression": "dateAdd(\"2026-01-01\", 1, \"days\")",
+   "error": "type",
+   "at": 8
+  },
+  {
+   "name": "dateAdd needs a unit text",
+   "expression": "dateAdd(today(), 1, 1)",
+   "error": "type",
+   "at": 20
+  },
+  {
+   "name": "dateAdd needs a number",
+   "expression": "dateAdd(today(), \"1\", \"days\")",
+   "error": "type",
+   "at": 17
+  },
+  {
+   "name": "negative days",
+   "expression": "dateBetween(parseDate(\"2026-01-01\"), parseDate(\"2026-01-10\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": -9
+   }
+  },
+  {
+   "name": "days over a leap year",
+   "expression": "dateBetween(parseDate(\"2025-12-31\"), parseDate(\"2024-12-31\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": 365
+   }
+  },
+  {
+   "name": "days over a leap february",
+   "expression": "dateBetween(parseDate(\"2024-03-01\"), parseDate(\"2024-02-01\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": 29
+   }
+  },
+  {
+   "name": "hours truncated toward zero",
+   "expression": "dateBetween(parseDate(\"2026-01-01T00:00\"), parseDate(\"2026-01-01T01:59\"), \"hours\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "hours positive",
+   "expression": "dateBetween(parseDate(\"2026-01-01T03:59\"), parseDate(\"2026-01-01T00:00\"), \"hours\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "minutes",
+   "expression": "dateBetween(parseDate(\"2026-01-01T01:30\"), parseDate(\"2026-01-01T00:00\"), \"minutes\")",
+   "result": {
+    "type": "number",
+    "data": 90
+   }
+  },
+  {
+   "name": "minutes negative",
+   "expression": "dateBetween(parseDate(\"2026-01-01T00:00\"), parseDate(\"2026-01-01T00:01:59\"), \"minutes\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "weeks",
+   "expression": "dateBetween(parseDate(\"2026-01-10\"), parseDate(\"2026-01-01\"), \"weeks\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "weeks negative",
+   "expression": "dateBetween(parseDate(\"2026-01-01\"), parseDate(\"2026-01-10\"), \"weeks\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "weeks of thirteen days",
+   "expression": "dateBetween(parseDate(\"2026-01-14\"), parseDate(\"2026-01-01\"), \"weeks\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "months at the end of January",
+   "expression": "dateBetween(parseDate(\"2026-01-31\"), parseDate(\"2026-02-28\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "months from the end of February",
+   "expression": "dateBetween(parseDate(\"2026-03-31\"), parseDate(\"2026-02-28\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "months short of the day",
+   "expression": "dateBetween(parseDate(\"2026-03-30\"), parseDate(\"2026-01-31\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "months exactly",
+   "expression": "dateBetween(parseDate(\"2026-03-31\"), parseDate(\"2026-01-31\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "months short of the time",
+   "expression": "dateBetween(parseDate(\"2026-03-15T10:00\"), parseDate(\"2026-02-15T11:00\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "months at the time",
+   "expression": "dateBetween(parseDate(\"2026-03-15T11:00\"), parseDate(\"2026-02-15T11:00\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "months negative short of the time",
+   "expression": "dateBetween(parseDate(\"2026-02-15T11:00\"), parseDate(\"2026-03-15T10:00\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "months negative exactly",
+   "expression": "dateBetween(parseDate(\"2026-02-15\"), parseDate(\"2026-03-15\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "months negative short",
+   "expression": "dateBetween(parseDate(\"2026-02-16\"), parseDate(\"2026-03-15\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "months across years",
+   "expression": "dateBetween(parseDate(\"2027-02-01\"), parseDate(\"2026-11-01\"), \"months\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "quarters",
+   "expression": "dateBetween(parseDate(\"2026-12-31\"), parseDate(\"2026-01-01\"), \"quarters\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "quarters negative",
+   "expression": "dateBetween(parseDate(\"2026-01-01\"), parseDate(\"2026-12-31\"), \"quarters\")",
+   "result": {
+    "type": "number",
+    "data": -3
+   }
+  },
+  {
+   "name": "quarters short",
+   "expression": "dateBetween(parseDate(\"2026-03-31\"), parseDate(\"2026-01-01\"), \"quarters\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "years not yet",
+   "expression": "dateBetween(parseDate(\"2027-01-01\"), parseDate(\"2026-01-02\"), \"years\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "years exactly",
+   "expression": "dateBetween(parseDate(\"2027-01-02\"), parseDate(\"2026-01-02\"), \"years\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "years negative",
+   "expression": "dateBetween(parseDate(\"2025-01-02\"), parseDate(\"2026-01-02\"), \"years\")",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "years over leap days",
+   "expression": "dateBetween(parseDate(\"2028-02-29\"), parseDate(\"2024-02-29\"), \"years\")",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "years from a leap day",
+   "expression": "dateBetween(parseDate(\"2025-02-28\"), parseDate(\"2024-02-29\"), \"years\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the whole range in days",
+   "expression": "dateBetween(parseDate(\"9999-12-31\"), parseDate(\"0001-01-01\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": 3652058
+   }
+  },
+  {
+   "name": "an unknown unit is empty in dateBetween",
+   "expression": "dateBetween(today(), today(), \"weekz\")",
+   "result": null
+  },
+  {
+   "name": "an unset date is empty in dateBetween",
+   "page": "p2",
+   "expression": "dateBetween(prop(\"Due\"), today(), \"days\")",
+   "result": null
+  },
+  {
+   "name": "dateBetween method",
+   "expression": "prop(\"Due\").dateBetween(parseDate(\"2026-10-01\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": 24
+   }
+  },
+  {
+   "name": "dateBetween needs dates",
+   "expression": "dateBetween(1, today(), \"days\")",
+   "error": "type",
+   "at": 12
+  },
+  {
+   "name": "formatDate the date tokens",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"YYYY-MM-DD\")",
+   "result": {
+    "type": "text",
+    "data": "2026-03-04"
+   }
+  },
+  {
+   "name": "formatDate short tokens",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"D/M/YY\")",
+   "result": {
+    "type": "text",
+    "data": "4/3/26"
+   }
+  },
+  {
+   "name": "formatDate names",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"dddd, MMMM Do\")",
+   "result": {
+    "type": "text",
+    "data": "Wednesday, March 4th"
+   }
+  },
+  {
+   "name": "formatDate short names",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"ddd MMM D\")",
+   "result": {
+    "type": "text",
+    "data": "Wed Mar 4"
+   }
+  },
+  {
+   "name": "formatDate weekday number",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"d\")",
+   "result": {
+    "type": "text",
+    "data": "3"
+   }
+  },
+  {
+   "name": "formatDate quarter",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"Q\")",
+   "result": {
+    "type": "text",
+    "data": "1"
+   }
+  },
+  {
+   "name": "formatDate 24 hour",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"HH:mm:ss\")",
+   "result": {
+    "type": "text",
+    "data": "05:06:07"
+   }
+  },
+  {
+   "name": "formatDate short 24 hour",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"H:m:s\")",
+   "result": {
+    "type": "text",
+    "data": "5:6:7"
+   }
+  },
+  {
+   "name": "formatDate 12 hour",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"hh:mm a\")",
+   "result": {
+    "type": "text",
+    "data": "05:06 am"
+   }
+  },
+  {
+   "name": "formatDate upper meridiem",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "5:06 AM"
+   }
+  },
+  {
+   "name": "formatDate literal brackets",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"[YYYY] YYYY\")",
+   "result": {
+    "type": "text",
+    "data": "YYYY 2026"
+   }
+  },
+  {
+   "name": "formatDate a bracket text",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"[Week] W\")",
+   "result": {
+    "type": "text",
+    "data": "Week W"
+   }
+  },
+  {
+   "name": "formatDate a literal T",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"YYYY-MM-DDTHH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-03-04T05:06"
+   }
+  },
+  {
+   "name": "formatDate an unclosed bracket",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"[xyz YYYY\")",
+   "result": {
+    "type": "text",
+    "data": "[xyz 2026"
+   }
+  },
+  {
+   "name": "formatDate longest match first",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"MMMMM\")",
+   "result": {
+    "type": "text",
+    "data": "March3"
+   }
+  },
+  {
+   "name": "formatDate YYYYY",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"YYYYY\")",
+   "result": {
+    "type": "text",
+    "data": "2026Y"
+   }
+  },
+  {
+   "name": "formatDate the empty pattern",
+   "expression": "formatDate(parseDate(\"2026-03-04T05:06:07\"), \"\")",
+   "result": null
+  },
+  {
+   "name": "formatDate year of the first century",
+   "expression": "formatDate(parseDate(\"0007-01-01\"), \"YYYY YY\")",
+   "result": {
+    "type": "text",
+    "data": "0007 07"
+   }
+  },
+  {
+   "name": "formatDate a date without a time",
+   "expression": "formatDate(parseDate(\"2026-03-04\"), \"HH:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "00:00 AM"
+   }
+  },
+  {
+   "name": "ordinal 1",
+   "expression": "formatDate(parseDate(\"2026-01-01\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "1st"
+   }
+  },
+  {
+   "name": "ordinal 2",
+   "expression": "formatDate(parseDate(\"2026-01-02\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "2nd"
+   }
+  },
+  {
+   "name": "ordinal 3",
+   "expression": "formatDate(parseDate(\"2026-01-03\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "3rd"
+   }
+  },
+  {
+   "name": "ordinal 4",
+   "expression": "formatDate(parseDate(\"2026-01-04\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "4th"
+   }
+  },
+  {
+   "name": "ordinal 10",
+   "expression": "formatDate(parseDate(\"2026-01-10\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "10th"
+   }
+  },
+  {
+   "name": "ordinal 11",
+   "expression": "formatDate(parseDate(\"2026-01-11\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "11th"
+   }
+  },
+  {
+   "name": "ordinal 12",
+   "expression": "formatDate(parseDate(\"2026-01-12\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "12th"
+   }
+  },
+  {
+   "name": "ordinal 13",
+   "expression": "formatDate(parseDate(\"2026-01-13\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "13th"
+   }
+  },
+  {
+   "name": "ordinal 14",
+   "expression": "formatDate(parseDate(\"2026-01-14\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "14th"
+   }
+  },
+  {
+   "name": "ordinal 21",
+   "expression": "formatDate(parseDate(\"2026-01-21\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "21st"
+   }
+  },
+  {
+   "name": "ordinal 22",
+   "expression": "formatDate(parseDate(\"2026-01-22\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "22nd"
+   }
+  },
+  {
+   "name": "ordinal 23",
+   "expression": "formatDate(parseDate(\"2026-01-23\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "23rd"
+   }
+  },
+  {
+   "name": "ordinal 24",
+   "expression": "formatDate(parseDate(\"2026-01-24\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "24th"
+   }
+  },
+  {
+   "name": "ordinal 30",
+   "expression": "formatDate(parseDate(\"2026-01-30\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "30th"
+   }
+  },
+  {
+   "name": "ordinal 31",
+   "expression": "formatDate(parseDate(\"2026-01-31\"), \"Do\")",
+   "result": {
+    "type": "text",
+    "data": "31st"
+   }
+  },
+  {
+   "name": "12 hour clock at 0",
+   "expression": "formatDate(parseDate(\"2026-01-01T00:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "12:05 AM"
+   }
+  },
+  {
+   "name": "12 hour clock at 1",
+   "expression": "formatDate(parseDate(\"2026-01-01T01:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "1:05 AM"
+   }
+  },
+  {
+   "name": "12 hour clock at 11",
+   "expression": "formatDate(parseDate(\"2026-01-01T11:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "11:05 AM"
+   }
+  },
+  {
+   "name": "12 hour clock at 12",
+   "expression": "formatDate(parseDate(\"2026-01-01T12:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "12:05 PM"
+   }
+  },
+  {
+   "name": "12 hour clock at 13",
+   "expression": "formatDate(parseDate(\"2026-01-01T13:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "1:05 PM"
+   }
+  },
+  {
+   "name": "12 hour clock at 23",
+   "expression": "formatDate(parseDate(\"2026-01-01T23:05\"), \"h:mm A\")",
+   "result": {
+    "type": "text",
+    "data": "11:05 PM"
+   }
+  },
+  {
+   "name": "month name 1",
+   "expression": "formatDate(parseDate(\"2026-01-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "January Jan 01 1"
+   }
+  },
+  {
+   "name": "month name 2",
+   "expression": "formatDate(parseDate(\"2026-02-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "February Feb 02 2"
+   }
+  },
+  {
+   "name": "month name 3",
+   "expression": "formatDate(parseDate(\"2026-03-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "March Mar 03 3"
+   }
+  },
+  {
+   "name": "month name 4",
+   "expression": "formatDate(parseDate(\"2026-04-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "April Apr 04 4"
+   }
+  },
+  {
+   "name": "month name 5",
+   "expression": "formatDate(parseDate(\"2026-05-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "May May 05 5"
+   }
+  },
+  {
+   "name": "month name 6",
+   "expression": "formatDate(parseDate(\"2026-06-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "June Jun 06 6"
+   }
+  },
+  {
+   "name": "month name 7",
+   "expression": "formatDate(parseDate(\"2026-07-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "July Jul 07 7"
+   }
+  },
+  {
+   "name": "month name 8",
+   "expression": "formatDate(parseDate(\"2026-08-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "August Aug 08 8"
+   }
+  },
+  {
+   "name": "month name 9",
+   "expression": "formatDate(parseDate(\"2026-09-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "September Sep 09 9"
+   }
+  },
+  {
+   "name": "month name 10",
+   "expression": "formatDate(parseDate(\"2026-10-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "October Oct 10 10"
+   }
+  },
+  {
+   "name": "month name 11",
+   "expression": "formatDate(parseDate(\"2026-11-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "November Nov 11 11"
+   }
+  },
+  {
+   "name": "month name 12",
+   "expression": "formatDate(parseDate(\"2026-12-15\"), \"MMMM MMM MM M\")",
+   "result": {
+    "type": "text",
+    "data": "December Dec 12 12"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-18",
+   "expression": "formatDate(parseDate(\"2026-10-18\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Sunday Sun 0"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-19",
+   "expression": "formatDate(parseDate(\"2026-10-19\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Monday Mon 1"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-20",
+   "expression": "formatDate(parseDate(\"2026-10-20\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Tuesday Tue 2"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-21",
+   "expression": "formatDate(parseDate(\"2026-10-21\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Wednesday Wed 3"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-22",
+   "expression": "formatDate(parseDate(\"2026-10-22\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Thursday Thu 4"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-23",
+   "expression": "formatDate(parseDate(\"2026-10-23\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Friday Fri 5"
+   }
+  },
+  {
+   "name": "weekday name of 2026-10-24",
+   "expression": "formatDate(parseDate(\"2026-10-24\"), \"dddd ddd d\")",
+   "result": {
+    "type": "text",
+    "data": "Saturday Sat 6"
+   }
+  },
+  {
+   "name": "formatDate of an unset date is empty",
+   "page": "p2",
+   "expression": "formatDate(prop(\"Due\"), \"YYYY\")",
+   "result": null
+  },
+  {
+   "name": "formatDate method",
+   "expression": "prop(\"Due\").formatDate(\"D MMM\")",
+   "result": {
+    "type": "text",
+    "data": "25 Oct"
+   }
+  },
+  {
+   "name": "formatDate a time property",
+   "expression": "formatDate(prop(\"When\"), \"HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "14:45"
+   }
+  },
+  {
+   "name": "formatDate needs a text",
+   "expression": "formatDate(today(), 1)",
+   "error": "type",
+   "at": 20
+  },
+  {
+   "name": "formatDate arity",
+   "expression": "formatDate(today())",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "min of dates",
+   "expression": "min(parseDate(\"2026-01-05\"), parseDate(\"2025-12-31\"), parseDate(\"2026-06-01\"))",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2025-12-31"
+    }
+   }
+  },
+  {
+   "name": "max of dates",
+   "expression": "max(parseDate(\"2026-01-05\"), parseDate(\"2025-12-31\"), parseDate(\"2026-06-01\"))",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-06-01"
+    }
+   }
+  },
+  {
+   "name": "max of a list of dates",
+   "expression": "[parseDate(\"2026-01-01\"), parseDate(\"2026-03-01\")].max()",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-03-01"
+    }
+   }
+  },
+  {
+   "name": "max keeps the time of the winner",
+   "expression": "max(parseDate(\"2026-01-01T10:00\"), parseDate(\"2026-01-01\"))",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-01",
+     "time": "10:00"
+    }
+   }
+  },
+  {
+   "name": "min keeps no time when the day wins",
+   "expression": "min(parseDate(\"2026-01-01T10:00\"), parseDate(\"2026-01-01\"))",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-01"
+    }
+   }
+  },
+  {
+   "name": "sort dates",
+   "expression": "sort([parseDate(\"2026-03-01\"), parseDate(\"2026-01-01\"), parseDate(\"2026-02-01\")])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-01-01"
+      }
+     },
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-02-01"
+      }
+     },
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-03-01"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "a date list type",
+   "expression": "[parseDate(\"2026-03-01\")]",
+   "type": {
+    "base": "date",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-03-01"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "a day is less than the next minute",
+   "expression": "parseDate(\"2026-01-01\") < parseDate(\"2026-01-01T00:01\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a day is at most its midnight",
+   "expression": "parseDate(\"2026-01-01\") <= parseDate(\"2026-01-01T00:00\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a date property equals the same day",
+   "expression": "prop(\"Due\") == parseDate(\"2026-10-25\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a date with a time property differs",
+   "expression": "prop(\"When\") == parseDate(\"2026-10-25\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "a date property with a time",
+   "expression": "prop(\"When\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-25",
+     "time": "14:45"
+    }
+   }
+  },
+  {
+   "name": "hour of a property",
+   "expression": "hour(prop(\"When\"))",
+   "result": {
+    "type": "number",
+    "data": 14
+   }
+  },
+  {
+   "name": "a date is not a number",
+   "expression": "today() < 1",
+   "error": "type",
+   "at": 10
+  },
+  {
+   "name": "now plus a text",
+   "expression": "now() + \"x\"",
+   "result": {
+    "type": "text",
+    "data": "December 31, 2026 11:30 PMx"
+   }
+  }
+ ]
+}

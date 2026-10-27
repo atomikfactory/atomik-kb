@@ -1,0 +1,18 @@
+[package]
+name = "kb-mcp"
+description = "The MCP server protocol of atomik-kb (ADR-0037): JSON-RPC 2.0, the MCP lifecycle, the tool catalog and argument parsing over a backend trait; and kb-mcp-bridge, the stdio bridge to the app's loopback server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "kb-mcp-bridge"
+path = "src/bin/kb-mcp-bridge.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

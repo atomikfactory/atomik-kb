@@ -1,0 +1,28 @@
+[package]
+name = "kb-import"
+description = "Import of Markdown, text, HTML, CSV, Notion exports and AppFlowy backups into atomik-kb pages: the import plan and its resolution (ADR-0036, ADR-0039)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-model = { workspace = true }
+serde_json = { workspace = true }
+pulldown-cmark = { workspace = true }
+scraper = { workspace = true }
+html5ever = { workspace = true }
+csv = { workspace = true }
+yaml-rust2 = { workspace = true }
+percent-encoding = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+kb-doc = { workspace = true }
+# The round trip tests import what `kb-export` writes (an export of ADR-0036 and its people, ADR-0049).
+kb-export = { workspace = true }
+
+[lints]
+workspace = true

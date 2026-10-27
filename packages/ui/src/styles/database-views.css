@@ -1,0 +1,650 @@
+/*
+ * The tab strip of a database block's views and the filter groups of its filter editor (ADR-0054), agent B. Also the
+ * rules that move with the list, table and board onto the layout registry.
+ *
+ * Its own file so that the agents of the batch do not edit one 11,000-line stylesheet at once; `index.css` loads it after
+ * `app.css`, so its rules win a tie with the older ones. Colours and spacing come from the variables of `app.css`.
+ */
+
+/* ---- The tab strip of the views (PageListViewTabs.tsx) ---- */
+
+.page-editor-content .page-list-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 4px 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.page-editor-content .page-list-tabs {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.page-editor-content .page-list-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.page-editor-content .page-list-tab-item {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  max-width: 14rem;
+  color: var(--text-muted);
+  border-radius: 6px;
+}
+
+.page-editor-content .page-list-tab-item:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-tab-item[data-active] {
+  color: var(--text);
+  background: var(--selected);
+}
+
+.page-editor-content .page-list-tab {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-tab svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.page-editor-content .page-list-tab-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-list-tab[aria-selected="true"] {
+  font-weight: 600;
+}
+
+.page-editor-content .page-list-tab-menu {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-tab-menu svg {
+  width: 14px;
+  height: 14px;
+}
+
+.page-editor-content .page-list-tab-item:hover .page-list-tab-menu,
+.page-editor-content .page-list-tab-item:focus-within .page-list-tab-menu,
+.page-editor-content .page-list-tab-item[data-active] .page-list-tab-menu {
+  opacity: 1;
+}
+
+.page-editor-content .page-list-tab-menu:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-tab-input {
+  width: 10rem;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85em;
+}
+
+.page-editor-content .page-list-tab-add {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-tab-add svg {
+  width: 14px;
+  height: 14px;
+}
+
+.page-editor-content .page-list-tab-add:hover:not(:disabled),
+.page-editor-content .page-list-tab-add[aria-expanded="true"] {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-tab-add:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.page-editor-content .page-list-tabs-limit {
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+
+.page-editor-content .page-list-tab:focus-visible,
+.page-editor-content .page-list-tab-menu:focus-visible,
+.page-editor-content .page-list-tab-add:focus-visible,
+.page-editor-content .page-list-tab-input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+/*
+ * The toolbar at the end of the tab row (PageListToolbar.tsx): Filter, Sort, Properties and the view settings button, one
+ * row that never wraps (it fits a 400 px column). It stays on the tabs' line while there is room and drops under them,
+ * at the end of its own line, when there is not (the row wraps; the tabs and their "+" stay together in a group).
+ */
+
+.page-editor-content .page-list-tabs-row {
+  flex-wrap: wrap;
+}
+
+.page-editor-content .page-list-tabs-group {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.page-editor-content .page-list-toolbar {
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 2px;
+  margin-left: auto;
+}
+
+/* The bar says what is active (a filter, a sort) even while the pointer is away. */
+.page-editor-content .page-list-toolbar[data-badged] {
+  opacity: 1;
+}
+
+.page-editor-content .page-list-toolbar .page-list-button {
+  gap: 6px;
+  max-width: none;
+  padding: 0 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border-color: transparent;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-list-toolbar .page-list-button:hover,
+.page-editor-content .page-list-toolbar .page-list-button[aria-expanded="true"] {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-toolbar .page-list-count {
+  white-space: normal;
+}
+
+.page-editor-content .page-list-toolbar .page-list-settings-button {
+  justify-content: center;
+  width: 26px;
+  padding: 0;
+}
+
+.page-editor-content .page-list-toolbar .page-list-settings-button svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* The number on Filter (how many filters) and Sort (a sort is set), in the accent colour. */
+.page-list-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  color: var(--accent-text);
+  background: var(--accent);
+  border-radius: 8px;
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* The sort and the view settings popovers (floating panels in the page's body, outside the editor). */
+.page-list-popover {
+  display: grid;
+  gap: 8px;
+  width: 260px;
+  padding: 8px;
+}
+
+.page-list-field {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.page-list-field-label {
+  color: var(--text-muted);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.page-list-popover .page-list-select {
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.page-list-popover .page-list-select:hover {
+  background: var(--surface-hover);
+}
+
+.page-list-popover .page-list-select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* The layout's own settings: a labelled section between the common ones. */
+.page-list-settings-section {
+  display: grid;
+  gap: 8px;
+  padding: 8px 0;
+  border-block: 1px solid var(--border);
+}
+
+.page-list-settings-title {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.page-list-settings-list {
+  display: grid;
+  gap: 2px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.page-list-field-label .page-list-count {
+  font-weight: 400;
+  white-space: pre;
+}
+
+.page-list-settings-actions {
+  margin: 0 -4px -4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- The filter groups of the filter editor (PageListFilters.tsx) ---- */
+
+.page-filter-match {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.page-filter-match .page-list-select {
+  height: 26px;
+  padding: 0 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 1em;
+}
+
+/* A group is a box inside the panel: its own match control and remove button, its rows, its add button. */
+.page-filter-group {
+  display: grid;
+  gap: 6px;
+  padding: 6px 8px 6px 10px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.page-filter-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.page-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.page-filters .page-filter-add:focus-visible,
+.page-filters .icon-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* ---- The sort keys of the sort popover (PageListToolbar.tsx, ADR-0058): a row per key, then "Add a sort" ---- */
+
+.page-list-popover.page-list-sorts {
+  width: 340px;
+  max-width: 92vw;
+}
+
+.page-sort-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* The property takes the room, the direction its text. */
+.page-list-popover .page-sort-row .page-list-select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.page-list-popover .page-sort-row .page-list-select:nth-of-type(2) {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.page-list-sorts .page-filter-add:focus-visible,
+.page-list-sorts .icon-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-editor-content .page-list-tab-menu {
+    transition: none;
+  }
+}
+
+@media print {
+  .page-editor-content .page-list-tabs-row {
+    display: none;
+  }
+}
+
+/* ---- Database templates: the menu next to "New" (NewPageMenu.tsx, ADR-0056, agent D) ----
+ * A chevron button beside each layout's "New" control opens a menu of the templates of the block's source. The menu is
+ * a portal (outside `.page-editor-content`), so its rules are not scoped to the editor. */
+
+.page-editor-content .database-new-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* The list's button keeps its own top margin, so the group takes it and the button gives it up. */
+.page-editor-content .database-new-group.is-list {
+  margin: 4px 0 0;
+}
+
+.page-editor-content .database-new-group.is-list > .page-list-new {
+  margin: 0;
+}
+
+/* The table's "New" row spans the grid; the menu button sits at its end. */
+.page-editor-content .database-new-group[data-wide] > .page-table-new {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.page-editor-content .database-new-trigger {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-editor-content .database-new-trigger:hover:not(:disabled),
+.page-editor-content .database-new-trigger[aria-expanded="true"] {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .database-new-trigger:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.page-editor-content .database-new-trigger:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.page-editor-content .database-new-trigger svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* A calendar day: its "+" and the menu button show when the pointer or the focus is on the day (always on touch screens). */
+.page-editor-content .page-calendar-adders {
+  display: inline-flex;
+  align-items: center;
+}
+
+.page-editor-content .page-calendar-day .database-new-trigger {
+  width: 18px;
+  height: 22px;
+  opacity: 0;
+}
+
+.page-editor-content .page-calendar-day:hover .database-new-trigger,
+.page-editor-content .page-calendar-day:focus-within .database-new-trigger,
+.page-editor-content .page-calendar-day .database-new-trigger[aria-expanded="true"] {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .page-editor-content .page-calendar-day .database-new-trigger {
+    opacity: 1;
+  }
+}
+
+/* The gallery's "New page" card: the menu button sits in the card's corner. */
+.page-editor-content .page-gallery-new {
+  position: relative;
+}
+
+.page-editor-content .page-gallery-new > .database-new-trigger {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* The menu. */
+.database-new-menu {
+  min-width: 240px;
+  max-width: min(360px, calc(100vw - 16px));
+  padding: 6px;
+}
+
+.database-new-body {
+  display: grid;
+  gap: 1px;
+}
+
+.database-new-heading {
+  margin: 0;
+  padding: 2px 10px;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.database-new-none {
+  margin: 0;
+  padding: 4px 10px;
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+.database-new-template {
+  display: grid;
+}
+
+.database-new-template-line {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.database-new-use {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  min-width: 0;
+}
+
+.database-new-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  color: var(--text-muted);
+}
+
+.database-new-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.database-new-default {
+  flex: none;
+  padding: 0 6px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.75em;
+  line-height: 1.6;
+}
+
+.database-new-more {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.database-new-more:hover,
+.database-new-more[aria-expanded="true"] {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.database-new-more:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.database-new-more svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* The row's actions open under it, indented. */
+.database-new-actions {
+  display: grid;
+  margin: 0 0 4px 22px;
+  padding-left: 6px;
+  border-left: 2px solid var(--border);
+}
+
+.database-new-separator {
+  margin: 4px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.database-new-create {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.database-new-create svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+@media print {
+  .page-editor-content :is(.database-new-group, .database-new-trigger, .page-calendar-adders) {
+    display: none !important;
+  }
+}

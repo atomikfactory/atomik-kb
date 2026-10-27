@@ -1,0 +1,1509 @@
+{
+ "schema": [
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  },
+  {
+   "id": "link",
+   "name": "Link",
+   "kind": "url"
+  },
+  {
+   "id": "mail",
+   "name": "Mail",
+   "kind": "email"
+  },
+  {
+   "id": "tel",
+   "name": "Tel",
+   "kind": "phone"
+  },
+  {
+   "id": "place",
+   "name": "Place",
+   "kind": "place"
+  },
+  {
+   "id": "pick",
+   "name": "Pick",
+   "kind": "select",
+   "options": [
+    {
+     "id": "a",
+     "name": "Alpha"
+    },
+    {
+     "id": "b",
+     "name": "Beta"
+    }
+   ]
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    }
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "note": {
+     "kind": "text",
+     "value": "Hello World"
+    },
+    "link": {
+     "kind": "url",
+     "value": "https://example.com/a"
+    },
+    "mail": {
+     "kind": "email",
+     "value": "ada@example.com"
+    },
+    "tel": {
+     "kind": "phone",
+     "value": "+1 555 0100"
+    },
+    "place": {
+     "kind": "place",
+     "value": {
+      "name": "Café de Flore",
+      "lat": 48.854,
+      "lon": 2.333
+     }
+    },
+    "pick": {
+     "kind": "select",
+     "value": "b"
+    },
+    "tags": {
+     "kind": "multi_select",
+     "value": [
+      "t1",
+      "t2"
+     ]
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Empty",
+   "values": {}
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "text property",
+   "expression": "prop(\"Note\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Hello World"
+   }
+  },
+  {
+   "name": "url property",
+   "expression": "prop(\"Link\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "https://example.com/a"
+   }
+  },
+  {
+   "name": "email property",
+   "expression": "prop(\"Mail\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "ada@example.com"
+   }
+  },
+  {
+   "name": "phone property",
+   "expression": "prop(\"Tel\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "+1 555 0100"
+   }
+  },
+  {
+   "name": "place property is its name",
+   "expression": "prop(\"Place\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Café de Flore"
+   }
+  },
+  {
+   "name": "select property is its name",
+   "expression": "prop(\"Pick\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Beta"
+   }
+  },
+  {
+   "name": "unset text",
+   "page": "p2",
+   "expression": "prop(\"Note\")",
+   "result": null
+  },
+  {
+   "name": "unset url equals the empty text",
+   "page": "p2",
+   "expression": "prop(\"Link\") == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unset place has no length",
+   "page": "p2",
+   "expression": "length(prop(\"Place\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "unset select equals the empty text",
+   "page": "p2",
+   "expression": "prop(\"Pick\") == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unset select is empty",
+   "page": "p2",
+   "expression": "empty(prop(\"Pick\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unset tags have no items",
+   "page": "p2",
+   "expression": "prop(\"Tags\").length()",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "text kinds can be combined",
+   "expression": "prop(\"Pick\") + \": \" + prop(\"Note\")",
+   "result": {
+    "type": "text",
+    "data": "Beta: Hello World"
+   }
+  },
+  {
+   "name": "length of nothing",
+   "expression": "length(\"\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "length with accents",
+   "expression": "length(\"héllo\")",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "length of two emoji",
+   "expression": "length(\"😀😀\")",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "length of a newline text",
+   "expression": "length(\"a\\nb\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "length of a property",
+   "expression": "length(prop(\"Note\"))",
+   "result": {
+    "type": "number",
+    "data": 11
+   }
+  },
+  {
+   "name": "length of an unset property",
+   "page": "p2",
+   "expression": "length(prop(\"Note\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "length method on a literal",
+   "expression": "\"abc\".length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "length of a list",
+   "expression": "length([1, 2, 3])",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "length of a number",
+   "expression": "length(1)",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "substring from",
+   "expression": "substring(\"hello\", 1)",
+   "result": {
+    "type": "text",
+    "data": "ello"
+   }
+  },
+  {
+   "name": "substring range",
+   "expression": "substring(\"hello\", 1, 3)",
+   "result": {
+    "type": "text",
+    "data": "el"
+   }
+  },
+  {
+   "name": "substring end before start",
+   "expression": "length(substring(\"hello\", 3, 1))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "substring end before start has no value",
+   "expression": "substring(\"hello\", 3, 1)",
+   "result": null
+  },
+  {
+   "name": "substring negative start is clamped",
+   "expression": "substring(\"hello\", -2)",
+   "result": {
+    "type": "text",
+    "data": "hello"
+   }
+  },
+  {
+   "name": "substring end is clamped",
+   "expression": "substring(\"hello\", 2, 99)",
+   "result": {
+    "type": "text",
+    "data": "llo"
+   }
+  },
+  {
+   "name": "substring of nothing",
+   "expression": "substring(\"hello\", 0, 0)",
+   "result": null
+  },
+  {
+   "name": "substring truncates fractions",
+   "expression": "substring(\"hello\", 1.9, 3.9)",
+   "result": {
+    "type": "text",
+    "data": "el"
+   }
+  },
+  {
+   "name": "substring by code points",
+   "expression": "substring(\"😀a😀\", 1, 2)",
+   "result": {
+    "type": "text",
+    "data": "a"
+   }
+  },
+  {
+   "name": "substring from the end",
+   "expression": "substring(\"hello\", 5)",
+   "result": null
+  },
+  {
+   "name": "substring beyond the end",
+   "expression": "length(substring(\"hello\", 99))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "substring negative end",
+   "expression": "length(substring(\"hello\", 2, -1))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "substring method",
+   "expression": "\"hello\".substring(1, 4)",
+   "result": {
+    "type": "text",
+    "data": "ell"
+   }
+  },
+  {
+   "name": "contains",
+   "expression": "contains(\"hello\", \"ell\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "contains the empty text",
+   "expression": "contains(\"hello\", \"\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "contains is case sensitive",
+   "expression": "contains(\"hello\", \"L\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "contains of a property",
+   "expression": "contains(prop(\"Note\"), \"World\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the empty text contains the empty text",
+   "expression": "contains(\"\", \"\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "contains a number",
+   "expression": "contains(\"a1\", 1)",
+   "error": "type",
+   "at": 15
+  },
+  {
+   "name": "test finds a letter",
+   "expression": "test(\"abc\", \"b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test anchored",
+   "expression": "test(\"abc\", \"^b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test an escaped dot",
+   "expression": "test(\"a.c\", \"a\\\\.c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a dot matches anything",
+   "expression": "test(\"abc\", \"a.c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test is case sensitive",
+   "expression": "test(\"ABC\", \"abc\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test of an invalid pattern is empty",
+   "expression": "test(\"abc\", \"(\")",
+   "result": null
+  },
+  {
+   "name": "the dot does not match a newline",
+   "expression": "test(\"a\\nb\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the dot matches a letter of any alphabet",
+   "expression": "test(\"é\", \"^.$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the dot matches an emoji as one",
+   "expression": "test(\"😀\", \"^.$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "any char through a class",
+   "expression": "test(\"a\\nb\", \"a[\\\\s\\\\S]b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a word character is ASCII",
+   "expression": "test(\"é\", \"\\\\w\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test a non word character",
+   "expression": "test(\"é\", \"\\\\W\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a digit",
+   "expression": "test(\"a1\", \"\\\\d\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test an Arabic digit is not a digit",
+   "expression": "test(\"٣\", \"\\\\d\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test a non digit",
+   "expression": "test(\"é\", \"\\\\D\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a boundary",
+   "expression": "test(\"foo bar\", \"\\\\bbar\\\\b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test no boundary inside a word",
+   "expression": "test(\"foobar\", \"\\\\bbar\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test a boundary next to an accent",
+   "expression": "test(\"éfoo\", \"\\\\bfoo\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test alternation and groups",
+   "expression": "test(\"ab\", \"^(a|b)+$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test the empty text",
+   "expression": "test(\"\", \"^$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a lazy quantifier",
+   "expression": "test(\"aaa\", \"^a+?$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a counted quantifier",
+   "expression": "test(\"aaa\", \"^a{2,3}$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a counted quantifier too short",
+   "expression": "test(\"a\", \"^a{2,}$\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test a class with a range",
+   "expression": "test(\"m\", \"[a-f]\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test a negated class",
+   "expression": "test(\"m\", \"[^a-f]\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a non capturing group",
+   "expression": "test(\"abab\", \"^(?:ab)+$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a space class",
+   "expression": "test(\"a b\", \"a\\\\sb\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test an escaped slash",
+   "expression": "test(\"a/b\", \"a\\\\/b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test a literal bracket in a class",
+   "expression": "test(\"a[b\", \"[[]\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test an ampersand in a class",
+   "expression": "test(\"&\", \"[a&&b]\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test the empty class matches nothing",
+   "expression": "test(\"abc\", \"[]\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test the full class needs a char",
+   "expression": "test(\"\", \"^[^]$\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test the full class matches a char",
+   "expression": "test(\"x\", \"^[^]$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "match digits",
+   "expression": "match(\"a1b22c333\", \"\\\\d+\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "1"
+     },
+     {
+      "type": "text",
+      "data": "22"
+     },
+     {
+      "type": "text",
+      "data": "333"
+     }
+    ]
+   }
+  },
+  {
+   "name": "match nothing",
+   "expression": "match(\"abc\", \"\\\\d\")",
+   "result": null
+  },
+  {
+   "name": "match a letter twice",
+   "expression": "match(\"aXbX\", \"X\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "X"
+     },
+     {
+      "type": "text",
+      "data": "X"
+     }
+    ]
+   }
+  },
+  {
+   "name": "match empty matches",
+   "expression": "match(\"abc\", \"\").length()",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "match an empty pattern has no value",
+   "expression": "match(\"abc\", \"\")",
+   "result": null
+  },
+  {
+   "name": "match counts the empty matches like JavaScript",
+   "expression": "match(\"baac\", \"a*\").length()",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "match of an invalid pattern is empty",
+   "expression": "match(\"abc\", \"(\")",
+   "result": null
+  },
+  {
+   "name": "match a class with a dash",
+   "expression": "match(\"a-b_c d\", \"[\\\\w-]+\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a-b_c"
+     },
+     {
+      "type": "text",
+      "data": "d"
+     }
+    ]
+   }
+  },
+  {
+   "name": "match first",
+   "expression": "match(\"x1y2\", \"\\\\d\").first()",
+   "result": {
+    "type": "text",
+    "data": "1"
+   }
+  },
+  {
+   "name": "match methods",
+   "expression": "\"a1b2\".match(\"\\\\d\").join(\"+\")",
+   "result": {
+    "type": "text",
+    "data": "1+2"
+   }
+  },
+  {
+   "name": "replace the first",
+   "expression": "replace(\"aaa\", \"a\", \"b\")",
+   "result": {
+    "type": "text",
+    "data": "baa"
+   }
+  },
+  {
+   "name": "replace all",
+   "expression": "replaceAll(\"aaa\", \"a\", \"b\")",
+   "result": {
+    "type": "text",
+    "data": "bbb"
+   }
+  },
+  {
+   "name": "replace with a group",
+   "expression": "replace(\"abc\", \"(b)\", \"[$1]\")",
+   "result": {
+    "type": "text",
+    "data": "a[b]c"
+   }
+  },
+  {
+   "name": "replace with the whole match",
+   "expression": "replace(\"abc\", \"b\", \"$0$0\")",
+   "result": {
+    "type": "text",
+    "data": "abbc"
+   }
+  },
+  {
+   "name": "replace with a dollar",
+   "expression": "replace(\"abc\", \"b\", \"$$\")",
+   "result": {
+    "type": "text",
+    "data": "a$c"
+   }
+  },
+  {
+   "name": "replace with a lone dollar sign",
+   "expression": "replace(\"abc\", \"b\", \"$a\")",
+   "result": {
+    "type": "text",
+    "data": "a$ac"
+   }
+  },
+  {
+   "name": "replace with a trailing dollar",
+   "expression": "replace(\"abc\", \"b\", \"$\")",
+   "result": {
+    "type": "text",
+    "data": "a$c"
+   }
+  },
+  {
+   "name": "replace with an unmatched group",
+   "expression": "replace(\"abc\", \"(x)?b\", \"[$1]\")",
+   "result": {
+    "type": "text",
+    "data": "a[]c"
+   }
+  },
+  {
+   "name": "replace swaps date parts",
+   "expression": "replace(\"2026-10-18\", \"(\\\\d+)-(\\\\d+)\", \"$2/$1\")",
+   "result": {
+    "type": "text",
+    "data": "10/2026-18"
+   }
+  },
+  {
+   "name": "replace all with the match",
+   "expression": "replaceAll(\"a1b2\", \"\\\\d\", \"<$0>\")",
+   "result": {
+    "type": "text",
+    "data": "a<1>b<2>"
+   }
+  },
+  {
+   "name": "replace all empty matches",
+   "expression": "replaceAll(\"abc\", \"\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "-a-b-c-"
+   }
+  },
+  {
+   "name": "replace all like JavaScript",
+   "expression": "replaceAll(\"baac\", \"a*\", \"X\")",
+   "result": {
+    "type": "text",
+    "data": "XbXXcX"
+   }
+  },
+  {
+   "name": "replace nothing found",
+   "expression": "replace(\"Hello\", \"L\", \"x\")",
+   "result": {
+    "type": "text",
+    "data": "Hello"
+   }
+  },
+  {
+   "name": "replace a dot matches any",
+   "expression": "replace(\"a.b\", \".\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "-.b"
+   }
+  },
+  {
+   "name": "replace an escaped dot",
+   "expression": "replace(\"a.b\", \"\\\\.\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "a-b"
+   }
+  },
+  {
+   "name": "replace in the empty text",
+   "expression": "replace(\"\", \"^\", \"x\")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "replace with an invalid pattern is empty",
+   "expression": "replace(\"a\", \"(\", \"b\")",
+   "result": null
+  },
+  {
+   "name": "replace with an emoji",
+   "expression": "replaceAll(\"a😀b\", \"😀\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "a-b"
+   }
+  },
+  {
+   "name": "replace with groups in order",
+   "expression": "replace(\"ab\", \"(a)(b)\", \"$2$1\")",
+   "result": {
+    "type": "text",
+    "data": "ba"
+   }
+  },
+  {
+   "name": "replace method",
+   "expression": "\"a-b\".replaceAll(\"-\", \"+\")",
+   "result": {
+    "type": "text",
+    "data": "a+b"
+   }
+  },
+  {
+   "name": "replace result may be long",
+   "expression": "length(replaceAll(\"abc\", \"\", \"xxxx\"))",
+   "result": {
+    "type": "number",
+    "data": 19
+   }
+  },
+  {
+   "name": "split",
+   "expression": "split(\"a,b\", \",\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split into characters",
+   "expression": "split(\"abc\", \"\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     },
+     {
+      "type": "text",
+      "data": "c"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split by a long separator",
+   "expression": "split(\"a--b\", \"--\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split the empty text has no value",
+   "expression": "split(\"\", \",\")",
+   "result": null
+  },
+  {
+   "name": "split the empty text keeps one item",
+   "expression": "split(\"\", \",\").length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "split keeps a trailing empty",
+   "expression": "split(\"a,b,\", \",\").length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "split emoji into characters",
+   "expression": "split(\"😀a\", \"\").length()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "split then map",
+   "expression": "split(\"a,b\", \",\").map(upper(current))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "A"
+     },
+     {
+      "type": "text",
+      "data": "B"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split on spaces",
+   "expression": "split(\"a b  c\", \" \").length()",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "split method",
+   "expression": "\"x y\".split(\" \").last()",
+   "result": {
+    "type": "text",
+    "data": "y"
+   }
+  },
+  {
+   "name": "join",
+   "expression": "join([\"a\", \"b\"], \"-\")",
+   "result": {
+    "type": "text",
+    "data": "a-b"
+   }
+  },
+  {
+   "name": "join numbers",
+   "expression": "join([1, 2], \"+\")",
+   "result": {
+    "type": "text",
+    "data": "1+2"
+   }
+  },
+  {
+   "name": "join nothing has no value",
+   "expression": "join([], \",\")",
+   "result": null
+  },
+  {
+   "name": "join tags",
+   "expression": "join(prop(\"Tags\"), \", \")",
+   "result": {
+    "type": "text",
+    "data": "red, blue"
+   }
+  },
+  {
+   "name": "join with an empty item",
+   "expression": "join([\"a\", \"\", \"b\"], \"|\")",
+   "result": {
+    "type": "text",
+    "data": "a||b"
+   }
+  },
+  {
+   "name": "join numbers like JavaScript",
+   "expression": "join([0.1 + 0.2, 1e21], \" \")",
+   "result": {
+    "type": "text",
+    "data": "0.30000000000000004 1e+21"
+   }
+  },
+  {
+   "name": "join dates",
+   "expression": "join([parseDate(\"2026-01-05\"), parseDate(\"2026-01-06T09:00\")], \"; \")",
+   "result": {
+    "type": "text",
+    "data": "January 5, 2026; January 6, 2026 9:00 AM"
+   }
+  },
+  {
+   "name": "join booleans",
+   "expression": "join([true, false], \"/\")",
+   "result": {
+    "type": "text",
+    "data": "true/false"
+   }
+  },
+  {
+   "name": "join needs a list",
+   "expression": "join(\"a\", \",\")",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "join method",
+   "expression": "prop(\"Tags\").join(\"+\")",
+   "result": {
+    "type": "text",
+    "data": "red+blue"
+   }
+  },
+  {
+   "name": "lower",
+   "expression": "lower(\"ÀB\")",
+   "result": {
+    "type": "text",
+    "data": "àb"
+   }
+  },
+  {
+   "name": "upper with a sharp s",
+   "expression": "upper(\"ß\")",
+   "result": {
+    "type": "text",
+    "data": "SS"
+   }
+  },
+  {
+   "name": "lower with a final sigma",
+   "expression": "lower(\"ΑΣ\")",
+   "result": {
+    "type": "text",
+    "data": "ας"
+   }
+  },
+  {
+   "name": "lower of a property",
+   "expression": "lower(prop(\"Note\"))",
+   "result": {
+    "type": "text",
+    "data": "hello world"
+   }
+  },
+  {
+   "name": "upper of nothing has no value",
+   "expression": "upper(\"\")",
+   "result": null
+  },
+  {
+   "name": "trim",
+   "expression": "trim(\"  a b  \")",
+   "result": {
+    "type": "text",
+    "data": "a b"
+   }
+  },
+  {
+   "name": "trim a no-break space",
+   "expression": "trim(\" x \")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "trim tabs and newlines",
+   "expression": "trim(\"\\t\\n x \\t\")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "trim only white space",
+   "expression": "trim(\"   \")",
+   "result": null
+  },
+  {
+   "name": "upper method",
+   "expression": "prop(\"Note\").upper()",
+   "result": {
+    "type": "text",
+    "data": "HELLO WORLD"
+   }
+  },
+  {
+   "name": "repeat",
+   "expression": "repeat(\"ab\", 3)",
+   "result": {
+    "type": "text",
+    "data": "ababab"
+   }
+  },
+  {
+   "name": "repeat zero times",
+   "expression": "repeat(\"ab\", 0)",
+   "result": null
+  },
+  {
+   "name": "repeat a negative count",
+   "expression": "repeat(\"ab\", -1)",
+   "result": null
+  },
+  {
+   "name": "repeat truncates the count",
+   "expression": "repeat(\"ab\", 2.9)",
+   "result": {
+    "type": "text",
+    "data": "abab"
+   }
+  },
+  {
+   "name": "repeat an accent",
+   "expression": "repeat(\"é\", 2)",
+   "result": {
+    "type": "text",
+    "data": "éé"
+   }
+  },
+  {
+   "name": "repeat to the limit",
+   "expression": "repeat(\"ab\", 5000).length()",
+   "result": {
+    "type": "number",
+    "data": 10000
+   }
+  },
+  {
+   "name": "repeat beyond the limit is empty",
+   "expression": "empty(repeat(\"ab\", 5001))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty text in a concatenation",
+   "expression": "length(repeat(\"ab\", 5001) + \"x\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "padStart",
+   "expression": "padStart(\"abc\", 2, \"0\")",
+   "result": {
+    "type": "text",
+    "data": "abc"
+   }
+  },
+  {
+   "name": "padStart with a long pad",
+   "expression": "padStart(\"1\", 5, \"ab\")",
+   "result": {
+    "type": "text",
+    "data": "abab1"
+   }
+  },
+  {
+   "name": "padEnd with a long pad",
+   "expression": "padEnd(\"1\", 5, \"ab\")",
+   "result": {
+    "type": "text",
+    "data": "1abab"
+   }
+  },
+  {
+   "name": "padStart with an empty pad",
+   "expression": "padStart(\"a\", 3, \"\")",
+   "result": {
+    "type": "text",
+    "data": "a"
+   }
+  },
+  {
+   "name": "padStart with an emoji pad",
+   "expression": "padStart(\"é\", 3, \"😀\")",
+   "result": {
+    "type": "text",
+    "data": "😀😀é"
+   }
+  },
+  {
+   "name": "padEnd to zero",
+   "expression": "padEnd(\"a\", 0, \"x\")",
+   "result": {
+    "type": "text",
+    "data": "a"
+   }
+  },
+  {
+   "name": "padStart beyond the limit is empty",
+   "expression": "empty(padStart(\"a\", 10001, \"x\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "padEnd truncates the length",
+   "expression": "padEnd(\"x\", 2.9, \"-\")",
+   "result": {
+    "type": "text",
+    "data": "x-"
+   }
+  },
+  {
+   "name": "padStart a number is a type error",
+   "expression": "padStart(5, 3, \"0\")",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "padStart method",
+   "expression": "\"7\".padStart(3, \"0\")",
+   "result": {
+    "type": "text",
+    "data": "007"
+   }
+  },
+  {
+   "name": "unknown method",
+   "expression": "1.foo()",
+   "error": "unknown_function",
+   "at": 2
+  },
+  {
+   "name": "unsupported notion function",
+   "expression": "\"a\".style(\"b\")",
+   "error": "unknown_function",
+   "at": 4
+  },
+  {
+   "name": "unsupported dateStart",
+   "expression": "dateStart(today())",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "unsupported formatNumber",
+   "expression": "formatNumber(1, \"usd\")",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "unsupported link",
+   "expression": "link(\"a\", \"b\")",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "function names are case sensitive",
+   "expression": "Now()",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "function names are case sensitive 2",
+   "expression": "ROUND(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "function names are case sensitive 3",
+   "expression": "Format(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "a bare name is a variable",
+   "expression": "foo",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "a method on a bare name",
+   "expression": "foo.length()",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "arity of substring",
+   "expression": "substring(\"a\")",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of now",
+   "expression": "now(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of format",
+   "expression": "format()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of concat",
+   "expression": "concat()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of count",
+   "expression": "count()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of slice",
+   "expression": "slice([1])",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of at",
+   "expression": "at([1])",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of id",
+   "expression": "id(1, 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of a method counts the receiver",
+   "expression": "\"a\".replace(\"a\")",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "arity of a method with too many arguments",
+   "expression": "\"a\".lower(1)",
+   "error": "arity",
+   "at": 0
+  }
+ ]
+}

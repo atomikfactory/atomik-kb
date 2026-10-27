@@ -1,0 +1,30 @@
+[package]
+name = "kb-speech-native"
+description = "The kb-speech sidecar of atomik-kb dictation (ADR-0053): a process that reads audio frames on stdin and writes recognised text on stdout, with sherpa-onnx (Silero VAD, Parakeet or Moonshine) inside. The desktop shell starts it for a session and ends it afterwards."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+publish = false
+
+# The frame loop (no sherpa-onnx in it, so its unit tests run without the DLLs).
+[lib]
+name = "kb_speech_native"
+
+# The sidecar. `test = false`: a test executable of this binary would link the sherpa-onnx DLLs, which live in
+# `target/<profile>/` and not in `target/<profile>/deps/` where test executables run. Its logic is tested through
+# the library; `kb-speech.exe --version` is the smoke test of the DLLs.
+[[bin]]
+name = "kb-speech"
+path = "src/main.rs"
+test = false
+
+[dependencies]
+kb-speech = { workspace = true }
+# Needs `SHERPA_ONNX_LIB_DIR` (scripts/fetch-speech-deps.ps1, scripts/dev-env.ps1), else its build script downloads the
+# native libraries. Its `-sys` crate is vendored (workspace `[patch.crates-io]`, vendor/sherpa-onnx-sys/VENDORED.md).
+sherpa-onnx = { workspace = true }
+
+[lints]
+workspace = true

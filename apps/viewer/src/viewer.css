@@ -1,0 +1,63 @@
+/*
+ * The viewer's own rules (M13 slice 4): the page is drawn by `@atomik-kb/ui`'s stylesheet (the same markup as the app's page
+ * view); this file adds the states around it. A stylesheet file, loaded from the viewer's own origin: the policy allows no
+ * inline style.
+ */
+
+/* The page fills the window and scrolls inside it, as the app's main area does. */
+.viewer-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.viewer-root > .viewer-content {
+  flex: 1 1 auto;
+}
+
+/*
+ * The page fills the window as the app's does (ADR-0035). The 52 px gutter on its left is the block handle's, and the viewer
+ * has none: without it the cover still runs from edge to edge (its margin follows `--page-gutter`).
+ */
+.content-body.viewer-body > section.page {
+  --page-gutter: 0px;
+  padding-left: 0;
+}
+
+.viewer-note {
+  margin: 0;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.viewer-note.is-warning {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--text);
+}
+
+/* The screens that are not the page: opening, a link that is gone, a key that does not open, a server that is silent. */
+.viewer-status {
+  box-sizing: border-box;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 96px 24px;
+  text-align: center;
+}
+
+.viewer-status h1 {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+
+.viewer-status p {
+  color: var(--text-muted);
+}
+
+.viewer-status .button {
+  margin-top: 20px;
+}

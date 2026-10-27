@@ -1,0 +1,34 @@
+[package]
+name = "kb-crypto"
+description = "Cryptographic primitives and envelopes for atomik-kb (ADR-0013)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+zeroize = { workspace = true }
+hkdf = { workspace = true }
+sha2 = { workspace = true }
+blake3 = { workspace = true }
+# `zeroize`: the cipher wipes its copy of the key and the one-time Poly1305 key.
+chacha20poly1305 = { workspace = true, features = ["zeroize"] }
+ed25519-dalek = { workspace = true }
+x25519-dalek = { workspace = true }
+# `zeroize`: makes `argon2::Block` zeroisable (we wipe the memory blocks after every
+# derivation) and wipes the crate's own intermediate hashes.
+argon2 = { workspace = true, features = ["zeroize"] }
+subtle = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+# Known-answer and golden vector files (`fixtures/crypto/*.json`) in tests and in the
+# generator example.
+serde_json = { workspace = true }
+# Round-trip and decoder-robustness property tests (`tests/properties.rs`).
+proptest = { workspace = true }
+
+[lints]
+workspace = true

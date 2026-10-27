@@ -1,0 +1,23 @@
+[package]
+name = "kb-types"
+description = "Typed ids, the core API contract and platform traits shared by every atomik-kb crate"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[features]
+default = []
+# Generates TypeScript definitions when running `cargo test -p kb-types --features ts`.
+ts = ["dep:ts-rs"]
+# Deterministic Clock/Rng doubles for tests in other crates.
+testing = []
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+ts-rs = { workspace = true, optional = true }
+
+[lints]
+workspace = true

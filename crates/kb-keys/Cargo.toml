@@ -1,0 +1,23 @@
+[package]
+name = "kb-keys"
+description = "Key hierarchy and keystore access for atomik-kb (ADR-0006, ADR-0007)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-crypto = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+zeroize = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+proptest = { workspace = true }
+
+[lints]
+workspace = true

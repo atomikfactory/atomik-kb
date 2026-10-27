@@ -1,0 +1,30 @@
+# Rust
+/target/
+**/target/
+# Node
+node_modules/
+dist/
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+# Local env
+.env
+.env.*
+!.env.example
+
+# desktop smoke-pass output (captures, logs)
+scripts/smoke/out/
+
+# Persistent installer build worktree and lock files (scripts/package/auto-build.ps1)
+/.build/
+
+# The MCP stdio bridge, built and copied here by the packaging scripts (scripts/package/*)
+/apps/desktop/src-tauri/binaries/
+
+# The JavaScript glue wasm-bindgen makes from crates/kb-wasm for the web viewer (M13 slice 4)
+/apps/viewer/src/wasm/
+
+# Local assistant config
+CLAUDE.md
+.claude/

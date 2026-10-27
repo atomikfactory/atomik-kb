@@ -1,0 +1,168 @@
+{
+ "schema": [
+  {
+   "id": "dup1",
+   "name": "Dup",
+   "kind": "number"
+  },
+  {
+   "id": "dup2",
+   "name": "Dup",
+   "kind": "number"
+  },
+  {
+   "id": "shadow",
+   "name": "Name",
+   "kind": "number"
+  },
+  {
+   "id": "title",
+   "name": "title",
+   "kind": "text"
+  },
+  {
+   "id": "quote",
+   "name": "Say \"hi\"",
+   "kind": "number"
+  },
+  {
+   "id": "slash",
+   "name": "A\\B",
+   "kind": "number"
+  },
+  {
+   "id": "accent",
+   "name": "Prix €",
+   "kind": "number"
+  },
+  {
+   "id": "double",
+   "name": "Double",
+   "kind": "formula",
+   "expression": "prop(\"Dup\") * 2"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "dup1": {
+     "kind": "number",
+     "value": 1
+    },
+    "dup2": {
+     "kind": "number",
+     "value": 2
+    },
+    "shadow": {
+     "kind": "number",
+     "value": 7
+    },
+    "title": {
+     "kind": "text",
+     "value": "shadowed title"
+    },
+    "quote": {
+     "kind": "number",
+     "value": 5
+    },
+    "slash": {
+     "kind": "number",
+     "value": 6
+    },
+    "accent": {
+     "kind": "number",
+     "value": 8
+    }
+   }
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "the first of two equal names wins",
+   "expression": "prop(\"Dup\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "a property named like the title label shadows it",
+   "expression": "prop(\"Name\")",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "a property named title shadows the title",
+   "expression": "prop(\"title\")",
+   "result": {
+    "type": "text",
+    "data": "shadowed title"
+   }
+  },
+  {
+   "name": "a name with quotes",
+   "expression": "prop(\"Say \\\"hi\\\"\")",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "a name with a backslash",
+   "expression": "prop(\"A\\\\B\")",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "a name with a symbol",
+   "expression": "prop(\"Prix €\")",
+   "result": {
+    "type": "number",
+    "data": 8
+   }
+  },
+  {
+   "name": "a formula reads the first of two equal names",
+   "expression": "prop(\"Double\")",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a name inside a longer text is only a name inside prop",
+   "expression": "\"prop(\\\"Dup\\\")\" + prop(\"Dup\")",
+   "result": {
+    "type": "text",
+    "data": "prop(\"Dup\")1"
+   }
+  },
+  {
+   "name": "a name in a comment is left alone",
+   "expression": "prop(\"Dup\") /* prop(\"Nope\") */ + 1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "an unknown name in this schema",
+   "expression": "prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 5
+  }
+ ]
+}

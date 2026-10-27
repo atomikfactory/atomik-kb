@@ -1,0 +1,94 @@
+{
+  "format": 1,
+  "pages": [
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000006,
+          "id": "70050102-0304-4506-8708-090a0b0c0d05",
+          "title": "Notes — ünïcödé ✓",
+          "updatedAt": 1700000000006
+        },
+        {
+          "children": [],
+          "createdAt": 1700000000005,
+          "id": "70040102-0304-4506-8708-090a0b0c0d04",
+          "title": "Specs",
+          "updatedAt": 1700000000011
+        }
+      ],
+      "createdAt": 1700000000002,
+      "icon": "📁",
+      "id": "70020102-0304-4506-8708-090a0b0c0d02",
+      "title": "Projects 2026",
+      "updatedAt": 1700000000024
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000023,
+          "id": "700b0102-0304-4506-8708-090a0b0c0d0b",
+          "title": "From the phone",
+          "updatedAt": 1700000000023
+        }
+      ],
+      "createdAt": 1700000000001,
+      "id": "70010102-0304-4506-8708-090a0b0c0d01",
+      "title": "Inbox ✉",
+      "updatedAt": 1700000000022
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000009,
+      "icon": "🧪",
+      "id": "70080102-0304-4506-8708-090a0b0c0d08",
+      "title": "Scratch",
+      "updatedAt": 1700000000025
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000018,
+      "id": "700a0102-0304-4506-8708-090a0b0c0d0a",
+      "title": "Recovered",
+      "updatedAt": 1700000000020
+    }
+  ],
+  "space": {
+    "createdAt": 1700000000000,
+    "icon": "🏠",
+    "id": "5a011122-3344-4566-b788-99aabbccdd01",
+    "name": "Personal"
+  },
+  "tombstones": {
+    "70090102-0304-4506-8708-090a0b0c0d09": 1700000000017
+  },
+  "trash": [
+    {
+      "children": [],
+      "createdAt": 1700000000004,
+      "id": "70030102-0304-4506-8708-090a0b0c0d03",
+      "title": "Atomik",
+      "trashedAt": 1700000000014,
+      "trashedFrom": "70020102-0304-4506-8708-090a0b0c0d02",
+      "updatedAt": 1700000000014
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000008,
+          "id": "70070102-0304-4506-8708-090a0b0c0d07",
+          "title": "Old idea",
+          "updatedAt": 1700000000008
+        }
+      ],
+      "createdAt": 1700000000007,
+      "id": "70060102-0304-4506-8708-090a0b0c0d06",
+      "title": "Archive",
+      "trashedAt": 1700000000013,
+      "updatedAt": 1700000000013
+    }
+  ]
+}

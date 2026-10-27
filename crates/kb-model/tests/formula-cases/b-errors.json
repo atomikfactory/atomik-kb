@@ -1,0 +1,1014 @@
+{
+ "schema": [
+  {
+   "id": "score",
+   "name": "Score",
+   "kind": "number"
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    }
+   ]
+  },
+  {
+   "id": "creator",
+   "name": "Creator",
+   "kind": "created_by"
+  },
+  {
+   "id": "emoji",
+   "name": "Prix 💶",
+   "kind": "number"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "One",
+   "values": {
+    "score": {
+     "kind": "number",
+     "value": 7
+    }
+   }
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "syntax: a trailing operator",
+   "expression": "1 +",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "syntax: an unclosed parenthesis",
+   "expression": "(1",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: two numbers in a row",
+   "expression": "1 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a closing parenthesis alone",
+   "expression": ")",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: a trailing comma in a list",
+   "expression": "[1,]",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "syntax: a trailing comma in a call",
+   "expression": "max(1, 2,)",
+   "error": "syntax",
+   "at": 9
+  },
+  {
+   "name": "syntax: an unclosed call",
+   "expression": "max(",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "syntax: a ternary without a colon",
+   "expression": "1 ? 2",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "syntax: a chain of comparisons",
+   "expression": "1 < 2 < 3",
+   "error": "syntax",
+   "at": 6
+  },
+  {
+   "name": "syntax: a chain of equalities",
+   "expression": "1 == 2 == 3",
+   "error": "syntax",
+   "at": 7
+  },
+  {
+   "name": "syntax: a dot at the end",
+   "expression": "x.",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a method without parentheses",
+   "expression": "x.f",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "syntax: a dollar sign",
+   "expression": "1 $ 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a lone equals sign",
+   "expression": "1 = 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a lone ampersand",
+   "expression": "1 & 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a lone bar",
+   "expression": "1 | 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: not in the middle of a sum",
+   "expression": "1 + not 2",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "syntax: an unclosed text",
+   "expression": "\"abc",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: an unknown escape",
+   "expression": "\"a\\qb\"",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a text ending in a backslash",
+   "expression": "1 + \"x\\",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "syntax: an unclosed comment",
+   "expression": "1 /* x",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a number out of range",
+   "expression": "1e999",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: the earliest error wins over a later text error",
+   "expression": "1 + ) \"abc",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "syntax: the earliest error wins over an earlier text error",
+   "expression": "\"abc 1 +",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: an empty expression",
+   "expression": "",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: only white space",
+   "expression": "   \n ",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: only a comment",
+   "expression": "/* only */",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: a list without a closing bracket",
+   "expression": "[1, 2",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "syntax: a call without a closing parenthesis",
+   "expression": "abs(1",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "syntax: two commas",
+   "expression": "[1,, 2]",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "syntax: an empty parenthesis",
+   "expression": "()",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "syntax: a leading operator",
+   "expression": "* 2",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: a dot before a number method",
+   "expression": "1..abs()",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a name before a bracket is not an index",
+   "expression": "x[0]",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "syntax: a colon without a question",
+   "expression": "1 : 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "syntax: a question mark without a colon after a comparison",
+   "expression": "1 < 2 ?",
+   "error": "syntax",
+   "at": 7
+  },
+  {
+   "name": "syntax: an emoji is one character",
+   "expression": "😀",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: an emoji after a number",
+   "expression": "1 + 😀",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "syntax: an emoji after a text",
+   "expression": "\"😀😀\" 1",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "syntax: an unclosed text with an emoji",
+   "expression": "\"😀",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: an emoji after an identifier",
+   "expression": "a😀",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "syntax: the end after accents and emoji",
+   "expression": "\"é\" + \"😀\" +",
+   "error": "syntax",
+   "at": 11
+  },
+  {
+   "name": "syntax: a letter with an accent is not an identifier",
+   "expression": "é + 1",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "syntax: a digit starts no identifier",
+   "expression": "1abc",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "an unknown function",
+   "expression": "foo(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "an unknown function inside a sum",
+   "expression": "1 + foo(1)",
+   "error": "unknown_function",
+   "at": 4
+  },
+  {
+   "name": "an unknown method is located at its name",
+   "expression": "(1).foo()",
+   "error": "unknown_function",
+   "at": 4
+  },
+  {
+   "name": "function names are case sensitive",
+   "expression": "Round(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "an inherited object member is not a function",
+   "expression": "constructor(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "the prototype is not a function",
+   "expression": "__proto__(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "toString is not a function",
+   "expression": "toString()",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "unstyle is not supported",
+   "expression": "unstyle(\"a\")",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "link is not supported",
+   "expression": "link(\"a\", \"b\")",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "dateRange is not supported",
+   "expression": "dateRange(today(), today())",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "dateStart is not supported",
+   "expression": "dateStart(today())",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "dateEnd is not supported",
+   "expression": "dateEnd(today())",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "formatNumber is not supported",
+   "expression": "formatNumber(1)",
+   "error": "unknown_function",
+   "at": 0
+  },
+  {
+   "name": "an unknown variable",
+   "expression": "x + 1",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "current outside a list function",
+   "expression": "current",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "index outside a list function",
+   "expression": "index + 1",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "current after a list function",
+   "expression": "[1].map(1) + current",
+   "error": "unknown_variable",
+   "at": 13
+  },
+  {
+   "name": "a let name is not visible after the let",
+   "expression": "let(x, 1, 2) + x",
+   "error": "unknown_variable",
+   "at": 15
+  },
+  {
+   "name": "a lets value sees only the names before it",
+   "expression": "lets(a, b, b, 1, a)",
+   "error": "unknown_variable",
+   "at": 8
+  },
+  {
+   "name": "a let value does not see its own name",
+   "expression": "let(x, x, 1)",
+   "error": "unknown_variable",
+   "at": 7
+  },
+  {
+   "name": "current is not visible in the list argument",
+   "expression": "sort([current])",
+   "error": "unknown_variable",
+   "at": 6
+  },
+  {
+   "name": "an unknown variable after an emoji text",
+   "expression": "\"😀\" + x",
+   "error": "unknown_variable",
+   "at": 6
+  },
+  {
+   "name": "a let name must not be a text",
+   "expression": "let(\"x\", 1, 2)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be a number",
+   "expression": "let(1, 1, 2)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be a function",
+   "expression": "let(sum, 1, sum)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be current",
+   "expression": "let(current, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be index",
+   "expression": "let(index, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be if",
+   "expression": "let(if, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a let name must not be a keyword",
+   "expression": "let(true, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "a lets name must not be a function",
+   "expression": "lets(a, 1, sum, 2, 3)",
+   "error": "syntax",
+   "at": 11
+  },
+  {
+   "name": "a method let has a value for its name",
+   "expression": "5.let(x, x)",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "prop needs a text in quotes",
+   "expression": "prop(1)",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "prop needs a literal",
+   "expression": "prop(\"a\" + \"b\")",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "prop needs a text, not a name",
+   "expression": "prop(x)",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "the method prop needs a text",
+   "expression": "prop(\"Tags\").first().prop(1)",
+   "error": "syntax"
+  },
+  {
+   "name": "an unknown property is located at its argument",
+   "expression": "1 + prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 9
+  },
+  {
+   "name": "an unknown property is located in code points",
+   "expression": "\"💶\" + prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 11
+  },
+  {
+   "name": "property names are case sensitive",
+   "expression": "prop(\"score\")",
+   "error": "unknown_property",
+   "at": 5
+  },
+  {
+   "name": "a property name with a symbol is found",
+   "expression": "prop(\"Prix 💶\") + prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 22
+  },
+  {
+   "name": "created by is not readable",
+   "expression": "prop(\"Creator\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "created by is not readable after a sum",
+   "expression": "1 + prop(\"Creator\")",
+   "error": "unsupported_property",
+   "at": 9
+  },
+  {
+   "name": "round without arguments",
+   "expression": "round()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "round with three arguments",
+   "expression": "round(1, 2, 3)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "pi takes none",
+   "expression": "pi(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "max takes at least one",
+   "expression": "max()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "sum takes at least one",
+   "expression": "sum()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "if takes three",
+   "expression": "if(true, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "ifs takes three or more",
+   "expression": "ifs(true, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "ifs takes an odd number",
+   "expression": "ifs(true, 1, 2, 3)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "and takes two or more",
+   "expression": "and(true)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a method keeps the receiver in the count",
+   "expression": "[1].at()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a method with too many arguments",
+   "expression": "[1].first(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "the call is the range of an arity error",
+   "expression": "1 + round()",
+   "error": "arity",
+   "at": 4
+  },
+  {
+   "name": "a method call is located at its receiver",
+   "expression": "1 + [1].at()",
+   "error": "arity",
+   "at": 4
+  },
+  {
+   "name": "substring needs two",
+   "expression": "substring(\"a\")",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "slice needs two",
+   "expression": "slice([1])",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "concat needs one",
+   "expression": "concat()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "count takes one or two",
+   "expression": "count()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "map needs a list and an expression",
+   "expression": "[1].map()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "map takes only two",
+   "expression": "[1].map(1, 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "now takes none",
+   "expression": "now(1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "id takes at most one",
+   "expression": "id(1, 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "email needs one",
+   "expression": "email()",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "let takes three",
+   "expression": "let(x, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "lets takes an odd number",
+   "expression": "lets(a, 1, b, 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "an arity error comes before the errors of the arguments",
+   "expression": "abs(foo(1), 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a number plus a boolean",
+   "expression": "1 + true",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a boolean plus a boolean",
+   "expression": "true + true",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "length of a number",
+   "expression": "length(1)",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "a list of a number and a text",
+   "expression": "[1, \"a\"]",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a condition that is a number",
+   "expression": "if(1, 2, 3)",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "branches of different types",
+   "expression": "if(true, 1, \"a\")",
+   "error": "type",
+   "at": 12
+  },
+  {
+   "name": "ifs branches of different types",
+   "expression": "ifs(true, 1, true, \"a\", 3)",
+   "error": "type"
+  },
+  {
+   "name": "equality of a number and a text",
+   "expression": "1 == \"1\"",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "a list of lists",
+   "expression": "[[1], [2]]",
+   "error": "type"
+  },
+  {
+   "name": "a list of a list and a number",
+   "expression": "[1, [2]]",
+   "error": "type"
+  },
+  {
+   "name": "negating a boolean",
+   "expression": "-true",
+   "error": "type",
+   "at": 1
+  },
+  {
+   "name": "not of a number",
+   "expression": "not 1",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "and of a number",
+   "expression": "1 and true",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "and with a number on the right",
+   "expression": "true and 1",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "a boolean compared with a number",
+   "expression": "true < 1",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "a text compared with a number",
+   "expression": "\"a\" < 1",
+   "error": "type",
+   "at": 6
+  },
+  {
+   "name": "lists are not ordered",
+   "expression": "[1] < [2]",
+   "error": "type"
+  },
+  {
+   "name": "a list plus a number",
+   "expression": "[1] + 1",
+   "error": "type"
+  },
+  {
+   "name": "sum of texts",
+   "expression": "sum([\"a\"])",
+   "error": "type"
+  },
+  {
+   "name": "min of a number and a date",
+   "expression": "min(1, parseDate(\"2026-01-01\"))",
+   "error": "type"
+  },
+  {
+   "name": "min of a date and a number",
+   "expression": "min(parseDate(\"2026-01-01\"), 1)",
+   "error": "type"
+  },
+  {
+   "name": "round of a text",
+   "expression": "round(\"a\")",
+   "error": "type"
+  },
+  {
+   "name": "toNumber of a list",
+   "expression": "toNumber([1])",
+   "error": "type"
+  },
+  {
+   "name": "dateAdd of a number",
+   "expression": "dateAdd(1, 1, \"days\")",
+   "error": "type"
+  },
+  {
+   "name": "dateAdd with a text count",
+   "expression": "dateAdd(today(), \"1\", \"days\")",
+   "error": "type"
+  },
+  {
+   "name": "formatDate with a number format",
+   "expression": "formatDate(today(), 1)",
+   "error": "type"
+  },
+  {
+   "name": "join of a text",
+   "expression": "join(\"a\", \",\")",
+   "error": "type"
+  },
+  {
+   "name": "at of a number",
+   "expression": "at(1, 1)",
+   "error": "type"
+  },
+  {
+   "name": "at with a text index",
+   "expression": "at([1], \"a\")",
+   "error": "type"
+  },
+  {
+   "name": "includes of another type",
+   "expression": "includes([1], \"a\")",
+   "error": "type"
+  },
+  {
+   "name": "concat of other types",
+   "expression": "concat([1], [\"a\"])",
+   "error": "type"
+  },
+  {
+   "name": "name of a text",
+   "expression": "name(\"a\")",
+   "error": "type"
+  },
+  {
+   "name": "id of a number",
+   "expression": "id(1)",
+   "error": "type"
+  },
+  {
+   "name": "map over a text",
+   "expression": "\"a\".map(current)",
+   "error": "type"
+  },
+  {
+   "name": "filter with a number condition",
+   "expression": "[1].filter(current)",
+   "error": "type"
+  },
+  {
+   "name": "map to a list",
+   "expression": "[1].map([2])",
+   "error": "type"
+  },
+  {
+   "name": "a property of a list",
+   "expression": "prop(\"Tags\").prop(\"Score\")",
+   "error": "type"
+  },
+  {
+   "name": "equal of other types",
+   "expression": "equal(1, \"a\")",
+   "error": "type"
+  },
+  {
+   "name": "a text has no properties",
+   "expression": "\"a\".prop(\"Score\")",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "sixty-five parentheses are too deep",
+   "expression": "(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+   "error": "too_long"
+  },
+  {
+   "name": "seventy brackets are too deep",
+   "expression": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+   "error": "too_long"
+  },
+  {
+   "name": "seventy calls are too deep",
+   "expression": "abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(abs(1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+   "error": "too_long"
+  },
+  {
+   "name": "a text of 4001 characters is too long",
+   "expression": "1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+   "error": "too_long"
+  },
+  {
+   "name": "a text of 4001 emoji is too long",
+   "expression": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+   "error": "too_long"
+  },
+  {
+   "name": "sixty-four parentheses are fine",
+   "expression": "((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "a text of 4000 characters is fine",
+   "expression": "1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "a long sum",
+   "expression": "1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1",
+   "result": {
+    "type": "number",
+    "data": 1001
+   }
+  },
+  {
+   "name": "many nots",
+   "expression": "not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not not true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a method chain",
+   "expression": "1.abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs().abs()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "a number property",
+   "expression": "prop(\"Score\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "a multi-select is a list of text",
+   "expression": "prop(\"Tags\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "a name with a symbol",
+   "expression": "prop(\"Prix 💶\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  }
+ ]
+}

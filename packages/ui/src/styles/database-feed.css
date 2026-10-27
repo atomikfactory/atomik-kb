@@ -1,0 +1,225 @@
+/*
+ * The feed layout (ADR-0058), agent F of the database power-ups batch: one column of cards, each with the page's icon and title,
+ * the shown properties and an excerpt of the page's text, then "Show more" and the "New page" card.
+ *
+ * Its own file, loaded by `index.css` after the gallery's, whose card it follows: colours and spacing come from the variables of
+ * `app.css`, so the light and the dark theme need no rule of their own.
+ *
+ * Every rule starts with `.page-editor-content`, as the older layouts' rules do: the editor's own `ul` and `li` rules (padding,
+ * margin) would win a tie, and the cards are a list.
+ *
+ * The column is as wide as the text column of a page (720 px) and centred in a wider block; in a narrower one (a side peek, a
+ * phone) it takes the whole width. A dashboard tile lets it fill the tile.
+ */
+
+.page-editor-content .page-feed {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.page-editor-content .page-dashboard-embedded .page-feed {
+  max-width: none;
+}
+
+.page-editor-content .page-feed-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-editor-content .page-feed-card {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.page-editor-content .page-feed-card:hover,
+.page-editor-content .page-feed-card:focus-within {
+  border-color: var(--text-muted);
+}
+
+.page-editor-content .page-feed-card:hover {
+  box-shadow: 0 1px 4px rgba(16, 24, 40, 0.12);
+}
+
+/* The title button: the icon and the title, two lines at most. */
+.page-editor-content .page-feed-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: start;
+  cursor: pointer;
+}
+
+.page-editor-content .page-feed-title:focus-visible,
+.page-editor-content .page-feed-new-button:focus-visible,
+.page-editor-content .page-feed-more:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.page-editor-content .page-feed-card:hover .page-feed-name {
+  text-decoration: underline;
+}
+
+.page-editor-content .page-feed-title .page-icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 1.4em;
+  color: var(--text-muted);
+}
+
+.page-editor-content .page-feed-title .page-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.page-editor-content .page-feed-name {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* The shown properties, side by side and wrapping (the gallery stacks them in a narrow card). */
+.page-editor-content .page-feed-props {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.page-editor-content .page-feed-prop {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* The excerpt: three lines at most, the line breaks of the page kept (`pre-line` folds the other white space). */
+.page-editor-content .page-feed-excerpt {
+  display: -webkit-box;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+  font-size: 0.92em;
+  line-height: 1.5;
+  white-space: pre-line;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* "Show more": a quiet button centred under the cards. */
+.page-editor-content .page-feed-more {
+  justify-self: center;
+  padding: 6px 16px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.page-editor-content .page-feed-more:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+/* "New page": a card of the column with a dashed edge; the menu button sits in its corner. */
+.page-editor-content .page-feed-new {
+  padding: 0;
+  background: transparent;
+  border-style: dashed;
+  cursor: default;
+}
+
+.page-editor-content .page-feed-new > .database-new-trigger {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.page-editor-content .page-feed-new-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 3.5rem;
+  padding: 12px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.page-editor-content .page-feed-new-button:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-feed-new-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.page-editor-content .page-feed-new-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-editor-content .page-feed-card {
+    transition: none;
+  }
+}
+
+/* On paper a card stays whole, and "Show more" and the "New page" card are left out. */
+@media print {
+  .page-editor-content .page-feed-card {
+    break-inside: avoid;
+  }
+
+  .page-editor-content .page-feed-new,
+  .page-editor-content .page-feed-more {
+    display: none;
+  }
+}

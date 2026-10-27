@@ -1,0 +1,171 @@
+/*
+ * The template button (ADR-0056, `editor/template-button.ts`, `editor/TemplateButtonView.tsx`): a button "+ label" that inserts a copy
+ * of the blocks it holds, a fold-out "Edit content" that frames those blocks, and the settings popover (a floating panel, so it sits
+ * outside the editor's content). Theme tokens only (`app.css` defines them).
+ */
+
+.page-editor-content .template-button-body {
+  margin: 4px 0;
+}
+
+.page-editor-content .template-button-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-editor-content .template-button-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 12px 5px 8px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+.page-editor-content .template-button-trigger:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.page-editor-content .template-button-trigger:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.page-editor-content .template-button-plus {
+  display: inline-flex;
+  flex: none;
+  color: var(--text-muted);
+}
+
+.page-editor-content .template-button-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-editor-content .template-button-fold,
+.page-editor-content .template-button-settings {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.page-editor-content .template-button-fold:hover,
+.page-editor-content .template-button-settings:hover,
+.page-editor-content .template-button-settings[aria-expanded="true"] {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .template-button-chevron {
+  display: inline-flex;
+  transition: transform 120ms ease;
+}
+
+.page-editor-content .template-button-fold[aria-expanded="true"] .template-button-chevron {
+  transform: rotate(90deg);
+}
+
+/* The settings button shows while the pointer is over the button or the focus is in it. */
+.page-editor-content .template-button-settings {
+  opacity: 0;
+}
+
+.page-editor-content [data-type="templateButton"]:hover > .template-button-body .template-button-settings,
+.page-editor-content [data-type="templateButton"]:focus-within > .template-button-body .template-button-settings,
+.page-editor-content [data-type="templateButton"].ProseMirror-selectednode > .template-button-body .template-button-settings,
+.page-editor-content .template-button-settings:focus-visible,
+.page-editor-content .template-button-settings[aria-expanded="true"] {
+  opacity: 1;
+}
+
+/* No pointer to hover with: the button stays in view. */
+@media (hover: none) {
+  .page-editor-content .template-button-settings {
+    opacity: 1;
+  }
+}
+
+/* The content, framed: it is what the button inserts, not part of the page's own text. */
+.page-editor-content .template-button-frame {
+  margin-top: 6px;
+  padding: 6px 12px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.page-editor-content .template-button-frame[hidden] {
+  display: none;
+}
+
+.page-editor-content .template-button-content {
+  min-width: 0;
+}
+
+@media print {
+  .page-editor-content .template-button-fold,
+  .page-editor-content .template-button-settings,
+  .page-editor-content .template-button-frame {
+    display: none;
+  }
+}
+
+/* The settings popover */
+
+.template-button-settings-panel {
+  display: grid;
+  gap: 12px;
+  width: 280px;
+  padding: 12px;
+}
+
+.template-button-field {
+  display: grid;
+  gap: 4px;
+}
+
+.template-button-field > span,
+.template-button-position > legend {
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.template-button-field input[type="text"] {
+  padding: 5px 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.template-button-position {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.template-button-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}

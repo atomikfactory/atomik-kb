@@ -1,0 +1,1429 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "qty",
+   "name": "Qty",
+   "kind": "number"
+  },
+  {
+   "id": "finished",
+   "name": "Finished",
+   "kind": "checkbox"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    }
+   ]
+  },
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "price": {
+     "kind": "number",
+     "value": 3
+    },
+    "qty": {
+     "kind": "number",
+     "value": 4
+    },
+    "finished": {
+     "kind": "checkbox",
+     "value": true
+    },
+    "note": {
+     "kind": "text",
+     "value": "Hello"
+    },
+    "tags": {
+     "kind": "multi_select",
+     "value": [
+      "t1"
+     ]
+    },
+    "due": {
+     "kind": "date",
+     "value": {
+      "date": "2026-10-25"
+     }
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Empty",
+   "values": {}
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "left associative subtraction",
+   "expression": "7 - 2 - 1",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "left associative division",
+   "expression": "100 / 10 / 5",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "product chain from the left",
+   "expression": "2 * 3 % 4",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "mod positive",
+   "expression": "7 % 3",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "mod keeps the sign of the dividend",
+   "expression": "7 % -3",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "mod negative dividend",
+   "expression": "-7 % -3",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "mod of fractions",
+   "expression": "5.5 % 2",
+   "result": {
+    "type": "number",
+    "data": 1.5
+   }
+  },
+  {
+   "name": "mod by zero is empty",
+   "expression": "5 % 0",
+   "result": null
+  },
+  {
+   "name": "power is right associative",
+   "expression": "2 ^ 3 ^ 2",
+   "result": {
+    "type": "number",
+    "data": 512
+   }
+  },
+  {
+   "name": "power with a fractional exponent",
+   "expression": "4 ^ 0.5",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "power of a negative base to a fraction is empty",
+   "expression": "(-8) ^ (1 / 3)",
+   "result": null
+  },
+  {
+   "name": "zero to the zero",
+   "expression": "0 ^ 0",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "power overflow is empty",
+   "expression": "10 ^ 400",
+   "result": null
+  },
+  {
+   "name": "pow function",
+   "expression": "pow(2, 10)",
+   "result": {
+    "type": "number",
+    "data": 1024
+   }
+  },
+  {
+   "name": "power binds tighter than the sign",
+   "expression": "-3 ^ 2",
+   "result": {
+    "type": "number",
+    "data": -9
+   }
+  },
+  {
+   "name": "parenthesised sign then power",
+   "expression": "(-3) ^ 2",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "double minus",
+   "expression": "- - 3",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "double minus without space",
+   "expression": "--3",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "minus minus",
+   "expression": "1 - -1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "triple minus",
+   "expression": "---3",
+   "result": {
+    "type": "number",
+    "data": -3
+   }
+  },
+  {
+   "name": "sum and product",
+   "expression": "1 + 2 * 3 - 4 / 2",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "not chain",
+   "expression": "not not true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "bang chain",
+   "expression": "!!false",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "triple not",
+   "expression": "not not not true",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "and binds tighter than or",
+   "expression": "true or false and false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "parentheses override",
+   "expression": "(true or false) and false",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "not binds looser than a comparison",
+   "expression": "not 1 == 2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not binds tighter than and",
+   "expression": "not false and false",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "symbol operators",
+   "expression": "true && !false || false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "word operators",
+   "expression": "true and not false or false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "and function",
+   "expression": "and(true, true, false)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "or function",
+   "expression": "or(false, false, true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "and method",
+   "expression": "true.and(false)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "or method",
+   "expression": "false.or(true, false)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not function",
+   "expression": "not(true)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "not method",
+   "expression": "true.not()",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "equal function",
+   "expression": "equal(1, 1)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unequal function",
+   "expression": "unequal(\"a\", \"a\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "equal lists",
+   "expression": "equal([1, 2], [1, 2])",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "lists compare item by item",
+   "expression": "[1, 2] == [1, 3]",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "lists of different lengths",
+   "expression": "[1, 2] == [1, 2, 3]",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty lists are equal",
+   "expression": "[] == []",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "not equal operator on lists",
+   "expression": "[1] != [2]",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "and needs two arguments",
+   "expression": "and(true)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "and of a number",
+   "expression": "and(true, 1)",
+   "error": "type",
+   "at": 10
+  },
+  {
+   "name": "or of a text",
+   "expression": "or(\"x\", true)",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "empty is less than nothing",
+   "page": "p2",
+   "expression": "prop(\"Price\") < 1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty is not at least anything",
+   "page": "p2",
+   "expression": "prop(\"Price\") >= 0",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "two empties are equal",
+   "page": "p2",
+   "expression": "prop(\"Price\") == prop(\"Qty\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "two empties are not unequal",
+   "page": "p2",
+   "expression": "prop(\"Price\") != prop(\"Qty\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty is not zero",
+   "page": "p2",
+   "expression": "prop(\"Price\") == 0",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty differs from a number",
+   "page": "p2",
+   "expression": "prop(\"Price\") != 1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset text is the empty text",
+   "page": "p2",
+   "expression": "prop(\"Note\") == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset list is the empty list",
+   "page": "p2",
+   "expression": "prop(\"Tags\") == []",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset date equals itself",
+   "page": "p2",
+   "expression": "prop(\"Due\") == prop(\"Due\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset date is before nothing",
+   "page": "p2",
+   "expression": "prop(\"Due\") < today()",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "division by zero equals itself",
+   "expression": "(1 / 0) == (1 / 0)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "division by zero is not a number",
+   "expression": "(1 / 0) == 1",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "booleans are ordered",
+   "expression": "false < true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "boolean at least",
+   "expression": "true >= true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "boolean greater",
+   "expression": "true > false",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "text is compared by code point",
+   "expression": "\"B\" < \"a\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a prefix is smaller",
+   "expression": "\"a\" < \"ab\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "accents come after letters",
+   "expression": "\"é\" > \"z\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an emoji comes after a letter",
+   "expression": "\"😀\" > \"z\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an emoji comes after a BMP symbol",
+   "expression": "\"～\" < \"😀\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "text equality is case sensitive",
+   "expression": "\"a\" == \"A\"",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "dates are compared by instant",
+   "expression": "prop(\"Due\") > parseDate(\"2026-10-01\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a day is before its first minute",
+   "expression": "parseDate(\"2026-10-01\") < parseDate(\"2026-10-01T00:01\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a day equals its midnight",
+   "expression": "parseDate(\"2026-10-01\") == parseDate(\"2026-10-01T00:00\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "comparison of a time",
+   "expression": "parseDate(\"2026-10-01T10:00\") > parseDate(\"2026-10-01\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "if true",
+   "expression": "if(true, \"a\", \"b\")",
+   "result": {
+    "type": "text",
+    "data": "a"
+   }
+  },
+  {
+   "name": "if false",
+   "expression": "if(false, 1, 2)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "if on a checkbox number",
+   "expression": "if(prop(\"Finished\"), prop(\"Price\"), 0)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "an empty boolean reads false",
+   "expression": "if(at([true], 5), \"yes\", \"no\")",
+   "result": {
+    "type": "text",
+    "data": "no"
+   }
+  },
+  {
+   "name": "not of an empty boolean",
+   "expression": "not(at([true], 3))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an empty boolean in and",
+   "expression": "and(true, at([true], 3))",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty boolean in or",
+   "expression": "or(at([true], 3), true)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "if with an empty list takes the type of the other",
+   "expression": "if(true, [], prop(\"Tags\"))",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "if with a list",
+   "expression": "if(false, [], prop(\"Tags\"))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "ifs falls to the else",
+   "expression": "ifs(false, 1, false, 2, 3)",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "ifs picks the first true",
+   "expression": "ifs(false, 1, true, 2, true, 9, 3)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ifs needs a else",
+   "expression": "ifs(true, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "ifs needs an odd count",
+   "expression": "ifs(true, 1, false, 2)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "if condition must be a boolean",
+   "expression": "if(1, 2, 3)",
+   "error": "type",
+   "at": 3
+  },
+  {
+   "name": "ifs values must agree",
+   "expression": "ifs(true, 1, false, \"a\", 3)",
+   "error": "type",
+   "at": 20
+  },
+  {
+   "name": "ternary",
+   "expression": "false ? 1 : true ? 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ternary falls through",
+   "expression": "false ? 1 : false ? 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "ternary first",
+   "expression": "true ? 1 : false ? 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "ternary nested in the middle",
+   "expression": "true ? false ? 1 : 2 : 3",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "ternary condition must be a boolean",
+   "expression": "1 ? 2 : 3",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "ternary branches must agree",
+   "expression": "true ? 1 : \"a\"",
+   "error": "type",
+   "at": 11
+  },
+  {
+   "name": "let shadows",
+   "expression": "let(x, 2, let(x, x + 1, x * 10))",
+   "result": {
+    "type": "number",
+    "data": 30
+   }
+  },
+  {
+   "name": "lets are sequential",
+   "expression": "lets(a, 1, b, a + 1, c, b + 1, a + b + c)",
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "lets may shadow",
+   "expression": "lets(a, 1, a, a + 1, a)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "let of a text",
+   "expression": "let(s, \"ab\", s + s)",
+   "result": {
+    "type": "text",
+    "data": "abab"
+   }
+  },
+  {
+   "name": "let of a list",
+   "expression": "let(xs, [1, 2, 3], xs.sum() + xs.length())",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "let is visible in a list function",
+   "expression": "let(k, 10, [1, 2].map(current * k))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 10
+     },
+     {
+      "type": "number",
+      "data": 20
+     }
+    ]
+   }
+  },
+  {
+   "name": "let inside a list function",
+   "expression": "[1, 2, 3].map(let(k, current * 2, k + index))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 5
+     },
+     {
+      "type": "number",
+      "data": 8
+     }
+    ]
+   }
+  },
+  {
+   "name": "nested list functions use the innermost current",
+   "expression": "[1, 2].map([10, 20].map(current + index).sum())",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 31
+     },
+     {
+      "type": "number",
+      "data": 31
+     }
+    ]
+   }
+  },
+  {
+   "name": "an outer current through let",
+   "expression": "[1, 2].map(let(o, current, [10, 20].map(current + o).sum()))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 32
+     },
+     {
+      "type": "number",
+      "data": 34
+     }
+    ]
+   }
+  },
+  {
+   "name": "let value does not see its own name",
+   "expression": "let(x, x, x)",
+   "error": "unknown_variable",
+   "at": 7
+  },
+  {
+   "name": "let body unknown name",
+   "expression": "let(x, 1, y)",
+   "error": "unknown_variable",
+   "at": 10
+  },
+  {
+   "name": "let name is a function",
+   "expression": "let(sum, 1, sum)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "let name is current",
+   "expression": "let(current, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "let name is a string",
+   "expression": "let(\"x\", 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "let name is a keyword",
+   "expression": "let(true, 1, 1)",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "lets name is a function",
+   "expression": "lets(a, 1, e, 2, a)",
+   "error": "syntax",
+   "at": 11
+  },
+  {
+   "name": "let name that is no function of ours",
+   "expression": "let(link, 2, link * 2)",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "index outside a list function",
+   "expression": "index + 1",
+   "error": "unknown_variable",
+   "at": 0
+  },
+  {
+   "name": "let needs three arguments",
+   "expression": "let(x, 1)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "lets needs an odd count",
+   "expression": "lets(a, 1, 2, 3)",
+   "error": "arity",
+   "at": 0
+  },
+  {
+   "name": "a variable is not callable",
+   "expression": "let(x, 1, x(2))",
+   "error": "unknown_function",
+   "at": 10
+  },
+  {
+   "name": "comments around operators",
+   "expression": "1 /* a */ + /* b */ 2",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "only a comment and a number",
+   "expression": "/* only */ 5",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "a comment after a dot",
+   "expression": "[7, 8]. /* c */ first()",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "a comment inside prop",
+   "page": "p1",
+   "expression": "prop /* c */ (\"Price\")",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "a multi-line comment",
+   "expression": "1 +\n/* a\nb */ 1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "slash star is always a comment",
+   "expression": "4 /*/ 2 */ / 2",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "leading fraction",
+   "expression": ".5 + .5",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "exponent literal",
+   "expression": "1e3",
+   "result": {
+    "type": "number",
+    "data": 1000
+   }
+  },
+  {
+   "name": "signed exponent",
+   "expression": "1.5e+2",
+   "result": {
+    "type": "number",
+    "data": 150
+   }
+  },
+  {
+   "name": "negative exponent",
+   "expression": "2.5E-3",
+   "result": {
+    "type": "number",
+    "data": 0.0025
+   }
+  },
+  {
+   "name": "float sum is not exact",
+   "expression": "0.1 + 0.2 == 0.3",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "integer beyond 2^53 keeps the nearest double",
+   "expression": "format(9007199254740993)",
+   "result": {
+    "type": "text",
+    "data": "9007199254740992"
+   }
+  },
+  {
+   "name": "escaped quote",
+   "expression": "\"say \\\"hi\\\"\"",
+   "result": {
+    "type": "text",
+    "data": "say \"hi\""
+   }
+  },
+  {
+   "name": "escaped backslash",
+   "expression": "\"a\\\\b\"",
+   "result": {
+    "type": "text",
+    "data": "a\\b"
+   }
+  },
+  {
+   "name": "escaped tab and newline",
+   "expression": "\"a\\tb\\nc\"",
+   "result": {
+    "type": "text",
+    "data": "a\tb\nc"
+   }
+  },
+  {
+   "name": "a raw newline in a string",
+   "expression": "\"a\nb\"",
+   "result": {
+    "type": "text",
+    "data": "a\nb"
+   }
+  },
+  {
+   "name": "length of an escape",
+   "expression": "length(\"\\n\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "unknown escape",
+   "expression": "\"\\q\"",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "single equals",
+   "expression": "1 = 1",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "single ampersand",
+   "expression": "true & true",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "single bar",
+   "expression": "true | true",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "dollar sign",
+   "expression": "$1",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "unclosed comment",
+   "expression": "1 /* x",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "closing comment alone",
+   "expression": "1 */ 2",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "operator without operand",
+   "expression": "1 +* 2",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "empty parentheses",
+   "expression": "()",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "unclosed parenthesis",
+   "expression": "(1",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "two numbers",
+   "expression": "1 2",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "missing comma",
+   "expression": "max(1 2)",
+   "error": "syntax",
+   "at": 6
+  },
+  {
+   "name": "empty list item",
+   "expression": "[1, ]",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "leading comma in a list",
+   "expression": "[, 1]",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "ternary without else",
+   "expression": "true ? 1",
+   "error": "syntax",
+   "at": 8
+  },
+  {
+   "name": "ternary without a branch",
+   "expression": "true ? 1 : ",
+   "error": "syntax",
+   "at": 11
+  },
+  {
+   "name": "two fractions",
+   "expression": "1.5.5",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "two strings",
+   "expression": "\"a\" \"b\"",
+   "error": "syntax",
+   "at": 4
+  },
+  {
+   "name": "method without a call",
+   "expression": "x.f",
+   "error": "syntax",
+   "at": 3
+  },
+  {
+   "name": "method without a name",
+   "expression": "x.(1)",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "a dot at the end",
+   "expression": "x.",
+   "error": "syntax",
+   "at": 2
+  },
+  {
+   "name": "a number after a variable",
+   "expression": "x.1()",
+   "error": "syntax",
+   "at": 1
+  },
+  {
+   "name": "comparison chain with a third",
+   "expression": "1 == 1 != 2",
+   "error": "syntax",
+   "at": 7
+  },
+  {
+   "name": "whitespace only",
+   "expression": "  \n\t ",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "a comment only",
+   "expression": "/* nothing */",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "an empty expression",
+   "expression": "",
+   "error": "syntax",
+   "at": 0
+  },
+  {
+   "name": "empty of the empty text",
+   "expression": "empty(\"\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of the empty list",
+   "expression": "empty([])",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of false",
+   "expression": "empty(false)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of true",
+   "expression": "empty(true)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of one",
+   "expression": "empty(1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of a list with a zero",
+   "expression": "empty([0])",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of a date",
+   "expression": "empty(today())",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of an unset date",
+   "page": "p2",
+   "expression": "empty(prop(\"Due\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of tags",
+   "expression": "empty(prop(\"Tags\"))",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty of unset tags",
+   "page": "p2",
+   "expression": "empty(prop(\"Tags\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of an unset checkbox",
+   "page": "p2",
+   "expression": "empty(prop(\"Finished\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "empty of a page",
+   "expression": "empty(prop(\"Name\"))",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "empty method",
+   "expression": "prop(\"Note\").empty()",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "true literal",
+   "expression": "true",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "false is a value",
+   "expression": "false",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "zero is a value",
+   "expression": "0",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,1508 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    },
+    {
+     "id": "t3",
+     "name": "green"
+    }
+   ]
+  },
+  {
+   "id": "tasks",
+   "name": "Tasks",
+   "kind": "relation"
+  },
+  {
+   "id": "hours",
+   "name": "Hours",
+   "kind": "number"
+  },
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  },
+  {
+   "id": "owner",
+   "name": "Owner",
+   "kind": "person"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "values": {
+    "tags": {
+     "kind": "multi_select",
+     "value": [
+      "t1",
+      "t2",
+      "t3"
+     ]
+    },
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p2",
+      "p3",
+      "p4"
+     ]
+    },
+    "owner": {
+     "kind": "person",
+     "value": [
+      "grace",
+      "ada"
+     ]
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Task A",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 5
+    },
+    "due": {
+     "kind": "date",
+     "value": {
+      "date": "2026-03-01"
+     }
+    },
+    "note": {
+     "kind": "text",
+     "value": "x"
+    }
+   }
+  },
+  {
+   "id": "p3",
+   "title": "Task B",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 2.5
+    },
+    "due": {
+     "kind": "date",
+     "value": {
+      "date": "2026-01-01"
+     }
+    }
+   }
+  },
+  {
+   "id": "p4",
+   "title": "",
+   "values": {}
+  },
+  {
+   "id": "p5",
+   "title": "Empty",
+   "values": {}
+  }
+ ],
+ "people": [
+  {
+   "id": "ada",
+   "name": "Ada",
+   "email": "ada@example.com"
+  },
+  {
+   "id": "grace",
+   "name": "Grace",
+   "email": "grace@example.com"
+  }
+ ],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "at the start",
+   "expression": "at([10, 20, 30], 0)",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "at the end",
+   "expression": "at([10, 20, 30], 2)",
+   "result": {
+    "type": "number",
+    "data": 30
+   }
+  },
+  {
+   "name": "at beyond the end",
+   "expression": "at([10, 20, 30], 3)",
+   "result": null
+  },
+  {
+   "name": "at from the end",
+   "expression": "at([10, 20, 30], -1)",
+   "result": {
+    "type": "number",
+    "data": 30
+   }
+  },
+  {
+   "name": "at from the end to the start",
+   "expression": "at([10, 20, 30], -3)",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "at before the start",
+   "expression": "at([10, 20, 30], -4)",
+   "result": null
+  },
+  {
+   "name": "at truncates",
+   "expression": "at([10, 20], 1.9)",
+   "result": {
+    "type": "number",
+    "data": 20
+   }
+  },
+  {
+   "name": "at truncates toward zero for a negative",
+   "expression": "at([10, 20], -0.5)",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "at of tags",
+   "expression": "at(prop(\"Tags\"), 1)",
+   "result": {
+    "type": "text",
+    "data": "blue"
+   }
+  },
+  {
+   "name": "at of an empty list",
+   "expression": "at([], 0)",
+   "result": null
+  },
+  {
+   "name": "at with an unset position",
+   "page": "p5",
+   "expression": "at([1], prop(\"Price\"))",
+   "result": null
+  },
+  {
+   "name": "at method",
+   "expression": "[7, 8, 9].at(1)",
+   "result": {
+    "type": "number",
+    "data": 8
+   }
+  },
+  {
+   "name": "first",
+   "expression": "first([7, 8, 9])",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "last",
+   "expression": "last([7, 8, 9])",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "first of nothing",
+   "expression": "first([])",
+   "result": null
+  },
+  {
+   "name": "last of tags",
+   "expression": "prop(\"Tags\").last()",
+   "result": {
+    "type": "text",
+    "data": "green"
+   }
+  },
+  {
+   "name": "first page and its title",
+   "expression": "first(prop(\"Tasks\")).prop(\"Name\")",
+   "result": {
+    "type": "text",
+    "data": "Task A"
+   }
+  },
+  {
+   "name": "last of a list with an empty item",
+   "expression": "last([1, at([1], 5)])",
+   "result": null
+  },
+  {
+   "name": "slice a range",
+   "expression": "slice([1, 2, 3, 4, 5], 1, 3)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice from",
+   "expression": "slice([1, 2, 3, 4, 5], 2)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 4
+     },
+     {
+      "type": "number",
+      "data": 5
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice from the end",
+   "expression": "slice([1, 2, 3, 4, 5], -2)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 4
+     },
+     {
+      "type": "number",
+      "data": 5
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice to a negative end",
+   "expression": "slice([1, 2, 3, 4, 5], 1, -1)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 4
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice between negatives",
+   "expression": "slice([1, 2, 3, 4, 5], -3, -1)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 4
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice backwards",
+   "expression": "slice([1, 2, 3, 4, 5], 3, 1)",
+   "result": null
+  },
+  {
+   "name": "slice beyond the end",
+   "expression": "slice([1, 2, 3, 4, 5], 10)",
+   "result": null
+  },
+  {
+   "name": "slice before the start",
+   "expression": "slice([1, 2, 3, 4, 5], -10, 2)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice truncates",
+   "expression": "slice([1, 2, 3, 4, 5], 1.9, 3.9)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice of nothing",
+   "expression": "slice([], 0)",
+   "result": null
+  },
+  {
+   "name": "slice tags",
+   "expression": "prop(\"Tags\").slice(1)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     }
+    ]
+   }
+  },
+  {
+   "name": "slice length",
+   "expression": "slice([1, 2, 3], 0, 2).length()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "concat",
+   "expression": "concat([1], [2, 3], [])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat of nothing",
+   "expression": "concat([], [])",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "concat tags and a text",
+   "expression": "concat(prop(\"Tags\"), [\"x\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "x"
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat takes the type of the others",
+   "expression": "concat([], prop(\"Tags\")).length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "concat of different types",
+   "expression": "concat([1], [\"a\"])",
+   "error": "type",
+   "at": 12
+  },
+  {
+   "name": "concat method",
+   "expression": "[1].concat([2])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "concat needs lists",
+   "expression": "concat(1, [2])",
+   "error": "type",
+   "at": 7
+  },
+  {
+   "name": "sort numbers",
+   "expression": "[3, 1, 2].sort()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort negative numbers",
+   "expression": "sort([2, -1, 0, -5])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": -5
+     },
+     {
+      "type": "number",
+      "data": -1
+     },
+     {
+      "type": "number",
+      "data": 0
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort texts by code point",
+   "expression": "sort([\"b\", \"a\", \"B\", \"é\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "B"
+     },
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     },
+     {
+      "type": "text",
+      "data": "é"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort by code point and not by UTF-16 unit",
+   "expression": "sort([\"😀\", \"～\"])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "～"
+     },
+     {
+      "type": "text",
+      "data": "😀"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort booleans",
+   "expression": "[true, false, true].sort()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort puts empties last",
+   "expression": "sort([3, at([1], 5), 1]).length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "sort puts empties last 2",
+   "expression": "empty(sort([3, at([1], 5), 1]).last())",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "sort puts empties last 3",
+   "expression": "sort([3, at([1], 5), 1])",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort tags",
+   "expression": "sort(prop(\"Tags\"))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort pages by title",
+   "expression": "prop(\"Tasks\").sort().map(current.prop(\"Name\"))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Task A"
+     },
+     {
+      "type": "text",
+      "data": "Task B"
+     }
+    ]
+   }
+  },
+  {
+   "name": "sort pages puts the untitled page first",
+   "expression": "prop(\"Tasks\").sort().first().prop(\"Name\")",
+   "result": null
+  },
+  {
+   "name": "sort pages keeps all pages",
+   "expression": "prop(\"Tasks\").sort().length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "sort people by name",
+   "expression": "prop(\"Owner\").sort().map(name(current)).join(\", \")",
+   "result": {
+    "type": "text",
+    "data": "Ada, Grace"
+   }
+  },
+  {
+   "name": "people keep their stored order",
+   "expression": "prop(\"Owner\").map(name(current)).join(\", \")",
+   "result": {
+    "type": "text",
+    "data": "Grace, Ada"
+   }
+  },
+  {
+   "name": "sort of nothing",
+   "expression": "sort([])",
+   "result": null
+  },
+  {
+   "name": "sort of a number",
+   "expression": "sort(1)",
+   "error": "type",
+   "at": 5
+  },
+  {
+   "name": "reverse",
+   "expression": "[1, 2, 3].reverse()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 3
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 1
+     }
+    ]
+   }
+  },
+  {
+   "name": "reverse of nothing",
+   "expression": "reverse([])",
+   "result": null
+  },
+  {
+   "name": "reverse tags",
+   "expression": "prop(\"Tags\").reverse()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "green"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique",
+   "expression": "[1, 2, 1, 3, 2].unique()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 3
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique is case sensitive",
+   "expression": "[\"a\", \"A\", \"a\"].unique()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "A"
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique treats zeros alike",
+   "expression": "[0, 0 * -1].unique().length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "unique of equal numbers",
+   "expression": "[1, 1.0, 1e0].unique().length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "unique of booleans",
+   "expression": "[true, true, false].unique()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     }
+    ]
+   }
+  },
+  {
+   "name": "unique pages",
+   "expression": "prop(\"Tasks\").concat(prop(\"Tasks\")).unique().length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "includes",
+   "expression": "[1, 2, 3].includes(2)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes a missing item",
+   "expression": "[1, 2, 3].includes(5)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "includes is case sensitive",
+   "expression": "[\"a\"].includes(\"A\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "includes in tags",
+   "expression": "prop(\"Tags\").includes(\"red\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes a page",
+   "expression": "prop(\"Tasks\").includes(prop(\"Tasks\").first())",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "includes in nothing",
+   "expression": "includes([], 1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "includes of a wrong type",
+   "expression": "[1, 2].includes(\"a\")",
+   "error": "type",
+   "at": 16
+  },
+  {
+   "name": "includes of a list",
+   "expression": "[1, 2].includes([1])",
+   "error": "type",
+   "at": 16
+  },
+  {
+   "name": "flat",
+   "expression": "[1, 2].flat()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "flat of nothing",
+   "expression": "flat([])",
+   "result": null
+  },
+  {
+   "name": "map with index",
+   "expression": "[10, 20, 30].map(current + index)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 10
+     },
+     {
+      "type": "number",
+      "data": 21
+     },
+     {
+      "type": "number",
+      "data": 32
+     }
+    ]
+   }
+  },
+  {
+   "name": "filter evens",
+   "expression": "[1, 2, 3, 4].filter(current % 2 == 0)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 4
+     }
+    ]
+   }
+  },
+  {
+   "name": "filter by index",
+   "expression": "[5, 6, 7].filter(index > 0)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 6
+     },
+     {
+      "type": "number",
+      "data": 7
+     }
+    ]
+   }
+  },
+  {
+   "name": "find nothing",
+   "expression": "[1, 2, 3].find(current > 5)",
+   "result": null
+  },
+  {
+   "name": "find",
+   "expression": "[1, 2, 3].find(current > 1)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "findIndex nothing",
+   "expression": "[1, 2, 3].findIndex(current > 5)",
+   "result": {
+    "type": "number",
+    "data": -1
+   }
+  },
+  {
+   "name": "findIndex",
+   "expression": "[1, 2, 3].findIndex(current > 1)",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "some",
+   "expression": "[1, 2, 3].some(current > 2)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "some of nothing",
+   "expression": "some([], current > 0)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "every",
+   "expression": "every([2, 4], current % 2 == 0)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "every fails",
+   "expression": "every([1, 2], current > 1)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "count of a list",
+   "expression": "[1, 2, 3].count()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "count with a condition",
+   "expression": "[1, 2, 3].count(current > 1)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "count of nothing",
+   "expression": "[].count()",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "map of nothing",
+   "expression": "[].map(current)",
+   "result": null
+  },
+  {
+   "name": "map to booleans",
+   "expression": "[1, 2, 3].map(current > 1)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "count the true items",
+   "expression": "[1, 2, 3].map(current > 1).count(current)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "map upper",
+   "expression": "prop(\"Tags\").map(upper(current))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "RED"
+     },
+     {
+      "type": "text",
+      "data": "BLUE"
+     },
+     {
+      "type": "text",
+      "data": "GREEN"
+     }
+    ]
+   }
+  },
+  {
+   "name": "map text and index",
+   "expression": "prop(\"Tags\").map(current + index)",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red0"
+     },
+     {
+      "type": "text",
+      "data": "blue1"
+     },
+     {
+      "type": "text",
+      "data": "green2"
+     }
+    ]
+   }
+  },
+  {
+   "name": "map keeps empties inside",
+   "expression": "[1, 0, 2].map(if(current == 0, at([1], 9), current)).length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "map drops empties from the result",
+   "expression": "[1, 0, 2].map(if(current == 0, at([1], 9), current))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 1
+     },
+     {
+      "type": "number",
+      "data": 2
+     }
+    ]
+   }
+  },
+  {
+   "name": "chained functions",
+   "expression": "[1, 2, 3].map(current * 2).filter(current > 2).sum()",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "some on a method chain",
+   "expression": "[1, 2, 3].map(current * 2).some(current == 4)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "filter pages by a number",
+   "expression": "prop(\"Tasks\").filter(current.prop(\"Hours\") > 3).length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "find a page",
+   "expression": "prop(\"Tasks\").find(current.prop(\"Hours\") < 3).prop(\"Name\")",
+   "result": {
+    "type": "text",
+    "data": "Task B"
+   }
+  },
+  {
+   "name": "findIndex a page",
+   "expression": "prop(\"Tasks\").findIndex(current.prop(\"Name\") == \"Task B\")",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "some page has no hours",
+   "expression": "prop(\"Tasks\").some(empty(current.prop(\"Hours\")))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "every page has hours",
+   "expression": "prop(\"Tasks\").every(current.prop(\"Hours\") > 0)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the earliest due date of the tasks",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Due\")).min()",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-01"
+    }
+   }
+  },
+  {
+   "name": "the latest due date of the tasks",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Due\")).max()",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-03-01"
+    }
+   }
+  },
+  {
+   "name": "the due dates in order",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Due\")).sort()",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-01-01"
+      }
+     },
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-03-01"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "the page ids",
+   "expression": "prop(\"Tasks\").map(id(current)).length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "the page ids are unique",
+   "expression": "prop(\"Tasks\").map(id(current)).unique().length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "the id of this page",
+   "expression": "id() == id()",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the id is a uuid",
+   "expression": "length(id())",
+   "result": {
+    "type": "number",
+    "data": 36
+   }
+  },
+  {
+   "name": "the id of a related page differs",
+   "expression": "id() != id(prop(\"Tasks\").first())",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the id of a page twice",
+   "expression": "id(prop(\"Tasks\").first()) == id(prop(\"Tasks\").first())",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "this page is not in its tasks",
+   "expression": "prop(\"Tasks\").map(id(current)).includes(id())",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "map a page to its note",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Note\")).join(\",\")",
+   "result": {
+    "type": "text",
+    "data": "x,,"
+   }
+  },
+  {
+   "name": "a list function needs a list",
+   "expression": "prop(\"Price\").map(current)",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "map needs a list first",
+   "expression": "map(1, current)",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "filter needs a boolean",
+   "expression": "[1, 2].filter(current)",
+   "error": "type",
+   "at": 14
+  },
+  {
+   "name": "map cannot return a list",
+   "expression": "[1, 2].map([current])",
+   "error": "type",
+   "at": 11
+  },
+  {
+   "name": "find needs a boolean",
+   "expression": "[1].find(current)",
+   "error": "type",
+   "at": 9
+  },
+  {
+   "name": "count needs a boolean",
+   "expression": "[1].count(current)",
+   "error": "type",
+   "at": 10
+  },
+  {
+   "name": "a list of two types",
+   "expression": "[1, \"a\"]",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a list of lists",
+   "expression": "[[1]]",
+   "error": "type",
+   "at": 1
+  },
+  {
+   "name": "a list of a list and a number",
+   "expression": "[1, [2]]",
+   "error": "type",
+   "at": 4
+  },
+  {
+   "name": "a page list is a list",
+   "page": "p5",
+   "expression": "prop(\"Tasks\")",
+   "type": {
+    "base": "page",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "a list of dates is a list type",
+   "expression": "[today()].sort()",
+   "type": {
+    "base": "date",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-10-18"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "a list of booleans is a list type",
+   "expression": "[true]",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "an open list is a list of text",
+   "expression": "[]",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "the empty list in a branch",
+   "expression": "if(true, [], [1])",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "length of a mapped list",
+   "expression": "[1, 2, 3].map(current).length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "count on tags",
+   "expression": "prop(\"Tags\").count(current != \"red\")",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a method on a list literal",
+   "expression": "[3, 1, 2].sort().reverse().first()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  }
+ ]
+}

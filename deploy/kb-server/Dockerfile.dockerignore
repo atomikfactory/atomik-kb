@@ -1,0 +1,9 @@
+# Build-context exclusions for deploy/kb-server/Dockerfile (BuildKit reads
+# <Dockerfile>.dockerignore next to the Dockerfile). The build needs the Rust workspace
+# only: no build outputs, no JavaScript dependencies, no git history.
+.git
+target
+**/target
+**/node_modules
+**/dist
+deploy/kb-server/data

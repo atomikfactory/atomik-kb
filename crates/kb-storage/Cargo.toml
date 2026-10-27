@@ -1,0 +1,34 @@
+[package]
+name = "kb-storage"
+description = "SQLite schema, migrations and queries for atomik-kb (ADR-0012)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-keys = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+rusqlite_migration = { workspace = true }
+# Wipes the SQL text that carries the raw key (`raw_key_pragma`: `sqlcipher::open_file`, `Db::rekey`).
+zeroize = { workspace = true }
+
+# One SQL code path; only the SQLite build differs per target (ADR-0012).
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rusqlite = { workspace = true, features = ["bundled-sqlcipher-vendored-openssl"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+rusqlite = { workspace = true, features = ["ffi-sqlite-wasm-rs"] }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+# Builds a `DbKey` straight from a seeded secret in the tests (`Ark::from_secret`), without
+# the keystore flows of kb-keys.
+kb-crypto = { workspace = true }
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

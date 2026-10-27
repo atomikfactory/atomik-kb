@@ -1,0 +1,19 @@
+# Workspace-wide cargo configuration.
+
+# The vendored OpenSSL inside SQLCipher is built without a matching PDB on MSVC, which
+# makes link.exe emit LNK4099 for every object; the lint `linker_messages` then fails
+# `-D warnings` builds. Nothing is lost: the warning only concerns debug symbols of
+# the C library. CI sets the same flag on Windows (RUSTFLAGS overrides this file).
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=/ignore:4099"]
+
+[env]
+# ts-rs writes generated TypeScript here when `cargo test -p kb-types --features ts` runs.
+TS_RS_EXPORT_DIR = { value = "packages/core-client/src/generated", relative = true }
+# Our i64 fields are Unix-millisecond timestamps that serde_json emits as JSON numbers;
+# `number` (not `bigint`) is what the JavaScript side actually receives.
+TS_RS_LARGE_INT = "number"
+
+[alias]
+# Check that every platform-neutral crate still compiles for the web (ADR-0005).
+check-wasm = "check --target wasm32-unknown-unknown -p kb-types -p kb-crypto -p kb-keys -p kb-doc -p kb-model -p kb-sync -p kb-ai -p kb-mcp -p kb-storage -p kb-core -p kb-wasm -p kb-speech -p kb-drive"

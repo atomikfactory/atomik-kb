@@ -1,0 +1,15 @@
+# Caddy in front of kb-server: automatic HTTPS (Let's Encrypt) for $KB_DOMAIN and a
+# plain reverse proxy (WebSocket upgrades on /v2/ws pass through). kb-server itself
+# speaks plain HTTP on the compose network only.
+#
+# reverse_proxy sets X-Forwarded-For to the client's address by default (and, with no
+# `trusted_proxies` of its own, drops whatever a client sent in that header). kb-server
+# reads it only from addresses listed in KB_SERVER_TRUSTED_PROXIES (Caddy's address in
+# docker-compose.yml), for its per-client rate limits.
+#
+# Caddy writes no access log unless a `log` directive is added here. If you add one,
+# filter the query string: a WebSocket client may send its session token as `?token=`
+# (Caddy already redacts the Authorization header).
+{$KB_DOMAIN} {
+	reverse_proxy kb-server:8787
+}

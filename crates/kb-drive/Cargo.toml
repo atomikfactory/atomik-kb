@@ -1,0 +1,18 @@
+[package]
+name = "kb-drive"
+description = "The Google Drive backup protocol of atomik-kb (ADR-0059), sans-IO: PKCE and the OAuth installed-app flow, Drive API requests as values and their responses parsed, the resumable upload's steps"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+sha2 = { workspace = true }
+base64 = { workspace = true }
+percent-encoding = { workspace = true }
+
+[lints]
+workspace = true

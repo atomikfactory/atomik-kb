@@ -1,0 +1,1889 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "status",
+   "name": "Status",
+   "kind": "status",
+   "options": [
+    {
+     "id": "todo",
+     "name": "To do"
+    },
+    {
+     "id": "doing",
+     "name": "Doing"
+    },
+    {
+     "id": "done",
+     "name": "Done"
+    }
+   ]
+  },
+  {
+   "id": "pick",
+   "name": "Pick",
+   "kind": "select",
+   "options": [
+    {
+     "id": "a",
+     "name": "Alpha"
+    },
+    {
+     "id": "b",
+     "name": "Beta"
+    }
+   ]
+  },
+  {
+   "id": "tags",
+   "name": "Tags",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    }
+   ]
+  },
+  {
+   "id": "due",
+   "name": "Due",
+   "kind": "date"
+  },
+  {
+   "id": "finished",
+   "name": "Finished",
+   "kind": "checkbox"
+  },
+  {
+   "id": "tasks",
+   "name": "Tasks",
+   "kind": "relation"
+  },
+  {
+   "id": "hours",
+   "name": "Hours",
+   "kind": "number"
+  },
+  {
+   "id": "owner",
+   "name": "Owner",
+   "kind": "person"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  },
+  {
+   "id": "link",
+   "name": "Link",
+   "kind": "url"
+  },
+  {
+   "id": "mail",
+   "name": "Mail",
+   "kind": "email"
+  },
+  {
+   "id": "tel",
+   "name": "Tel",
+   "kind": "phone"
+  },
+  {
+   "id": "place",
+   "name": "Place",
+   "kind": "place"
+  },
+  {
+   "id": "files",
+   "name": "Files",
+   "kind": "files"
+  },
+  {
+   "id": "checklist",
+   "name": "Checklist",
+   "kind": "checklist"
+  },
+  {
+   "id": "created",
+   "name": "Created",
+   "kind": "created_time"
+  },
+  {
+   "id": "edited",
+   "name": "Edited",
+   "kind": "last_edited_time"
+  },
+  {
+   "id": "creator",
+   "name": "Creator",
+   "kind": "created_by"
+  },
+  {
+   "id": "editor",
+   "name": "Editor",
+   "kind": "last_edited_by"
+  },
+  {
+   "id": "effort",
+   "name": "Effort",
+   "kind": "rollup",
+   "rollup": {
+    "function": "sum",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "count",
+   "name": "Count",
+   "kind": "rollup",
+   "rollup": {
+    "function": "count_all"
+   }
+  },
+  {
+   "id": "firstdue",
+   "name": "First due",
+   "kind": "rollup",
+   "rollup": {
+    "function": "earliest",
+    "targetKind": "date"
+   }
+  },
+  {
+   "id": "lastdue",
+   "name": "Last due",
+   "kind": "rollup",
+   "rollup": {
+    "function": "latest",
+    "targetKind": "date"
+   }
+  },
+  {
+   "id": "names",
+   "name": "Names",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original"
+   }
+  },
+  {
+   "id": "tasktags",
+   "name": "Task tags",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "multi_select"
+   },
+   "options": [
+    {
+     "id": "t1",
+     "name": "red"
+    },
+    {
+     "id": "t2",
+     "name": "blue"
+    }
+   ]
+  },
+  {
+   "id": "taskpicks",
+   "name": "Task picks",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "select"
+   },
+   "options": [
+    {
+     "id": "a",
+     "name": "Alpha"
+    },
+    {
+     "id": "b",
+     "name": "Beta"
+    }
+   ]
+  },
+  {
+   "id": "taskhours",
+   "name": "Task hours",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "taskowners",
+   "name": "Task owners",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "person"
+   }
+  },
+  {
+   "id": "taskdone",
+   "name": "Task done",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "checkbox"
+   }
+  },
+  {
+   "id": "progress",
+   "name": "Progress",
+   "kind": "rollup",
+   "rollup": {
+    "function": "checklist_progress",
+    "targetKind": "checklist"
+   }
+  },
+  {
+   "id": "percent",
+   "name": "Percent",
+   "kind": "rollup",
+   "rollup": {
+    "function": "percent_checked",
+    "targetKind": "checkbox"
+   }
+  },
+  {
+   "id": "total",
+   "name": "Total",
+   "kind": "formula",
+   "expression": "prop(\"Price\") * 2"
+  },
+  {
+   "id": "chain",
+   "name": "Chain",
+   "kind": "formula",
+   "expression": "prop(\"Total\") + 1"
+  },
+  {
+   "id": "items",
+   "name": "Items",
+   "kind": "formula",
+   "expression": "split(\"a,,b\", \",\")"
+  },
+  {
+   "id": "blank",
+   "name": "Blank",
+   "kind": "formula",
+   "expression": "\"\""
+  },
+  {
+   "id": "label",
+   "name": "Label",
+   "kind": "formula",
+   "expression": "prop(\"Name\") + \"!\""
+  },
+  {
+   "id": "peek",
+   "name": "Peek",
+   "kind": "formula",
+   "expression": "prop(\"Tasks\").first().prop(\"Hours\")"
+  },
+  {
+   "id": "tagslist",
+   "name": "Tags list",
+   "kind": "formula",
+   "expression": "prop(\"Tags\")"
+  },
+  {
+   "id": "sumhours",
+   "name": "Sum hours",
+   "kind": "formula",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Hours\")).sum()"
+  },
+  {
+   "id": "flag",
+   "name": "Flag",
+   "kind": "formula",
+   "expression": "prop(\"Price\") > 2"
+  },
+  {
+   "id": "when",
+   "name": "When",
+   "kind": "formula",
+   "expression": "dateAdd(prop(\"Due\"), 1, \"days\")"
+  },
+  {
+   "id": "loopa",
+   "name": "Loop A",
+   "kind": "formula",
+   "expression": "prop(\"Loop B\")"
+  },
+  {
+   "id": "loopb",
+   "name": "Loop B",
+   "kind": "formula",
+   "expression": "prop(\"Loop A\")"
+  },
+  {
+   "id": "broken",
+   "name": "Broken",
+   "kind": "formula",
+   "expression": "1 +"
+  },
+  {
+   "id": "usesbroken",
+   "name": "Uses broken",
+   "kind": "formula",
+   "expression": "prop(\"Broken\") + 1"
+  },
+  {
+   "id": "usescreator",
+   "name": "Uses creator",
+   "kind": "formula",
+   "expression": "prop(\"Creator\")"
+  },
+  {
+   "id": "selfpeek",
+   "name": "Self peek",
+   "kind": "formula",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Self peek\")).sum()"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Project",
+   "created": "2026-10-01T09:00",
+   "edited": "2026-10-02T10:30",
+   "values": {
+    "price": {
+     "kind": "number",
+     "value": 3
+    },
+    "status": {
+     "kind": "status",
+     "value": "doing"
+    },
+    "pick": {
+     "kind": "select",
+     "value": "b"
+    },
+    "tags": {
+     "kind": "multi_select",
+     "value": [
+      "t1",
+      "t2"
+     ]
+    },
+    "due": {
+     "kind": "date",
+     "value": {
+      "date": "2026-10-25"
+     }
+    },
+    "finished": {
+     "kind": "checkbox",
+     "value": true
+    },
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p2",
+      "p3",
+      "p4"
+     ]
+    },
+    "owner": {
+     "kind": "person",
+     "value": [
+      "ada"
+     ]
+    },
+    "note": {
+     "kind": "text",
+     "value": "Hello"
+    },
+    "link": {
+     "kind": "url",
+     "value": "https://example.com"
+    },
+    "mail": {
+     "kind": "email",
+     "value": "ada@example.com"
+    },
+    "tel": {
+     "kind": "phone",
+     "value": "+1 555 0100"
+    },
+    "place": {
+     "kind": "place",
+     "value": {
+      "name": "Café"
+     }
+    },
+    "files": {
+     "kind": "files",
+     "value": [
+      "f1",
+      "f2",
+      "f3"
+     ]
+    },
+    "checklist": {
+     "kind": "checklist",
+     "value": [
+      {
+       "text": "a",
+       "done": true
+      },
+      {
+       "text": "b",
+       "done": false
+      },
+      {
+       "text": "c",
+       "done": true
+      }
+     ]
+    },
+    "effort": {
+     "kind": "rollup",
+     "value": {
+      "function": "sum",
+      "result": {
+       "type": "number",
+       "data": 7.5
+      }
+     }
+    },
+    "count": {
+     "kind": "rollup",
+     "value": {
+      "function": "count_all",
+      "result": {
+       "type": "number",
+       "data": 3
+      }
+     }
+    },
+    "firstdue": {
+     "kind": "rollup",
+     "value": {
+      "function": "earliest",
+      "result": {
+       "type": "date",
+       "data": {
+        "date": "2026-01-01"
+       }
+      }
+     }
+    },
+    "lastdue": {
+     "kind": "rollup",
+     "value": {
+      "function": "latest",
+      "result": {
+       "type": "date",
+       "data": {
+        "date": "2026-03-01",
+        "time": "08:00"
+       }
+      }
+     }
+    },
+    "names": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "text",
+         "value": "Task A"
+        },
+        {
+         "kind": "text",
+         "value": "Task B"
+        }
+       ]
+      }
+     }
+    },
+    "tasktags": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "multi_select",
+         "value": [
+          "t1"
+         ]
+        },
+        {
+         "kind": "multi_select",
+         "value": [
+          "t2",
+          "t1"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    "taskpicks": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "select",
+         "value": "a"
+        },
+        {
+         "kind": "select",
+         "value": "b"
+        }
+       ]
+      }
+     }
+    },
+    "taskhours": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "number",
+         "value": 5
+        },
+        {
+         "kind": "number",
+         "value": 2.5
+        }
+       ]
+      }
+     }
+    },
+    "taskowners": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "person",
+         "value": [
+          "ada"
+         ]
+        },
+        {
+         "kind": "person",
+         "value": [
+          "grace",
+          "ada"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    "taskdone": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "checkbox",
+         "value": true
+        },
+        {
+         "kind": "checkbox",
+         "value": false
+        }
+       ]
+      }
+     }
+    },
+    "progress": {
+     "kind": "rollup",
+     "value": {
+      "function": "checklist_progress",
+      "result": {
+       "type": "progress",
+       "data": {
+        "done": 2,
+        "total": 3
+       }
+      }
+     }
+    },
+    "percent": {
+     "kind": "rollup",
+     "value": {
+      "function": "percent_checked",
+      "result": {
+       "type": "number",
+       "data": 50
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Task A",
+   "created": "2026-10-03T08:00",
+   "edited": "2026-10-03T08:00",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 5
+    },
+    "price": {
+     "kind": "number",
+     "value": 10
+    },
+    "tasks": {
+     "kind": "relation",
+     "value": [
+      "p3"
+     ]
+    }
+   }
+  },
+  {
+   "id": "p3",
+   "title": "Task B",
+   "created": "2026-10-04T08:00",
+   "edited": "2026-10-04T08:00",
+   "values": {
+    "hours": {
+     "kind": "number",
+     "value": 2.5
+    }
+   }
+  },
+  {
+   "id": "p4",
+   "title": "",
+   "values": {}
+  },
+  {
+   "id": "p5",
+   "title": "Other",
+   "values": {
+    "progress": {
+     "kind": "rollup",
+     "value": {
+      "function": "checklist_progress",
+      "result": {
+       "type": "progress",
+       "data": {
+        "done": 0,
+        "total": 0
+       }
+      }
+     }
+    }
+   }
+  }
+ ],
+ "people": [
+  {
+   "id": "ada",
+   "name": "Ada",
+   "email": "ada@example.com"
+  },
+  {
+   "id": "grace",
+   "name": "Grace",
+   "email": "grace@example.com"
+  }
+ ],
+ "files": [
+  {
+   "id": "f1",
+   "name": "plan.pdf"
+  },
+  {
+   "id": "f2",
+   "name": "photo.png"
+  }
+ ],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "a text property",
+   "expression": "prop(\"Note\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Hello"
+   }
+  },
+  {
+   "name": "a url property",
+   "expression": "prop(\"Link\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "https://example.com"
+   }
+  },
+  {
+   "name": "an email property",
+   "expression": "prop(\"Mail\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "ada@example.com"
+   }
+  },
+  {
+   "name": "a phone property",
+   "expression": "prop(\"Tel\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "+1 555 0100"
+   }
+  },
+  {
+   "name": "a place is its name",
+   "expression": "prop(\"Place\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Café"
+   }
+  },
+  {
+   "name": "a status is its name",
+   "expression": "prop(\"Status\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Doing"
+   }
+  },
+  {
+   "name": "a select is its name",
+   "expression": "prop(\"Pick\")",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Beta"
+   }
+  },
+  {
+   "name": "a multi-select",
+   "expression": "prop(\"Tags\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a number",
+   "expression": "prop(\"Price\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "a date without a time",
+   "expression": "prop(\"Due\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-25"
+    }
+   }
+  },
+  {
+   "name": "a checkbox",
+   "expression": "prop(\"Finished\")",
+   "type": {
+    "base": "boolean",
+    "list": false
+   },
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset checkbox is false",
+   "page": "p2",
+   "expression": "prop(\"Finished\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "files are their names, unknown ones skipped",
+   "expression": "prop(\"Files\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "plan.pdf"
+     },
+     {
+      "type": "text",
+      "data": "photo.png"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a checklist is its done flags",
+   "expression": "prop(\"Checklist\")",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "count the done items",
+   "expression": "prop(\"Checklist\").count(current)",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "every item done",
+   "expression": "prop(\"Checklist\").every(current)",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "people",
+   "expression": "prop(\"Owner\")",
+   "type": {
+    "base": "person",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "person",
+      "data": "ada"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the people's e-mails",
+   "expression": "prop(\"Owner\").map(email(current)).join(\",\")",
+   "result": {
+    "type": "text",
+    "data": "ada@example.com"
+   }
+  },
+  {
+   "name": "relation pages",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Name\"))",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Task A"
+     },
+     {
+      "type": "text",
+      "data": "Task B"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the title by its keyword",
+   "expression": "prop(\"title\")",
+   "result": {
+    "type": "text",
+    "data": "Project"
+   }
+  },
+  {
+   "name": "the title by the label",
+   "expression": "prop(\"Name\")",
+   "result": {
+    "type": "text",
+    "data": "Project"
+   }
+  },
+  {
+   "name": "a blank title",
+   "page": "p4",
+   "expression": "prop(\"Name\")",
+   "result": null
+  },
+  {
+   "name": "a blank title has no length",
+   "page": "p4",
+   "expression": "length(prop(\"Name\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a blank title equals the empty text",
+   "page": "p4",
+   "expression": "prop(\"Name\") == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset text",
+   "page": "p4",
+   "expression": "prop(\"Note\")",
+   "result": null
+  },
+  {
+   "name": "an unset status",
+   "page": "p4",
+   "expression": "prop(\"Status\")",
+   "result": null
+  },
+  {
+   "name": "an unset multi-select",
+   "page": "p4",
+   "expression": "prop(\"Tags\")",
+   "result": null
+  },
+  {
+   "name": "an unset multi-select is a list",
+   "page": "p4",
+   "expression": "length(prop(\"Tags\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an unset date",
+   "page": "p4",
+   "expression": "prop(\"Due\")",
+   "result": null
+  },
+  {
+   "name": "unset files",
+   "page": "p4",
+   "expression": "prop(\"Files\")",
+   "result": null
+  },
+  {
+   "name": "an unset checklist",
+   "page": "p4",
+   "expression": "prop(\"Checklist\")",
+   "result": null
+  },
+  {
+   "name": "unset people",
+   "page": "p4",
+   "expression": "prop(\"Owner\")",
+   "result": null
+  },
+  {
+   "name": "an unset relation",
+   "page": "p4",
+   "expression": "prop(\"Tasks\")",
+   "result": null
+  },
+  {
+   "name": "an unset number",
+   "page": "p4",
+   "expression": "prop(\"Price\")",
+   "result": null
+  },
+  {
+   "name": "a sum rollup",
+   "expression": "prop(\"Effort\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 7.5
+   }
+  },
+  {
+   "name": "a count rollup",
+   "expression": "prop(\"Count\") + 0",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "an earliest rollup",
+   "expression": "prop(\"First due\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-01-01"
+    }
+   }
+  },
+  {
+   "name": "a latest rollup keeps its time",
+   "expression": "prop(\"Last due\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-03-01",
+     "time": "08:00"
+    }
+   }
+  },
+  {
+   "name": "a show original rollup of titles",
+   "expression": "prop(\"Names\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Task A"
+     },
+     {
+      "type": "text",
+      "data": "Task B"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a show original rollup of multi-selects is flattened",
+   "expression": "prop(\"Task tags\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     },
+     {
+      "type": "text",
+      "data": "red"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a show original rollup of selects",
+   "expression": "prop(\"Task picks\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Alpha"
+     },
+     {
+      "type": "text",
+      "data": "Beta"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a show original rollup of numbers",
+   "expression": "prop(\"Task hours\")",
+   "type": {
+    "base": "number",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 5
+     },
+     {
+      "type": "number",
+      "data": 2.5
+     }
+    ]
+   }
+  },
+  {
+   "name": "the sum of rolled up numbers",
+   "expression": "prop(\"Task hours\").sum()",
+   "result": {
+    "type": "number",
+    "data": 7.5
+   }
+  },
+  {
+   "name": "a show original rollup of people is flattened",
+   "expression": "prop(\"Task owners\")",
+   "type": {
+    "base": "person",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "person",
+      "data": "ada"
+     },
+     {
+      "type": "person",
+      "data": "grace"
+     },
+     {
+      "type": "person",
+      "data": "ada"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a show original rollup of checkboxes",
+   "expression": "prop(\"Task done\")",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     }
+    ]
+   }
+  },
+  {
+   "name": "a checklist progress rollup",
+   "expression": "prop(\"Progress\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 0.6666666666666666
+   }
+  },
+  {
+   "name": "an empty checklist progress",
+   "page": "p5",
+   "expression": "prop(\"Progress\")",
+   "result": null
+  },
+  {
+   "name": "a percent rollup",
+   "expression": "prop(\"Percent\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 50
+   }
+  },
+  {
+   "name": "an unset sum rollup",
+   "page": "p4",
+   "expression": "prop(\"Effort\") + 1",
+   "result": null
+  },
+  {
+   "name": "an unset count rollup",
+   "page": "p4",
+   "expression": "prop(\"Count\")",
+   "result": null
+  },
+  {
+   "name": "an unset show original rollup is a list",
+   "page": "p4",
+   "expression": "length(prop(\"Names\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an unset show original rollup has no value",
+   "page": "p4",
+   "expression": "prop(\"Names\")",
+   "result": null
+  },
+  {
+   "name": "an unset date rollup",
+   "page": "p4",
+   "expression": "prop(\"First due\")",
+   "result": null
+  },
+  {
+   "name": "created time",
+   "expression": "formatDate(prop(\"Created\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-10-01 09:00"
+   }
+  },
+  {
+   "name": "edited time",
+   "expression": "formatDate(prop(\"Edited\"), \"YYYY-MM-DD HH:mm\")",
+   "result": {
+    "type": "text",
+    "data": "2026-10-02 10:30"
+   }
+  },
+  {
+   "name": "edited after created",
+   "expression": "prop(\"Edited\") > prop(\"Created\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "hours between created and edited",
+   "expression": "dateBetween(prop(\"Edited\"), prop(\"Created\"), \"hours\")",
+   "result": {
+    "type": "number",
+    "data": 25
+   }
+  },
+  {
+   "name": "an unknown creation time",
+   "page": "p4",
+   "expression": "prop(\"Created\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "days since creation",
+   "expression": "dateBetween(today(), prop(\"Created\"), \"days\")",
+   "result": {
+    "type": "number",
+    "data": 16
+   }
+  },
+  {
+   "name": "created by is not readable",
+   "expression": "prop(\"Creator\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "last edited by is not readable",
+   "expression": "prop(\"Editor\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "an unknown name",
+   "expression": "prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 5
+  },
+  {
+   "name": "names are case sensitive",
+   "expression": "prop(\"price\")",
+   "error": "unknown_property",
+   "at": 5
+  },
+  {
+   "name": "the empty name",
+   "expression": "prop(\"\")",
+   "error": "unknown_property",
+   "at": 5
+  },
+  {
+   "name": "a name with spaces",
+   "expression": "prop(\" Price\")",
+   "error": "unknown_property",
+   "at": 5
+  },
+  {
+   "name": "a property on a page also needs to exist",
+   "expression": "prop(\"Tasks\").first().prop(\"Nope\")",
+   "error": "unknown_property",
+   "at": 27
+  },
+  {
+   "name": "a page property that is not readable",
+   "expression": "prop(\"Tasks\").first().prop(\"Creator\")",
+   "error": "unsupported_property"
+  },
+  {
+   "name": "prop needs a string literal",
+   "expression": "prop(1)",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "prop needs a string literal 2",
+   "expression": "prop(\"a\" + \"b\")",
+   "error": "syntax",
+   "at": 5
+  },
+  {
+   "name": "prop needs an argument",
+   "expression": "prop()",
+   "error": "syntax"
+  },
+  {
+   "name": "prop takes one string",
+   "expression": "prop(\"Price\", \"Qty\", \"x\")",
+   "error": "syntax"
+  },
+  {
+   "name": "a text has no properties",
+   "expression": "\"a\".prop(\"Price\")",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a list of pages has no properties",
+   "expression": "prop(\"Tasks\").prop(\"Hours\")",
+   "error": "type",
+   "at": 0
+  },
+  {
+   "name": "a formula",
+   "expression": "prop(\"Total\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "a formula of a formula",
+   "expression": "prop(\"Chain\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "an unset input leaves the formula empty",
+   "page": "p4",
+   "expression": "prop(\"Total\")",
+   "result": null
+  },
+  {
+   "name": "an unset input leaves the chain empty",
+   "page": "p4",
+   "expression": "prop(\"Chain\")",
+   "result": null
+  },
+  {
+   "name": "a formula that is empty equals an empty",
+   "page": "p4",
+   "expression": "prop(\"Total\") == prop(\"Total\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a formula that is empty is empty",
+   "page": "p4",
+   "expression": "empty(prop(\"Total\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a formula that drops empty items",
+   "expression": "prop(\"Items\")",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a formula result drops the empty items for the next formula",
+   "expression": "prop(\"Items\").length()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "the same inline keeps them",
+   "expression": "split(\"a,,b\", \",\").length()",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "a formula with no value is the empty text",
+   "expression": "prop(\"Blank\") == \"\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a formula with no value has no length",
+   "expression": "length(prop(\"Blank\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a formula with no value is empty",
+   "expression": "empty(prop(\"Blank\"))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a formula with no value is not read as empty",
+   "expression": "prop(\"Blank\") + \"x\"",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "a list formula",
+   "expression": "prop(\"Tags list\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "red"
+     },
+     {
+      "type": "text",
+      "data": "blue"
+     }
+    ]
+   }
+  },
+  {
+   "name": "an unset list formula is a list",
+   "page": "p4",
+   "expression": "length(prop(\"Tags list\"))",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a formula of the title",
+   "expression": "prop(\"Label\")",
+   "result": {
+    "type": "text",
+    "data": "Project!"
+   }
+  },
+  {
+   "name": "a formula of a blank title",
+   "page": "p4",
+   "expression": "prop(\"Label\")",
+   "result": {
+    "type": "text",
+    "data": "!"
+   }
+  },
+  {
+   "name": "a boolean formula",
+   "expression": "prop(\"Flag\")",
+   "type": {
+    "base": "boolean",
+    "list": false
+   },
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a comparison with an unset number is false",
+   "page": "p4",
+   "expression": "prop(\"Flag\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an unset boolean formula reads false",
+   "page": "p4",
+   "expression": "if(prop(\"Flag\"), \"y\", \"n\")",
+   "result": {
+    "type": "text",
+    "data": "n"
+   }
+  },
+  {
+   "name": "a date formula",
+   "expression": "prop(\"When\")",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-26"
+    }
+   }
+  },
+  {
+   "name": "a formula over a relation",
+   "expression": "prop(\"Sum hours\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 7.5
+   }
+  },
+  {
+   "name": "a formula that reads through a relation",
+   "expression": "prop(\"Peek\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "a formula through a related page",
+   "expression": "prop(\"Tasks\").first().prop(\"Total\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 20
+   }
+  },
+  {
+   "name": "a formula of a related page that chains",
+   "expression": "prop(\"Tasks\").first().prop(\"Chain\")",
+   "result": {
+    "type": "number",
+    "data": 21
+   }
+  },
+  {
+   "name": "the totals of the related pages",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Total\")).sum()",
+   "result": {
+    "type": "number",
+    "data": 20
+   }
+  },
+  {
+   "name": "a related formula that reads through a relation is empty",
+   "expression": "prop(\"Tasks\").first().prop(\"Peek\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "a related formula over a relation sums nothing",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Sum hours\")).sum()",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "the titles of the related pages",
+   "expression": "prop(\"Tasks\").map(current.prop(\"Name\")).join(\"|\")",
+   "result": {
+    "type": "text",
+    "data": "Task A|Task B|"
+   }
+  },
+  {
+   "name": "a page two hops away can be formatted",
+   "expression": "format(prop(\"Tasks\").first().prop(\"Tasks\"))",
+   "result": {
+    "type": "text",
+    "data": "Task B"
+   }
+  },
+  {
+   "name": "a page two hops away can be listed",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "a page two hops away has no properties",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").map(current.prop(\"Name\"))",
+   "result": null
+  },
+  {
+   "name": "a page two hops away can be compared",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").first() == prop(\"Tasks\").at(1)",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a page two hops away has its id",
+   "expression": "id(prop(\"Tasks\").first().prop(\"Tasks\").first()) == id(prop(\"Tasks\").at(1))",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "two hops through a formula",
+   "expression": "prop(\"Tasks\").first().prop(\"Tasks\").first().prop(\"Total\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": null
+  },
+  {
+   "name": "a loop",
+   "expression": "prop(\"Loop A\")",
+   "error": "cycle"
+  },
+  {
+   "name": "a loop through the other",
+   "expression": "prop(\"Loop B\")",
+   "error": "cycle"
+  },
+  {
+   "name": "a formula that does not parse",
+   "expression": "prop(\"Broken\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "a formula over a formula that does not parse",
+   "expression": "prop(\"Uses broken\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "a formula over a property that is not readable",
+   "expression": "prop(\"Uses creator\")",
+   "error": "unsupported_property",
+   "at": 5
+  },
+  {
+   "name": "a formula that reaches itself through a relation",
+   "expression": "prop(\"Self peek\")",
+   "error": "cycle",
+   "at": 5
+  },
+  {
+   "name": "checking as itself",
+   "expression": "prop(\"Total\") + 1",
+   "self": "total",
+   "error": "cycle",
+   "at": 5
+  },
+  {
+   "name": "checking as a formula of the chain",
+   "expression": "prop(\"Chain\") + 1",
+   "self": "total",
+   "error": "cycle",
+   "at": 5
+  },
+  {
+   "name": "checking as a formula nobody reads",
+   "expression": "prop(\"Total\") + 1",
+   "self": "flag",
+   "type": {
+    "base": "number",
+    "list": false
+   }
+  },
+  {
+   "name": "a formula that reads a formula and a rollup",
+   "expression": "prop(\"Total\") + prop(\"Effort\")",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 13.5
+   }
+  }
+ ]
+}

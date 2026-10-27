@@ -1,0 +1,295 @@
+/*
+ * The peek of a database row (ADR-0054), agent E: the side panel and its resize handle, the center dialog, the grid column
+ * beside the page (`.content.has-peek`), print.
+ *
+ * Its own file so that the agents of the batch do not edit one 11,000-line stylesheet at once; `index.css` loads it after
+ * `app.css`, so its rules win a tie with the older ones. Colours and spacing come from the variables of `app.css`.
+ */
+
+/*
+ * The frame, shared by the side panel and the dialog. It is the containing block of what the page editor fixes to the screen
+ * (the find bar), so that the bar of the peek's editor sits in the peek and not over the bar of the page's.
+ */
+.peek {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  color: var(--text);
+  background: var(--bg);
+  contain: layout;
+}
+
+.peek:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.peek-page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Open as page, Open in new tab, and Close at the other end. */
+.peek-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.peek-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+/* The page scrolls under the toolbar; the 52 px on its left are the gutter of the block handle, as on the page screen. */
+.peek-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 20px 24px 40px 52px;
+  overflow-y: auto;
+}
+
+.peek-page-title {
+  font-size: 1.5rem;
+}
+
+.peek-status {
+  margin: 12px 0;
+}
+
+/* The find bar of the peek's editor: at the top right of the peek, under the toolbar. */
+.peek .find-bar {
+  top: 52px;
+  right: 16px;
+  width: min(440px, calc(100% - 32px));
+}
+
+/* The handle on the left edge of the side panel, the sidebar's handle (`.sidebar-resize`) for the other side of a panel. */
+.peek-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  z-index: 2;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.peek-resize::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2px;
+  width: 2px;
+  background: transparent;
+  transition: background-color 0.12s;
+}
+
+.peek-resize:hover::after,
+.peek-resize.is-dragging::after {
+  background: var(--accent);
+}
+
+.peek-resize:focus-visible {
+  outline: none;
+}
+
+.peek-resize:focus-visible::after {
+  background: var(--focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peek-resize::after {
+    transition: none;
+  }
+}
+
+/* The center peek: a large dialog over the page, about 900 px wide and 85 % of the height. */
+.dialog.peek-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(900px, 100%);
+  height: min(85vh, 100%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.peek[data-mode="center"] {
+  flex: 1 1 auto;
+}
+
+.peek[data-mode="center"] .peek-scroll {
+  padding-right: 40px;
+}
+
+/*
+ * The side panel in the main area. Where there is room (the three groups of rules below: the page keeps 400 px, the peek takes what
+ * is left up to its width, 280 px at the least) it is a column of the grid, after the page and before the comments and the chat.
+ * Where there is not (a narrow window, or the comments panel and the chat open beside it) it lies over the right of the page instead,
+ * beside the comments and chat columns that are open, as the comments panel does below 900 px; `--peek-others` is what they take,
+ * and 320 px of the page stay in sight. `--peek-col` is what the column takes, for the find bar of the page to keep out of it.
+ * The breakpoints count the sidebar at its usual 272 px.
+ */
+.content.has-peek {
+  --peek-others: 0px;
+  --peek-col: 0px;
+}
+
+.content.has-peek.has-comments {
+  --peek-others: 340px;
+}
+
+.content.has-peek.has-chat {
+  --peek-others: 360px;
+}
+
+.content.has-peek.has-comments.has-chat {
+  --peek-others: 700px;
+}
+
+.content.has-peek > .peek {
+  position: absolute;
+  top: 40px;
+  right: var(--peek-others);
+  bottom: 0;
+  z-index: 5;
+  width: max(280px, min(var(--peek-width, 480px), calc(100% - var(--peek-others) - 320px)));
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.content.has-peek > .content-body .find-bar {
+  right: calc(28px + var(--peek-col));
+}
+
+/* The page and the peek. */
+@media (min-width: 960px) {
+  .content.has-peek:not(.has-comments, .has-chat) {
+    --peek-col: var(--peek-width, 480px);
+    display: grid;
+    grid-template-columns: minmax(400px, 1fr) minmax(280px, var(--peek-width, 480px));
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .content.has-peek:not(.has-comments, .has-chat) > .tab-strip {
+    grid-column: 1 / -1;
+  }
+
+  .content.has-peek:not(.has-comments, .has-chat) > .content-body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .content.has-peek:not(.has-comments, .has-chat) > .peek {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+    box-shadow: none;
+  }
+}
+
+/* The page, the peek, and the comments panel or the chat. */
+@media (min-width: 1320px) {
+  .content.has-peek:is(.has-comments, .has-chat):not(.has-comments.has-chat) {
+    --peek-col: var(--peek-width, 480px);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .content.has-peek.has-comments:not(.has-chat) {
+    grid-template-columns: minmax(400px, 1fr) minmax(280px, var(--peek-width, 480px)) 340px;
+  }
+
+  .content.has-peek.has-chat:not(.has-comments) {
+    grid-template-columns: minmax(400px, 1fr) minmax(280px, var(--peek-width, 480px)) 360px;
+  }
+
+  .content.has-peek:is(.has-comments, .has-chat):not(.has-comments.has-chat) > .tab-strip {
+    grid-column: 1 / -1;
+  }
+
+  .content.has-peek:is(.has-comments, .has-chat):not(.has-comments.has-chat) > .content-body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .content.has-peek:is(.has-comments, .has-chat):not(.has-comments.has-chat) > .peek {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+    box-shadow: none;
+  }
+
+  .content.has-peek.has-comments:not(.has-chat) > .comments-panel,
+  .content.has-peek.has-chat:not(.has-comments) > .ai-chat {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+
+/* The page, the peek, the comments panel and the chat: three panels beside the page. */
+@media (min-width: 1660px) {
+  .content.has-peek.has-comments.has-chat {
+    --peek-col: var(--peek-width, 480px);
+    display: grid;
+    grid-template-columns: minmax(400px, 1fr) minmax(280px, var(--peek-width, 480px)) 340px 360px;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .content.has-peek.has-comments.has-chat > .tab-strip {
+    grid-column: 1 / -1;
+  }
+
+  .content.has-peek.has-comments.has-chat > .content-body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .content.has-peek.has-comments.has-chat > .peek {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+    box-shadow: none;
+  }
+
+  .content.has-peek.has-comments.has-chat > .comments-panel {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .content.has-peek.has-comments.has-chat > .ai-chat {
+    grid-column: 4;
+    grid-row: 2;
+  }
+}
+
+/* Paper has the page only: the peek, in either mode, is not printed, and the column it took goes with it. */
+@media print {
+  .peek,
+  .dialog.peek-dialog {
+    display: none !important;
+  }
+
+  .content.has-peek {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

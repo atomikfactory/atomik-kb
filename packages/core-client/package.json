@@ -1,0 +1,32 @@
+{
+  "name": "@atomik-kb/core-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed TypeScript client for the atomik-kb core API: generated types, transports and a typed CoreClient.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./tauri": "./src/tauri.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "fixtures": "vitest run --config vitest.fixtures.config.ts",
+    "wordlist": "node scripts/wordlist.js"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "~2.12.1",
+    "loro-crdt": "1.16.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^4.1.11"
+  }
+}

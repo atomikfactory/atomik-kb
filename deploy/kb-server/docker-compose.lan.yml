@@ -1,0 +1,43 @@
+# kb-server alone, for a LAN / Tailscale-only host (no Caddy, no public domain, no
+# ports 80/443). The image is shipped prebuilt by scripts/deploy/server.ps1
+# (docker save | docker load), so there is no build section.
+#
+# The deploy script copies this file to the server as docker-compose.yml and keeps a
+# server-side .env next to it (KB_INVITE_TOKENS, optional KB_BIND, KB_PORT, KB_TAG ...).
+# See the comments at the top of scripts/deploy/server.ps1.
+
+name: kb-server
+
+services:
+  kb-server:
+    image: atomik-kb-server:${KB_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      # Comma-separated; needed only to create accounts. Rotate by editing .env and
+      # running `docker compose up -d` again: existing accounts are not affected.
+      KB_SERVER_INVITE_TOKENS: ${KB_INVITE_TOKENS:?set KB_INVITE_TOKENS in .env}
+      KB_SERVER_ACCOUNT_QUOTA_BYTES: ${KB_ACCOUNT_QUOTA_BYTES:-10737418240}
+      KB_SERVER_PRUNE_GRACE_DAYS: ${KB_PRUNE_GRACE_DAYS:-7}
+      # Optional: refuse devices whose last session is older than this many days.
+      KB_SERVER_IDLE_DEVICE_DAYS: ${KB_IDLE_DEVICE_DAYS:-}
+      # Shared spaces (protocol v2): accounts that share invites may create on this server,
+      # over all time (0: none), and per inviting account.
+      KB_SERVER_SHARE_SIGNUPS: ${KB_SHARE_SIGNUPS:-20}
+      KB_SERVER_SHARE_SIGNUPS_PER_ACCOUNT: ${KB_SHARE_SIGNUPS_PER_ACCOUNT:-5}
+      # KB_SERVER_TRUSTED_PROXIES is deliberately unset: there is no proxy, clients
+      # connect directly.
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - kb-data:/data
+    ports:
+      # Bind to the server's Tailscale address (100.x.y.z) to be reachable on the
+      # tailnet only; 0.0.0.0 exposes the port on every interface.
+      - "${KB_BIND:-0.0.0.0}:${KB_PORT:-8787}:8787"
+    # SIGTERM lets the server finish its requests and close server.db cleanly.
+    stop_grace_period: 30s
+    # No healthcheck: the distroless image has no shell or curl. The deploy script
+    # checks GET /v2/server from the host instead.
+
+volumes:
+  # server.db (with its -wal and -shm files): back this up.
+  kb-data:

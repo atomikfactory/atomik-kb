@@ -1,0 +1,311 @@
+{
+  "format": 1,
+  "pages": [
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000006,
+          "id": "70050102-0304-4506-8708-090a0b0c0d05",
+          "props": {
+            "b7063142-5364-4586-97a8-b9cadbecfd06": false
+          },
+          "title": "Notes — ünïcödé ✓",
+          "updatedAt": 1700000000073
+        },
+        {
+          "children": [],
+          "createdAt": 1700000000005,
+          "id": "70040102-0304-4506-8708-090a0b0c0d04",
+          "title": "Specs",
+          "updatedAt": 1700000000011
+        }
+      ],
+      "createdAt": 1700000000002,
+      "icon": "📁",
+      "id": "70020102-0304-4506-8708-090a0b0c0d02",
+      "props": {
+        "0000000a-0000-4000-8000-000000000001": [
+          "0c164152-6374-4596-a7b8-c9daebfc0d16"
+        ],
+        "b7023142-5364-4586-97a8-b9cadbecfd02": 1.5,
+        "b7033142-5364-4586-97a8-b9cadbecfd03": "0c0b4152-6374-4596-a7b8-c9daebfc0d0b",
+        "b7053142-5364-4586-97a8-b9cadbecfd05": {
+          "date": "2026-12-31"
+        },
+        "b7063142-5364-4586-97a8-b9cadbecfd06": true
+      },
+      "title": "Projects 2026",
+      "updatedAt": 1700000000082
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000023,
+          "id": "700b0102-0304-4506-8708-090a0b0c0d0b",
+          "title": "From the phone",
+          "updatedAt": 1700000000023
+        }
+      ],
+      "createdAt": 1700000000001,
+      "id": "70010102-0304-4506-8708-090a0b0c0d01",
+      "props": {
+        "0000000a-0000-4000-8000-000000000001": [
+          "0c154152-6374-4596-a7b8-c9daebfc0d15",
+          "0c174152-6374-4596-a7b8-c9daebfc0d17"
+        ],
+        "b7013142-5364-4586-97a8-b9cadbecfd01": "Quarterly plan\nsecond line",
+        "b7023142-5364-4586-97a8-b9cadbecfd02": 13.0,
+        "b7043142-5364-4586-97a8-b9cadbecfd04": "0c2a4152-6374-4596-a7b8-c9daebfc0d2a",
+        "b7053142-5364-4586-97a8-b9cadbecfd05": {
+          "date": "2026-10-07",
+          "time": "14:30"
+        },
+        "b7063142-5364-4586-97a8-b9cadbecfd06": true,
+        "b7073142-5364-4586-97a8-b9cadbecfd07": "https://example.com/plan",
+        "b7083142-5364-4586-97a8-b9cadbecfd08": "ada@example.com",
+        "b70a3142-5364-4586-97a8-b9cadbecfd0a": [
+          "0c204152-6374-4596-a7b8-c9daebfc0d20",
+          "0c1f4152-6374-4596-a7b8-c9daebfc0d1f"
+        ],
+        "b70c3142-5364-4586-97a8-b9cadbecfd0c": [
+          "a7022132-4354-4576-8798-a9bacbdced02",
+          "a7012132-4354-4576-8798-a9bacbdced01"
+        ],
+        "b70d3142-5364-4586-97a8-b9cadbecfd0d": [
+          {
+            "done": true,
+            "id": "1c015162-7384-45a6-b7c8-d9eafb0c1d01",
+            "text": "Draft the plan"
+          },
+          {
+            "done": false,
+            "id": "1c025162-7384-45a6-b7c8-d9eafb0c1d02",
+            "text": "Review with the team ✓"
+          },
+          {
+            "done": false,
+            "id": "1c035162-7384-45a6-b7c8-d9eafb0c1d03",
+            "text": ""
+          }
+        ]
+      },
+      "title": "Inbox ✉",
+      "updatedAt": 1700000000070
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000009,
+      "icon": "🧪",
+      "id": "70080102-0304-4506-8708-090a0b0c0d08",
+      "title": "Scratch",
+      "updatedAt": 1700000000025
+    },
+    {
+      "children": [],
+      "createdAt": 1700000000018,
+      "id": "700a0102-0304-4506-8708-090a0b0c0d0a",
+      "title": "Recovered",
+      "updatedAt": 1700000000020
+    }
+  ],
+  "properties": {
+    "0000000a-0000-4000-8000-000000000001": {
+      "createdAt": 1700000000060,
+      "kind": "multi_select",
+      "name": "Tags",
+      "options": {
+        "0c154152-6374-4596-a7b8-c9daebfc0d15": {
+          "color": "red",
+          "name": "urgent",
+          "position": "V"
+        },
+        "0c164152-6374-4596-a7b8-c9daebfc0d16": {
+          "color": "gray",
+          "name": "later",
+          "position": "k"
+        },
+        "0c174152-6374-4596-a7b8-c9daebfc0d17": {
+          "color": "yellow",
+          "name": "ideas",
+          "position": "s"
+        },
+        "0c184152-6374-4596-a7b8-c9daebfc0d18": {
+          "color": "blue",
+          "name": "from phone",
+          "position": "w"
+        },
+        "0c194152-6374-4596-a7b8-c9daebfc0d19": {
+          "color": "green",
+          "name": "from the laptop",
+          "position": "w"
+        }
+      },
+      "position": "0"
+    },
+    "b7013142-5364-4586-97a8-b9cadbecfd01": {
+      "createdAt": 1700000000041,
+      "kind": "text",
+      "name": "Summary line",
+      "position": "V"
+    },
+    "b7023142-5364-4586-97a8-b9cadbecfd02": {
+      "createdAt": 1700000000042,
+      "kind": "number",
+      "name": "Cost",
+      "position": "k"
+    },
+    "b7033142-5364-4586-97a8-b9cadbecfd03": {
+      "createdAt": 1700000000043,
+      "kind": "select",
+      "name": "Area",
+      "options": {
+        "0c0b4152-6374-4596-a7b8-c9daebfc0d0b": {
+          "color": "blue",
+          "name": "Home",
+          "position": "V"
+        },
+        "0c0d4152-6374-4596-a7b8-c9daebfc0d0d": {
+          "color": "brown",
+          "name": "Elsewhere",
+          "position": "s"
+        }
+      },
+      "position": "s"
+    },
+    "b7043142-5364-4586-97a8-b9cadbecfd04": {
+      "createdAt": 1700000000044,
+      "kind": "status",
+      "name": "Stage",
+      "options": {
+        "0c294152-6374-4596-a7b8-c9daebfc0d29": {
+          "color": "gray",
+          "group": "todo",
+          "name": "Not started",
+          "position": "V"
+        },
+        "0c2a4152-6374-4596-a7b8-c9daebfc0d2a": {
+          "color": "blue",
+          "group": "in_progress",
+          "name": "In progress",
+          "position": "k"
+        },
+        "0c2b4152-6374-4596-a7b8-c9daebfc0d2b": {
+          "color": "green",
+          "group": "done",
+          "name": "Done",
+          "position": "s"
+        },
+        "0c324152-6374-4596-a7b8-c9daebfc0d32": {
+          "color": "red",
+          "group": "in_progress",
+          "name": "Blocked",
+          "position": "w"
+        }
+      },
+      "position": "w"
+    },
+    "b7053142-5364-4586-97a8-b9cadbecfd05": {
+      "createdAt": 1700000000045,
+      "kind": "date",
+      "name": "Due",
+      "position": "y"
+    },
+    "b7063142-5364-4586-97a8-b9cadbecfd06": {
+      "createdAt": 1700000000046,
+      "kind": "checkbox",
+      "name": "Done",
+      "position": "z"
+    },
+    "b7073142-5364-4586-97a8-b9cadbecfd07": {
+      "createdAt": 1700000000047,
+      "kind": "url",
+      "name": "Link",
+      "position": "zV"
+    },
+    "b7083142-5364-4586-97a8-b9cadbecfd08": {
+      "createdAt": 1700000000048,
+      "kind": "email",
+      "name": "Contact",
+      "position": "zk"
+    },
+    "b70a3142-5364-4586-97a8-b9cadbecfd0a": {
+      "createdAt": 1700000000050,
+      "kind": "multi_select",
+      "name": "Skills",
+      "options": {
+        "0c1f4152-6374-4596-a7b8-c9daebfc0d1f": {
+          "color": "orange",
+          "name": "rust",
+          "position": "V"
+        },
+        "0c204152-6374-4596-a7b8-c9daebfc0d20": {
+          "color": "pink",
+          "name": "design",
+          "position": "k"
+        }
+      },
+      "position": "zw"
+    },
+    "b70b3142-5364-4586-97a8-b9cadbecfd0b": {
+      "createdAt": 1700000000080,
+      "kind": "text",
+      "name": "From the phone",
+      "position": "zzV"
+    },
+    "b70c3142-5364-4586-97a8-b9cadbecfd0c": {
+      "createdAt": 1700000000052,
+      "kind": "files",
+      "name": "Attachments",
+      "position": "zy"
+    },
+    "b70d3142-5364-4586-97a8-b9cadbecfd0d": {
+      "createdAt": 1700000000053,
+      "kind": "checklist",
+      "name": "To do",
+      "position": "zz"
+    }
+  },
+  "space": {
+    "createdAt": 1700000000000,
+    "icon": "🏠",
+    "id": "5a011122-3344-4566-b788-99aabbccdd01",
+    "name": "Personal"
+  },
+  "tombstones": {
+    "70090102-0304-4506-8708-090a0b0c0d09": 1700000000017
+  },
+  "trash": [
+    {
+      "children": [],
+      "createdAt": 1700000000004,
+      "id": "70030102-0304-4506-8708-090a0b0c0d03",
+      "title": "Atomik",
+      "trashedAt": 1700000000014,
+      "trashedFrom": "70020102-0304-4506-8708-090a0b0c0d02",
+      "updatedAt": 1700000000014
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "createdAt": 1700000000008,
+          "id": "70070102-0304-4506-8708-090a0b0c0d07",
+          "title": "Old idea",
+          "updatedAt": 1700000000008
+        }
+      ],
+      "createdAt": 1700000000007,
+      "id": "70060102-0304-4506-8708-090a0b0c0d06",
+      "props": {
+        "0000000a-0000-4000-8000-000000000001": [
+          "0c164152-6374-4596-a7b8-c9daebfc0d16"
+        ]
+      },
+      "title": "Archive",
+      "trashedAt": 1700000000013,
+      "updatedAt": 1700000000070
+    }
+  ]
+}

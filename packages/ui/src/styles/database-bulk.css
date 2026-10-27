@@ -1,0 +1,284 @@
+/*
+ * The selection of rows of a database block, the action bar of the selected rows and the row limit (ADR-0058, agent E; section 5 of
+ * `docs/architecture/database-power-ups.md`). Its own file, loaded by `index.css` after the other parts of the database views, so
+ * that its rules win a tie with them.
+ */
+
+/* ---- The checkbox of a row (PageRowCheckbox.tsx) ----
+ * Hidden until the pointer or focus is on the row, and always while anything is selected (the block says so with
+ * `data-selecting`); a touch screen has no hover, so it is always there. A hidden checkbox keeps its room: nothing moves. */
+
+.page-editor-content .page-row-checkbox {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.12s;
+}
+
+.page-editor-content .page-list[data-selecting] .page-row-checkbox,
+.page-editor-content .page-list-row:hover .page-row-checkbox,
+.page-editor-content .page-table-row:hover .page-row-checkbox,
+.page-editor-content .page-board-card:hover .page-row-checkbox,
+.page-editor-content .page-row-checkbox:focus-visible,
+.page-editor-content .page-row-checkbox:checked,
+.page-editor-content .page-row-checkbox:indeterminate {
+  opacity: 1;
+}
+
+.page-editor-content .page-row-checkbox:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+@media (hover: none) {
+  .page-editor-content .page-row-checkbox {
+    opacity: 1;
+  }
+}
+
+/* The header's "Select all" is always in view: it is the way into the selection from the keyboard and the pointer alike. */
+.page-editor-content .page-table-header-row .page-row-checkbox {
+  opacity: 1;
+}
+
+/* A selected row, card or table row is tinted. */
+.page-editor-content .page-list-row[data-selected],
+.page-editor-content .page-table-body .page-table-row[data-selected],
+.page-editor-content .page-board-card[data-selected] {
+  background: var(--selected);
+}
+
+.page-editor-content .page-board-card[data-selected] {
+  border-color: var(--accent);
+}
+
+/* The list: the checkbox is the first item of the row. */
+.page-editor-content .page-list-row > .page-row-checkbox {
+  margin-inline-end: -4px;
+}
+
+/* The table: a narrow column before the page column. */
+.page-editor-content .page-table-select-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  border-inline-end: 1px solid var(--border);
+}
+
+.page-editor-content .page-table-header-cell.page-table-select-cell {
+  color: var(--text-muted);
+}
+
+/* The board: the checkbox sits in the card's left margin, in front of the icon. */
+.page-editor-content .page-board-card:has(> .page-row-checkbox) {
+  padding-inline-start: 28px;
+}
+
+.page-editor-content .page-board-card > .page-row-checkbox {
+  position: absolute;
+  top: 9px;
+  inset-inline-start: 8px;
+}
+
+/* ---- The action bar (PageListBulkBar.tsx): it takes the place of the row of tabs and toolbar ---- */
+
+.page-editor-content .page-list-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
+  padding: 0 4px 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-editor-content .page-list-bulk-count {
+  padding-inline: 4px 8px;
+  color: var(--text);
+  font-size: 0.9em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-list-bulk-hint {
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.page-editor-content .page-list-bulk .page-list-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.page-editor-content .page-list-bulk .page-list-bulk-danger {
+  color: var(--danger);
+}
+
+.page-editor-content .page-list-bulk-close {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-inline-start: auto;
+  padding: 0;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-bulk-close:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-bulk-close:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.page-editor-content .page-list-bulk-error {
+  flex-basis: 100%;
+  margin: 0 4px;
+}
+
+/* The editor of the chosen property, in the bar. */
+.page-editor-content .page-list-bulk-edit {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
+}
+
+.page-editor-content .page-list-bulk-property {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.page-editor-content .page-list-bulk-editor {
+  flex: 0 1 18rem;
+  min-width: 8rem;
+  padding: 1px 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.page-editor-content .page-list-bulk .page-list-bulk-apply:not(:disabled) {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* The page picker of "Move to…" (a floating panel in the page's body, outside the editor). */
+.page-list-bulk-move {
+  display: grid;
+  gap: 6px;
+  width: 280px;
+  max-height: min(60vh, 380px);
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.page-list-bulk-targets {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-list-bulk-target {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 8px;
+  padding-inline-start: calc(8px + var(--depth, 0) * 14px);
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.9em;
+  text-align: start;
+  cursor: pointer;
+}
+
+.page-list-bulk-target:hover,
+.page-list-bulk-target:focus-visible {
+  background: var(--surface-hover);
+}
+
+.page-list-bulk-target:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.page-list-bulk-target-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-list-bulk-empty {
+  padding: 4px 8px;
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+/* ---- The row limit: "Showing 200 of 1,203" and "Show 200 more" under the list, the table and a board column ---- */
+
+.page-editor-content .page-list-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 4px 6px;
+}
+
+.page-editor-content .page-list-more-count {
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.page-editor-content .page-list-more-button {
+  padding: 3px 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.page-editor-content .page-list-more-button:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.page-editor-content .page-list-more-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+@media print {
+  .page-editor-content .page-list-bulk,
+  .page-editor-content .page-row-checkbox,
+  .page-editor-content .page-table-select-cell .page-row-checkbox,
+  .page-editor-content .page-list-more {
+    display: none;
+  }
+}

@@ -1,0 +1,135 @@
+/*
+ * The restore wizard (ADR-0059, `docs/architecture/drive-backup.md` section 6): a dialog of four steps (the source, the list of
+ * backups, the download, the restore), drawn by `components/RestoreWizard.tsx`. The kit dialog it opens is `.restore-dialog` in
+ * `app.css`.
+ */
+
+.dialog.restore-wizard {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+/* Focus moves to the heading of each step so that a screen reader starts there; it is not a control, so no ring. */
+.restore-step-heading {
+  margin-bottom: 0.5rem;
+}
+
+.restore-step-heading:focus {
+  outline: none;
+}
+
+/* The intro and the notice of a step sit a line apart (a dialog has no card rule for paragraphs). */
+.restore-wizard section > p {
+  margin: 0 0 0.5rem;
+}
+
+.restore-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.restore-source {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.restore-source p {
+  margin: 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.restore-source-title {
+  font-weight: 600;
+}
+
+.restore-origin {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.restore-backups {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: min(45vh, 360px);
+  margin-top: 0.5rem;
+  overflow-y: auto;
+}
+
+.restore-backup {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.restore-backup.is-checked {
+  border-color: var(--accent);
+}
+
+.restore-backup:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.restore-backup input {
+  margin-top: 4px;
+}
+
+.restore-backup-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.restore-backup-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.restore-backup-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  font-size: 0.85rem;
+}
+
+.restore-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.restore-download {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.restore-download progress {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.restore-download p {
+  margin: 0;
+  font-size: 0.85rem;
+}

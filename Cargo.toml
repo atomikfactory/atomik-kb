@@ -1,0 +1,155 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/*",
+  "adapters/*",
+  "apps/desktop/src-tauri",
+]
+# A vendored copy of a crate (`[patch.crates-io]` below), not ours to lint or test.
+exclude = ["vendor/sherpa-onnx-sys"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+rust-version = "1.90"
+authors = ["atomik-kb contributors"]
+
+[workspace.dependencies]
+# internal crates (explicit versions so cargo-deny does not treat them as wildcards)
+kb-types = { path = "crates/kb-types", version = "0.1.0" }
+kb-crypto = { path = "crates/kb-crypto", version = "0.1.0" }
+kb-keys = { path = "crates/kb-keys", version = "0.1.0" }
+kb-storage = { path = "crates/kb-storage", version = "0.1.0" }
+kb-doc = { path = "crates/kb-doc", version = "0.1.0" }
+kb-model = { path = "crates/kb-model", version = "0.1.0" }
+kb-core = { path = "crates/kb-core", version = "0.1.0" }
+kb-storage-native = { path = "adapters/kb-storage-native", version = "0.1.0" }
+kb-sync = { path = "crates/kb-sync", version = "0.1.0" }
+kb-net = { path = "crates/kb-net", version = "0.1.0" }
+kb-server = { path = "crates/kb-server", version = "0.1.0" }
+kb-export = { path = "crates/kb-export", version = "0.1.0" }
+kb-import = { path = "crates/kb-import", version = "0.1.0" }
+kb-ai = { path = "crates/kb-ai", version = "0.1.0" }
+kb-mcp = { path = "crates/kb-mcp", version = "0.1.0" }
+kb-wasm = { path = "crates/kb-wasm", version = "0.1.0" }
+kb-speech = { path = "crates/kb-speech", version = "0.1.0" }
+kb-drive = { path = "crates/kb-drive", version = "0.1.0" }
+
+# serialisation and errors
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+
+# crypto (ADR-0013)
+zeroize = { version = "1", features = ["derive"] }
+hkdf = "0.13"
+sha2 = "0.11"
+blake3 = "1"
+getrandom = "0.4"
+chacha20poly1305 = { version = "0.11", default-features = false, features = ["alloc"] }
+ed25519-dalek = { version = "3", default-features = false, features = ["alloc", "zeroize"] }
+x25519-dalek = { version = "3", default-features = false, features = ["zeroize", "static_secrets"] }
+argon2 = { version = "0.6", default-features = false, features = ["alloc"] }
+subtle = { version = "2", default-features = false }
+
+# storage (ADR-0012)
+rusqlite = { version = "0.40", default-features = false }
+rusqlite_migration = "2"
+
+# platform (OS keystore crates are per-target in adapters/kb-storage-native)
+web-time = "1"
+# The device's UTC offset for the reminders (`Clock::local_offset_seconds`, ADR-0024): the
+# system clock adapter only; no default features (no `std` time zone database, no serde).
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+
+# CRDT engine (ADR-0011); only kb-doc and kb-model may depend on it
+loro = "=1.16.2"
+
+# import and export (ADR-0036); pure Rust, wasm32-capable (the zip crate is for the shell only)
+pulldown-cmark = { version = "0.13.4", default-features = false }
+scraper = { version = "0.27.0", default-features = false }
+# The version scraper builds on: kb-import feeds its parser in pieces to bound the nesting it builds.
+html5ever = "0.39"
+csv = "1.4.0"
+yaml-rust2 = "0.13.0"
+percent-encoding = "2.3.2"
+zip = { version = "9.0.2", default-features = false, features = ["deflate"] }
+# AppFlowy import (ADR-0039): the id of a row's document is a UUIDv5 of the row id (kb-import only).
+uuid = { version = "1", default-features = false, features = ["v5"] }
+
+# formulas (ADR-0055, kb-model only): `test`, `match`, `replace`, `replaceAll`; pure Rust, wasm32-capable. The version the
+# lockfile already held through other crates.
+regex = "1.13"
+
+# local AI and MCP (ADR-0037): the WAV segments sent to Ollama and the MCP tokens
+base64 = { version = "0.22", default-features = false, features = ["alloc"] }
+
+# the web viewer's WebAssembly module (ADR-0051, kb-wasm only). Pinned to the exact version the lockfile
+# already held (released 2026-09-25): the wasm-bindgen CLI that makes the JavaScript glue
+# (`cargo install wasm-bindgen-cli --version 0.2.129 --locked`) must be the same version.
+wasm-bindgen = "=0.2.129"
+
+# local dictation (ADR-0053, kb-speech-native only): the sherpa-onnx recognizer and voice activity detector, as DLLs
+# (`shared`) so the sidecar needs no `+crt-static`. Its `-sys` crate is vendored (`[patch.crates-io]` below).
+sherpa-onnx = { version = "=1.13.8", default-features = false, features = ["shared"] }
+
+# codegen
+ts-rs = { version = "12", features = ["serde-json-impl"] }
+
+# sync: network client, driver and server (ADR-0021); native only
+tokio = { version = "1", default-features = false }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "http2"] }
+tokio-tungstenite = { version = "0.26", features = ["rustls-tls-webpki-roots"] }
+futures-util = { version = "0.3", default-features = false }
+axum = { version = "0.8", features = ["ws", "macros"] }
+tower-http = { version = "0.6", features = ["trace", "limit"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# tests
+tempfile = "3"
+proptest = "1"
+
+# desktop shell (the `tray-icon` feature is the tray of ADR-0040, built from Rust only)
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-build = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-deep-link = "2"
+tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
+tauri-plugin-global-shortcut = "2"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+dbg_macro = "warn"
+print_stdout = "warn"
+print_stderr = "warn"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.dev.package.openssl-src]
+opt-level = 3
+
+# Argon2id with the default 64 MiB parameters takes seconds unoptimised; the app lock
+# and its tests pay that on every unlock.
+[profile.dev.package.argon2]
+opt-level = 3
+
+# sherpa-onnx-sys 1.13.8 build-depends on `zip = "2"`, and every zip 2 to 5 release is yanked, so the published crate
+# no longer resolves. The vendored copy differs in that one line ("2" -> "9"); see vendor/sherpa-onnx-sys/VENDORED.md.
+[patch.crates-io]
+sherpa-onnx-sys = { path = "vendor/sherpa-onnx-sys" }

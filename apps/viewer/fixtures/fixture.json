@@ -1,0 +1,33 @@
+{
+  "attachment": {
+    "attachmentId": "22222222-2222-2222-2222-222222222222",
+    "chunkSize": 4194304,
+    "chunks": [
+      "b8b7156a5581ae6b261a3f749acc3727f1b0c20c9bb7801502f784a7df00392a"
+    ],
+    "mime": "image/png",
+    "name": "picture.png",
+    "size": 181
+  },
+  "cover": "attachment:22222222-2222-2222-2222-222222222222",
+  "coverY": 30,
+  "fragment": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "icon": "🧳",
+  "linkId": "1483df43-9bde-69b5-2d01-48d5a52d933b",
+  "mentions": [
+    {
+      "accountId": "33333333-3333-3333-3333-333333333333",
+      "name": "Bob"
+    }
+  ],
+  "pageId": "11111111-1111-1111-1111-111111111111",
+  "texts": [
+    "Packing list",
+    "Ask @Bob to bring the tickets.",
+    "Added after the first publication."
+  ],
+  "titles": [
+    "Trip notes",
+    "Trip notes (updated)"
+  ]
+}

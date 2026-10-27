@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      The policy of ADR-0051, `kb_types::sharing::VIEWER_CSP` word for word: the viewer's own scripts and WebAssembly,
+      requests to its own origin only, images from its own origin and from the blobs it decrypts. kb-server sends the
+      same text as a header on /view; the meta tag makes `vite dev` and `vite preview` run under it too. No inline
+      script, no inline style, no remote address anywhere in this file (src/viewer.test.ts checks).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; img-src 'self' blob:"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>atomik-kb</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

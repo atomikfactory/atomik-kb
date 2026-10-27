@@ -1,0 +1,563 @@
+/*
+ * The charts of a dashboard (ADR-0055, `docs/architecture/dashboards.md` section 4), agent F: the bar, line and donut drawings, their
+ * tooltip, legend and axes, the popover of a mark's pages and the chart type buttons of the widget settings.
+ *
+ * Its own file so that the agents of the batch do not edit one 11,000-line stylesheet at once; `index.css` loads it after `app.css`.
+ * Colours come from tokens only: the series colours `--chart-1` to `--chart-8` below (a validated categorical order, light and dark,
+ * stepped for each surface), the option colours of the editor's palette (`--text-color-*`, which already follow the theme) and the
+ * variables of `app.css`. Every rule that draws inside the page starts with `.page-editor-content`, as the other database layouts'
+ * rules do: the editor's own `p`, `ul`, `li`, `table` and `th` rules would win a tie. The popover is a floating panel in the page's
+ * body, outside the editor, so its rules do not.
+ */
+
+:root {
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #6250d6;
+  --chart-8: #e34948;
+  /* The "Other" slice and the group of pages without a value: neutral, so that no series colour is spent on them. */
+  --chart-other: #8a93a0;
+  --chart-empty: #c6ccd6;
+  /* What a donut's slices and a line's dots are separated from each other by: the surface the chart is on. */
+  --chart-surface: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
+    --chart-6: #008300;
+    --chart-7: #9085e9;
+    --chart-8: #e66767;
+    --chart-other: #6b7480;
+    --chart-empty: #4b5360;
+  }
+}
+
+:root[data-theme="dark"] {
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  --chart-6: #008300;
+  --chart-7: #9085e9;
+  --chart-8: #e66767;
+  --chart-other: #6b7480;
+  --chart-empty: #4b5360;
+}
+
+/* ---- The body of a chart widget ---- */
+
+.page-editor-content .chart-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--text);
+}
+
+.page-editor-content .chart-message {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+  padding: 0 12px;
+  color: var(--text-muted);
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.page-editor-content .chart-more {
+  flex: none;
+  height: 18px;
+  margin: 0;
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: 0.75em;
+  line-height: 18px;
+  text-align: right;
+}
+
+/* The same data as the drawing, for assistive technology: a table, never seen. The editor's table rules give a minimum width. */
+.page-editor-content .chart-body .visually-hidden {
+  width: 1px;
+  min-width: 0;
+}
+
+.page-editor-content .chart-body .visually-hidden th,
+.page-editor-content .chart-body .visually-hidden td {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* ---- The drawing ---- */
+
+.page-editor-content .chart-plot {
+  position: relative;
+  flex: none;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.page-editor-content .chart-plot:focus {
+  outline: none;
+}
+
+.page-editor-content .chart-plot:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.page-editor-content .chart-svg {
+  display: block;
+  overflow: visible;
+  font-family: inherit;
+}
+
+.page-editor-content .chart-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.page-editor-content .chart-baseline {
+  stroke: var(--text-muted);
+  stroke-opacity: 0.55;
+  stroke-width: 1;
+}
+
+.page-editor-content .chart-guide {
+  stroke: var(--text-muted);
+  stroke-opacity: 0.45;
+  stroke-width: 1;
+}
+
+.page-editor-content .chart-tick,
+.page-editor-content .chart-category {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+
+/* A mark has the colour of its group: a palette slot, an option's colour, or the neutral ones. */
+.page-editor-content .chart-mark,
+.page-editor-content .chart-swatch {
+  --mark: var(--chart-1);
+}
+
+.page-editor-content .chart-mark[data-series="2"],
+.page-editor-content .chart-swatch[data-series="2"] {
+  --mark: var(--chart-2);
+}
+
+.page-editor-content .chart-mark[data-series="3"],
+.page-editor-content .chart-swatch[data-series="3"] {
+  --mark: var(--chart-3);
+}
+
+.page-editor-content .chart-mark[data-series="4"],
+.page-editor-content .chart-swatch[data-series="4"] {
+  --mark: var(--chart-4);
+}
+
+.page-editor-content .chart-mark[data-series="5"],
+.page-editor-content .chart-swatch[data-series="5"] {
+  --mark: var(--chart-5);
+}
+
+.page-editor-content .chart-mark[data-series="6"],
+.page-editor-content .chart-swatch[data-series="6"] {
+  --mark: var(--chart-6);
+}
+
+.page-editor-content .chart-mark[data-series="7"],
+.page-editor-content .chart-swatch[data-series="7"] {
+  --mark: var(--chart-7);
+}
+
+.page-editor-content .chart-mark[data-series="8"],
+.page-editor-content .chart-swatch[data-series="8"] {
+  --mark: var(--chart-8);
+}
+
+.page-editor-content .chart-mark[data-series="other"],
+.page-editor-content .chart-swatch[data-series="other"] {
+  --mark: var(--chart-other);
+}
+
+.page-editor-content .chart-mark[data-series="empty"],
+.page-editor-content .chart-swatch[data-series="empty"] {
+  --mark: var(--chart-empty);
+}
+
+.page-editor-content .chart-mark[data-color="gray"],
+.page-editor-content .chart-swatch[data-color="gray"] {
+  --mark: var(--text-color-gray);
+}
+
+.page-editor-content .chart-mark[data-color="brown"],
+.page-editor-content .chart-swatch[data-color="brown"] {
+  --mark: var(--text-color-brown);
+}
+
+.page-editor-content .chart-mark[data-color="orange"],
+.page-editor-content .chart-swatch[data-color="orange"] {
+  --mark: var(--text-color-orange);
+}
+
+.page-editor-content .chart-mark[data-color="yellow"],
+.page-editor-content .chart-swatch[data-color="yellow"] {
+  --mark: var(--text-color-yellow);
+}
+
+.page-editor-content .chart-mark[data-color="green"],
+.page-editor-content .chart-swatch[data-color="green"] {
+  --mark: var(--text-color-green);
+}
+
+.page-editor-content .chart-mark[data-color="blue"],
+.page-editor-content .chart-swatch[data-color="blue"] {
+  --mark: var(--text-color-blue);
+}
+
+.page-editor-content .chart-mark[data-color="purple"],
+.page-editor-content .chart-swatch[data-color="purple"] {
+  --mark: var(--text-color-purple);
+}
+
+.page-editor-content .chart-mark[data-color="pink"],
+.page-editor-content .chart-swatch[data-color="pink"] {
+  --mark: var(--text-color-pink);
+}
+
+.page-editor-content .chart-mark[data-color="red"],
+.page-editor-content .chart-swatch[data-color="red"] {
+  --mark: var(--text-color-red);
+}
+
+.page-editor-content .chart-mark {
+  fill: var(--mark);
+  transition: opacity 0.12s ease;
+}
+
+/* A slice is cut from the next by a gap in the surface colour (no outline of its own). */
+.page-editor-content .chart-slice .chart-mark {
+  stroke: var(--chart-surface);
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* The mark under the mouse or the keys is the one in full colour. */
+.page-editor-content .chart-plot[data-has-active] .chart-bar:not([data-active]) .chart-mark,
+.page-editor-content .chart-plot[data-has-active] .chart-slice:not([data-active]) .chart-mark {
+  opacity: 0.55;
+}
+
+.page-editor-content .chart-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.page-editor-content .chart-line {
+  fill: none;
+  stroke: var(--chart-1);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.page-editor-content .chart-area {
+  fill: var(--chart-1);
+  fill-opacity: 0.12;
+}
+
+.page-editor-content .chart-dot {
+  fill: var(--chart-1);
+  stroke: var(--chart-surface);
+  stroke-width: 2;
+}
+
+/* ---- The tooltip ---- */
+
+.page-editor-content .chart-tooltip {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: 1px;
+  width: max-content;
+  max-width: 220px;
+  padding: 6px 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  font-size: 0.8em;
+  line-height: 1.35;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 8px));
+}
+
+.page-editor-content .chart-tooltip[data-align="start"] {
+  transform: translate(-12px, calc(-100% - 8px));
+}
+
+.page-editor-content .chart-tooltip[data-align="end"] {
+  transform: translate(calc(-100% + 12px), calc(-100% - 8px));
+}
+
+.page-editor-content .chart-tooltip[data-below] {
+  transform: translate(-50%, 12px);
+}
+
+.page-editor-content .chart-tooltip[data-below][data-align="start"] {
+  transform: translate(-12px, 12px);
+}
+
+.page-editor-content .chart-tooltip[data-below][data-align="end"] {
+  transform: translate(calc(-100% + 12px), 12px);
+}
+
+.page-editor-content .chart-tooltip-title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.page-editor-content .chart-tooltip-line {
+  color: var(--text-muted);
+}
+
+/* ---- The donut and its legend ---- */
+
+.page-editor-content .chart-donut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.page-editor-content .chart-donut[data-legend="below"] {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.page-editor-content .chart-donut[data-legend="below"] .chart-plot {
+  align-self: center;
+}
+
+.page-editor-content .chart-donut-value {
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.page-editor-content .chart-donut-caption {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+
+.page-editor-content .chart-legend {
+  display: grid;
+  flex: 1 1 0;
+  gap: 2px;
+  min-width: 0;
+  min-height: 0;
+  max-width: 280px;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  font-size: 0.85em;
+  list-style: none;
+}
+
+.page-editor-content .chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.page-editor-content .chart-legend-item[data-active] {
+  background: var(--surface-hover);
+}
+
+.page-editor-content .chart-swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: var(--mark);
+  border-radius: 2px;
+}
+
+.page-editor-content .chart-legend-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-editor-content .chart-legend-value {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.page-editor-content .chart-legend-share {
+  margin-inline-start: 6px;
+}
+
+/* ---- The pages of a mark (a floating panel in the body) ---- */
+
+.chart-popover {
+  display: grid;
+  gap: 2px;
+  width: 260px;
+  padding: 6px;
+}
+
+.chart-popover-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 2px 6px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85em;
+}
+
+.chart-popover-group {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chart-popover-value {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.chart-popover-pages {
+  display: grid;
+  max-height: 240px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.chart-popover-page {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 6px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.9em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chart-popover-page:hover {
+  background: var(--surface-hover);
+}
+
+.chart-popover-page:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.chart-popover-page-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chart-popover-more,
+.chart-popover-empty {
+  margin: 0;
+  padding: 4px 6px;
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+/* ---- The chart's part of the widget settings ---- */
+
+.chart-type-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.chart-type-button {
+  flex: 1;
+  height: 28px;
+  padding: 0 8px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.chart-type-button:hover {
+  background: var(--surface-hover);
+}
+
+.chart-type-button[aria-pressed="true"] {
+  background: var(--selected);
+  border-color: var(--accent);
+}
+
+.chart-type-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-editor-content .chart-mark {
+    transition: none;
+  }
+}
+
+/* The colours of the system, where the person asked for them: marks still tell themselves apart by their gaps. */
+@media (forced-colors: active) {
+  .page-editor-content .chart-mark,
+  .page-editor-content .chart-swatch {
+    --mark: CanvasText;
+  }
+
+  .page-editor-content .chart-slice .chart-mark {
+    stroke: Canvas;
+  }
+
+  .page-editor-content .chart-line {
+    stroke: CanvasText;
+  }
+
+  .page-editor-content .chart-dot {
+    fill: CanvasText;
+    stroke: Canvas;
+  }
+}

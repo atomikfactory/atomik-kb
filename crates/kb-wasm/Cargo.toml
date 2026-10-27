@@ -1,0 +1,32 @@
+[package]
+name = "kb-wasm"
+description = "The web viewer's WebAssembly module (ADR-0051): opens a view link's publication and decrypts its attachment chunks. wasm-bindgen over kb-crypto and kb-sync only; no SQLite, no clang."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+publish = false
+
+[lib]
+# `cdylib` is what `wasm-bindgen` turns into the module `apps/viewer` loads; `rlib` keeps the crate
+# checkable and testable on the host.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+kb-types = { workspace = true }
+kb-crypto = { workspace = true }
+kb-sync = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+wasm-bindgen = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+# Only the fixture example (`examples/viewer_fixture.rs`) and the native tests use these: a real page document
+# for the viewer's fixtures. They are never part of the wasm module.
+kb-doc = { workspace = true }
+kb-model = { workspace = true }
+
+[lints]
+workspace = true

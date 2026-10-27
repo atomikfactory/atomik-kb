@@ -1,0 +1,1165 @@
+{
+ "schema": [
+  {
+   "id": "price",
+   "name": "Price",
+   "kind": "number"
+  },
+  {
+   "id": "qty",
+   "name": "Qty",
+   "kind": "number"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "kind": "text"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "One",
+   "values": {
+    "price": {
+     "kind": "number",
+     "value": 3
+    },
+    "qty": {
+     "kind": "number",
+     "value": 4
+    },
+    "note": {
+     "kind": "text",
+     "value": "Hello World 42"
+    }
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Two",
+   "values": {}
+  }
+ ],
+ "people": [],
+ "files": [],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "length of the empty text",
+   "expression": "length(\"\")",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "length of accents",
+   "expression": "length(\"héllo\")",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "length of a list",
+   "expression": "length([1, 2, 3])",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "length of an empty list",
+   "expression": "length([])",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "length counts code points of a combining mark",
+   "expression": "length(\"é\")",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "substring from a start",
+   "expression": "substring(\"hello\", 1)",
+   "result": {
+    "type": "text",
+    "data": "ello"
+   }
+  },
+  {
+   "name": "substring clamps a negative start",
+   "expression": "substring(\"hello\", -2, 2)",
+   "result": {
+    "type": "text",
+    "data": "he"
+   }
+  },
+  {
+   "name": "substring with the end before the start is empty",
+   "expression": "substring(\"hello\", 3, 1)",
+   "result": null
+  },
+  {
+   "name": "substring clamps the end",
+   "expression": "substring(\"hello\", 2, 100)",
+   "result": {
+    "type": "text",
+    "data": "llo"
+   }
+  },
+  {
+   "name": "substring in code points",
+   "expression": "substring(\"😀ab\", 1, 2)",
+   "result": {
+    "type": "text",
+    "data": "a"
+   }
+  },
+  {
+   "name": "substring truncates its arguments",
+   "expression": "substring(\"hello\", 1.9, 3.9)",
+   "result": {
+    "type": "text",
+    "data": "el"
+   }
+  },
+  {
+   "name": "substring past the end is empty",
+   "expression": "substring(\"hello\", 9)",
+   "result": null
+  },
+  {
+   "name": "contains the empty text",
+   "expression": "contains(\"abc\", \"\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "contains is case sensitive",
+   "expression": "contains(\"abc\", \"B\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "contains a part",
+   "expression": "contains(prop(\"Note\"), \"World\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "split on a separator",
+   "expression": "split(\"a,b\", \",\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split on a long separator",
+   "expression": "split(\"a--b\", \"--\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split into characters",
+   "expression": "split(\"abc\", \"\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "a"
+     },
+     {
+      "type": "text",
+      "data": "b"
+     },
+     {
+      "type": "text",
+      "data": "c"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split into code points",
+   "expression": "split(\"😀a\", \"\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "😀"
+     },
+     {
+      "type": "text",
+      "data": "a"
+     }
+    ]
+   }
+  },
+  {
+   "name": "split the empty text",
+   "expression": "split(\"\", \",\").length()",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "split the empty text into characters",
+   "expression": "split(\"\", \"\").length()",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "join texts",
+   "expression": "join([\"a\", \"b\"], \"-\")",
+   "result": {
+    "type": "text",
+    "data": "a-b"
+   }
+  },
+  {
+   "name": "join numbers",
+   "expression": "join([1, 2], \"+\")",
+   "result": {
+    "type": "text",
+    "data": "1+2"
+   }
+  },
+  {
+   "name": "join an empty list is empty",
+   "expression": "join([], \",\")",
+   "result": null
+  },
+  {
+   "name": "join through format",
+   "expression": "join([1.5, 2], \" \")",
+   "result": {
+    "type": "text",
+    "data": "1.5 2"
+   }
+  },
+  {
+   "name": "lower with accents",
+   "expression": "lower(\"ÀB\")",
+   "result": {
+    "type": "text",
+    "data": "àb"
+   }
+  },
+  {
+   "name": "upper with the sharp s",
+   "expression": "upper(\"straße\")",
+   "result": {
+    "type": "text",
+    "data": "STRASSE"
+   }
+  },
+  {
+   "name": "lower of a dotted capital i is two code points",
+   "expression": "lower(\"İ\").length()",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "lower uses the final sigma",
+   "expression": "lower(\"ΑΣ\")",
+   "result": {
+    "type": "text",
+    "data": "ας"
+   }
+  },
+  {
+   "name": "trim white space",
+   "expression": "trim(\"  a b \n\")",
+   "result": {
+    "type": "text",
+    "data": "a b"
+   }
+  },
+  {
+   "name": "trim Unicode white space",
+   "expression": "trim(\" x \")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "trim the next line character",
+   "expression": "trim(\"x \")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "trim keeps the zero width no-break space",
+   "expression": "trim(\"﻿x\")",
+   "result": {
+    "type": "text",
+    "data": "﻿x"
+   }
+  },
+  {
+   "name": "repeat",
+   "expression": "repeat(\"ab\", 3)",
+   "result": {
+    "type": "text",
+    "data": "ababab"
+   }
+  },
+  {
+   "name": "repeat a negative count is empty",
+   "expression": "repeat(\"a\", -1)",
+   "result": null
+  },
+  {
+   "name": "repeat truncates the count",
+   "expression": "repeat(\"a\", 2.9)",
+   "result": {
+    "type": "text",
+    "data": "aa"
+   }
+  },
+  {
+   "name": "repeat over the limit is empty",
+   "expression": "repeat(\"ab\", 6000)",
+   "result": null
+  },
+  {
+   "name": "repeat to the limit",
+   "expression": "repeat(\"a\", 10000).length()",
+   "result": {
+    "type": "number",
+    "data": 10000
+   }
+  },
+  {
+   "name": "repeat clamps the count to 10,000",
+   "expression": "repeat(\"a\", 99999).length()",
+   "result": {
+    "type": "number",
+    "data": 10000
+   }
+  },
+  {
+   "name": "padStart",
+   "expression": "padStart(\"7\", 3, \"0\")",
+   "result": {
+    "type": "text",
+    "data": "007"
+   }
+  },
+  {
+   "name": "padStart of a long text is unchanged",
+   "expression": "padStart(\"abc\", 2, \"0\")",
+   "result": {
+    "type": "text",
+    "data": "abc"
+   }
+  },
+  {
+   "name": "padStart repeats and cuts the pad",
+   "expression": "padStart(\"7\", 6, \"ab\")",
+   "result": {
+    "type": "text",
+    "data": "ababa7"
+   }
+  },
+  {
+   "name": "padEnd repeats and cuts the pad",
+   "expression": "padEnd(\"7\", 4, \"ab\")",
+   "result": {
+    "type": "text",
+    "data": "7aba"
+   }
+  },
+  {
+   "name": "padStart with an empty pad is unchanged",
+   "expression": "padStart(\"x\", 3, \"\")",
+   "result": {
+    "type": "text",
+    "data": "x"
+   }
+  },
+  {
+   "name": "padStart in code points",
+   "expression": "padStart(\"😀\", 3, \"ab\")",
+   "result": {
+    "type": "text",
+    "data": "ab😀"
+   }
+  },
+  {
+   "name": "padStart over the limit is empty",
+   "expression": "padStart(\"x\", 20000, \"0\")",
+   "result": null
+  },
+  {
+   "name": "text plus a number",
+   "expression": "\"a\" + 1",
+   "result": {
+    "type": "text",
+    "data": "a1"
+   }
+  },
+  {
+   "name": "a number plus text",
+   "expression": "1 + \"a\"",
+   "result": {
+    "type": "text",
+    "data": "1a"
+   }
+  },
+  {
+   "name": "text plus a boolean",
+   "expression": "\"a\" + true",
+   "result": {
+    "type": "text",
+    "data": "atrue"
+   }
+  },
+  {
+   "name": "text plus a fraction",
+   "expression": "\"a\" + 0.5",
+   "result": {
+    "type": "text",
+    "data": "a0.5"
+   }
+  },
+  {
+   "name": "text over the limit is empty",
+   "expression": "repeat(\"a\", 6000) + repeat(\"a\", 6000)",
+   "result": null
+  },
+  {
+   "name": "text at the limit",
+   "expression": "(repeat(\"a\", 5000) + repeat(\"a\", 5000)).length()",
+   "result": {
+    "type": "number",
+    "data": 10000
+   }
+  },
+  {
+   "name": "compare texts by code point",
+   "expression": "\"a\" < \"B\"",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "compare an astral and a high BMP character by code point",
+   "expression": "\"😀\" > \"ｱ\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the empty text is the least",
+   "expression": "\"\" < \"a\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a prefix is less",
+   "expression": "\"abc\" < \"abd\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "text equality",
+   "expression": "\"a\" == \"a\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "text inequality",
+   "expression": "\"a\" != \"b\"",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped quote",
+   "expression": "\"a\\\"b\"",
+   "result": {
+    "type": "text",
+    "data": "a\"b"
+   }
+  },
+  {
+   "name": "an escaped backslash",
+   "expression": "\"a\\\\b\"",
+   "result": {
+    "type": "text",
+    "data": "a\\b"
+   }
+  },
+  {
+   "name": "an escaped newline",
+   "expression": "\"a\\nb\"",
+   "result": {
+    "type": "text",
+    "data": "a\nb"
+   }
+  },
+  {
+   "name": "an escaped tab",
+   "expression": "\"a\\tb\"",
+   "result": {
+    "type": "text",
+    "data": "a\tb"
+   }
+  },
+  {
+   "name": "a raw newline in a string",
+   "expression": "\"a\nb\"",
+   "result": {
+    "type": "text",
+    "data": "a\nb"
+   }
+  },
+  {
+   "name": "a string with a comment inside",
+   "expression": "\"a /* b */ c\"",
+   "result": {
+    "type": "text",
+    "data": "a /* b */ c"
+   }
+  },
+  {
+   "name": "test anchors",
+   "expression": "test(\"Hello\", \"^H\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test is case sensitive",
+   "expression": "test(\"abc\", \"B\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "test with alternation and a group",
+   "expression": "test(\"ab\", \"^(a|b)+$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "test with a class and a quantifier",
+   "expression": "test(\"abc123\", \"^[a-z]+[0-9]{3}$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a lazy quantifier",
+   "expression": "match(\"aXbXc\", \"a.*?X\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "aX"
+     }
+    ]
+   }
+  },
+  {
+   "name": "test with a bad pattern is empty",
+   "expression": "test(\"abc\", \"(\")",
+   "result": null
+  },
+  {
+   "name": "an escaped dot",
+   "expression": "test(\"a.c\", \"a\\\\.c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped dot does not match another character",
+   "expression": "test(\"abc\", \"a\\\\.c\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an escaped hyphen",
+   "expression": "test(\"a-c\", \"a\\\\-c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped hash",
+   "expression": "test(\"a#c\", \"a\\\\#c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped quote in a pattern",
+   "expression": "test(\"a\\\"c\", \"a\\\\\\\"c\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "dot does not match a newline",
+   "expression": "test(\"a\\nb\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "dot does not match a carriage return",
+   "expression": "test(\"a\rb\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "dot does not match a line separator",
+   "expression": "test(\"a b\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "dot does not match a paragraph separator",
+   "expression": "test(\"a b\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "dot matches a tab",
+   "expression": "test(\"a\tb\", \"a.b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a look-ahead is not in the subset",
+   "expression": "test(\"a\", \"(?=a)\")",
+   "result": null
+  },
+  {
+   "name": "a negative look-ahead is not in the subset",
+   "expression": "test(\"a\", \"(?!b)\")",
+   "result": null
+  },
+  {
+   "name": "a look-behind is not in the subset",
+   "expression": "test(\"a\", \"(?<=a)\")",
+   "result": null
+  },
+  {
+   "name": "a named group is not in the subset",
+   "expression": "test(\"a\", \"(?<n>a)\")",
+   "result": null
+  },
+  {
+   "name": "a flag group is not in the subset",
+   "expression": "test(\"a\", \"(?i)A\")",
+   "result": null
+  },
+  {
+   "name": "a back-reference is not in the subset",
+   "expression": "test(\"aa\", \"(a)\\\\1\")",
+   "result": null
+  },
+  {
+   "name": "a hex escape is not in the subset",
+   "expression": "test(\"a\", \"\\\\x61\")",
+   "result": null
+  },
+  {
+   "name": "a unicode escape is not in the subset",
+   "expression": "test(\"a\", \"\\\\u0061\")",
+   "result": null
+  },
+  {
+   "name": "a property escape is not in the subset",
+   "expression": "test(\"a\", \"\\\\p{L}\")",
+   "result": null
+  },
+  {
+   "name": "an unclosed class is not a pattern",
+   "expression": "test(\"a\", \"[a\")",
+   "result": null
+  },
+  {
+   "name": "an unmatched parenthesis is not a pattern",
+   "expression": "test(\"a\", \"a)\")",
+   "result": null
+  },
+  {
+   "name": "a quantifier with nothing before it is not a pattern",
+   "expression": "test(\"a\", \"*\")",
+   "result": null
+  },
+  {
+   "name": "an unfinished counted repetition is not a pattern",
+   "expression": "test(\"a\", \"a{\")",
+   "result": null
+  },
+  {
+   "name": "a non-capturing group is in the subset",
+   "expression": "test(\"ab\", \"(?:a)b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a counted repetition",
+   "expression": "test(\"aaa\", \"^a{3}$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an open counted repetition",
+   "expression": "test(\"aaa\", \"^a{2,}$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a bounded counted repetition",
+   "expression": "test(\"aaa\", \"^a{1,2}$\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an empty class matches nothing",
+   "expression": "test(\"ab\", \"[]\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "a negated empty class matches anything",
+   "expression": "test(\"ab\", \"[^]\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "space is white space",
+   "expression": "test(\"a b\", \"a\\\\sb\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the next line character is white space",
+   "expression": "test(\"ab\", \"a\\\\sb\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an ideographic space is white space",
+   "expression": "test(\"a　b\", \"a\\\\sb\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "the zero width no-break space is not white space",
+   "expression": "test(\"a﻿b\", \"a\\\\sb\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "the zero width no-break space is not white",
+   "expression": "test(\"a﻿b\", \"a\\\\Sb\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "white space in a class",
+   "expression": "test(\"a b\", \"a[\\\\s]b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped slash",
+   "expression": "test(\"a/b\", \"a\\\\/b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped dollar",
+   "expression": "test(\"a$b\", \"a\\\\$b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an escaped backslash in a pattern",
+   "expression": "test(\"a\\\\b\", \"a\\\\\\\\b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a lone closing bracket is a literal",
+   "expression": "test(\"a]\", \"a]\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a lone closing brace is a literal",
+   "expression": "test(\"a}\", \"a}\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "dot matches an astral character",
+   "expression": "test(\"😀\", \"^.$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "word and digit classes",
+   "expression": "test(\"A1\", \"^\\\\w\\\\d$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "word is ASCII",
+   "expression": "test(\"é\", \"^\\\\w$\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "digit is ASCII",
+   "expression": "test(\"٣\", \"^\\\\d$\")",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "word boundary",
+   "expression": "test(\"a b\", \"\\\\bb\\\\b\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a negated class",
+   "expression": "test(\"abc\", \"^[^0-9]+$\")",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "match every number",
+   "expression": "match(\"a1b22c333\", \"[0-9]+\")",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "1"
+     },
+     {
+      "type": "text",
+      "data": "22"
+     },
+     {
+      "type": "text",
+      "data": "333"
+     }
+    ]
+   }
+  },
+  {
+   "name": "match nothing is empty",
+   "expression": "match(\"abc\", \"[0-9]+\")",
+   "result": null
+  },
+  {
+   "name": "match with a bad pattern is empty",
+   "expression": "match(\"abc\", \"(\")",
+   "result": null
+  },
+  {
+   "name": "match keeps empty matches inside",
+   "expression": "match(\"baab\", \"a*\").length()",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "match the empty pattern",
+   "expression": "match(\"abc\", \"\").length()",
+   "result": {
+    "type": "number",
+    "data": 4
+   }
+  },
+  {
+   "name": "replace the first match",
+   "expression": "replace(\"aaa\", \"a\", \"b\")",
+   "result": {
+    "type": "text",
+    "data": "baa"
+   }
+  },
+  {
+   "name": "replaceAll every match",
+   "expression": "replaceAll(\"a1b22c\", \"\\\\d+\", \"#\")",
+   "result": {
+    "type": "text",
+    "data": "a#b#c"
+   }
+  },
+  {
+   "name": "replace with groups",
+   "expression": "replace(\"abc\", \"(b)\", \"[$1$1]\")",
+   "result": {
+    "type": "text",
+    "data": "a[bb]c"
+   }
+  },
+  {
+   "name": "replace with a dollar sign",
+   "expression": "replace(\"abc\", \"(b)\", \"$$\")",
+   "result": {
+    "type": "text",
+    "data": "a$c"
+   }
+  },
+  {
+   "name": "replace with the whole match",
+   "expression": "replace(\"abc\", \"b\", \"$0$0\")",
+   "result": {
+    "type": "text",
+    "data": "abbc"
+   }
+  },
+  {
+   "name": "replace with a group that does not exist",
+   "expression": "replace(\"abc\", \"b\", \"$2\")",
+   "result": {
+    "type": "text",
+    "data": "ac"
+   }
+  },
+  {
+   "name": "replace with a group that did not take part",
+   "expression": "replace(\"abc\", \"(z)?b\", \"[$1]\")",
+   "result": {
+    "type": "text",
+    "data": "a[]c"
+   }
+  },
+  {
+   "name": "a dollar sign followed by a letter is literal",
+   "expression": "replace(\"abc\", \"b\", \"$x\")",
+   "result": {
+    "type": "text",
+    "data": "a$xc"
+   }
+  },
+  {
+   "name": "a trailing dollar sign is literal",
+   "expression": "replace(\"abc\", \"b\", \"$\")",
+   "result": {
+    "type": "text",
+    "data": "a$c"
+   }
+  },
+  {
+   "name": "replace without a match",
+   "expression": "replace(\"abc\", \"z\", \"y\")",
+   "result": {
+    "type": "text",
+    "data": "abc"
+   }
+  },
+  {
+   "name": "replace with a bad pattern is empty",
+   "expression": "replace(\"abc\", \"(\", \"x\")",
+   "result": null
+  },
+  {
+   "name": "replaceAll with the empty pattern",
+   "expression": "replaceAll(\"abc\", \"\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "-a-b-c-"
+   }
+  },
+  {
+   "name": "replaceAll with the empty pattern over astral characters",
+   "expression": "replaceAll(\"😀😀\", \"\", \"-\")",
+   "result": {
+    "type": "text",
+    "data": "-😀-😀-"
+   }
+  },
+  {
+   "name": "replaceAll counts an empty match right after a match",
+   "expression": "replaceAll(\"baab\", \"a*\", \"X\")",
+   "result": {
+    "type": "text",
+    "data": "XbXXbX"
+   }
+  },
+  {
+   "name": "replaceAll with an escaped dot and a dollar",
+   "expression": "replaceAll(\"a.b\", \"\\\\.\", \"$$\")",
+   "result": {
+    "type": "text",
+    "data": "a$b"
+   }
+  },
+  {
+   "name": "replace with the groups of a date",
+   "expression": "replace(\"2026-10-18\", \"(\\\\d+)-(\\\\d+)-(\\\\d+)\", \"$3/$2/$1\")",
+   "result": {
+    "type": "text",
+    "data": "18/10/2026"
+   }
+  },
+  {
+   "name": "format a boolean",
+   "expression": "format(true)",
+   "result": {
+    "type": "text",
+    "data": "true"
+   }
+  },
+  {
+   "name": "format a list",
+   "expression": "format([1, 2])",
+   "result": {
+    "type": "text",
+    "data": "1, 2"
+   }
+  },
+  {
+   "name": "format a list with an empty item",
+   "expression": "format([\"a\", at([\"b\"], 3), \"c\"])",
+   "result": {
+    "type": "text",
+    "data": "a, , c"
+   }
+  },
+  {
+   "name": "format an empty text",
+   "expression": "format(\"\")",
+   "result": null
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+[package]
+name = "kb-sync"
+description = "Sync protocol v2 (ADR-0021, ADR-0045): wire formats, verification, the RemoteStore trait, a reference remote and its conformance suite. Pure, wasm32-capable."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+default = []
+# Exposes the conformance suite and the reference remote's adversarial knobs to other
+# crates' tests (the fixture of the suite uses kb-types' seeded generator).
+testing = ["kb-types/testing"]
+
+[dependencies]
+kb-types = { workspace = true }
+kb-crypto = { workspace = true }
+kb-keys = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+zeroize = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+proptest = { workspace = true }

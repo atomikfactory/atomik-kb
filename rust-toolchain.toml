@@ -1,0 +1,6 @@
+# Pinned toolchain for reproducible builds. Bump deliberately, in its own commit.
+[toolchain]
+channel = "1.99.0"
+components = ["clippy", "rustfmt"]
+targets = ["wasm32-unknown-unknown"]
+profile = "minimal"

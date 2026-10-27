@@ -1,0 +1,40 @@
+[package]
+name = "kb-net"
+description = "Sync network client and driver (ADR-0021): HttpRemote over reqwest and WebSocket, and the SyncDriver loop that runs the cycle against a core. Native only."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+kb-crypto = { workspace = true }
+kb-keys = { workspace = true }
+kb-sync = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true, features = ["rt", "time", "sync", "macros", "net"] }
+reqwest = { workspace = true }
+tokio-tungstenite = { workspace = true }
+futures-util = { workspace = true, features = ["std", "sink"] }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+kb-sync = { workspace = true, features = ["testing"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "sync", "net", "test-util"] }
+# A stub server for the HTTP remote's tests (status mapping, sessions, notifications).
+axum = { workspace = true }
+# The end-to-end tests (`tests/`): people with a real core each (over a plain SQLite file), one
+# `MemoryRemote` or an in-process `kb-server` between them.
+kb-core = { workspace = true }
+kb-storage = { workspace = true }
+kb-server = { workspace = true }
+tempfile = { workspace = true }
+# The log of an end-to-end test, on stderr when `KB_TEST_LOG` names a filter (`debug`, `kb_net=trace`).
+tracing-subscriber = { workspace = true }

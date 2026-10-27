@@ -1,0 +1,1994 @@
+{
+ "schema": [
+  {
+   "id": "num",
+   "name": "Num",
+   "kind": "number"
+  },
+  {
+   "id": "txt",
+   "name": "Txt",
+   "kind": "text"
+  },
+  {
+   "id": "link",
+   "name": "Link",
+   "kind": "url"
+  },
+  {
+   "id": "mail",
+   "name": "Mail",
+   "kind": "email"
+  },
+  {
+   "id": "tel",
+   "name": "Tel",
+   "kind": "phone"
+  },
+  {
+   "id": "pick",
+   "name": "Pick",
+   "kind": "select",
+   "options": [
+    {
+     "id": "pa",
+     "name": "Alpha"
+    },
+    {
+     "id": "pb",
+     "name": "Beta"
+    }
+   ]
+  },
+  {
+   "id": "stat",
+   "name": "Stat",
+   "kind": "status",
+   "options": [
+    {
+     "id": "s1",
+     "name": "Open"
+    },
+    {
+     "id": "s2",
+     "name": "Closed"
+    }
+   ]
+  },
+  {
+   "id": "multi",
+   "name": "Multi",
+   "kind": "multi_select",
+   "options": [
+    {
+     "id": "m1",
+     "name": "One"
+    },
+    {
+     "id": "m2",
+     "name": "Two"
+    },
+    {
+     "id": "m3",
+     "name": "Three"
+    }
+   ]
+  },
+  {
+   "id": "when",
+   "name": "When",
+   "kind": "date"
+  },
+  {
+   "id": "chk",
+   "name": "Chk",
+   "kind": "checkbox"
+  },
+  {
+   "id": "files",
+   "name": "Files",
+   "kind": "files"
+  },
+  {
+   "id": "steps",
+   "name": "Steps",
+   "kind": "checklist"
+  },
+  {
+   "id": "where",
+   "name": "Where",
+   "kind": "place"
+  },
+  {
+   "id": "who",
+   "name": "Who",
+   "kind": "person"
+  },
+  {
+   "id": "rel",
+   "name": "Rel",
+   "kind": "relation"
+  },
+  {
+   "id": "created",
+   "name": "Created",
+   "kind": "created_time"
+  },
+  {
+   "id": "edited",
+   "name": "Edited",
+   "kind": "last_edited_time"
+  },
+  {
+   "id": "r_cnt",
+   "name": "R count",
+   "kind": "rollup",
+   "rollup": {
+    "function": "count_all",
+    "targetKind": null
+   }
+  },
+  {
+   "id": "r_unique",
+   "name": "R unique",
+   "kind": "rollup",
+   "rollup": {
+    "function": "count_unique",
+    "targetKind": null
+   }
+  },
+  {
+   "id": "r_empty",
+   "name": "R empty",
+   "kind": "rollup",
+   "rollup": {
+    "function": "count_empty",
+    "targetKind": null
+   }
+  },
+  {
+   "id": "r_pe",
+   "name": "R percent empty",
+   "kind": "rollup",
+   "rollup": {
+    "function": "percent_empty",
+    "targetKind": null
+   }
+  },
+  {
+   "id": "r_avg",
+   "name": "R average",
+   "kind": "rollup",
+   "rollup": {
+    "function": "average",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "r_med",
+   "name": "R median",
+   "kind": "rollup",
+   "rollup": {
+    "function": "median",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "r_min",
+   "name": "R min",
+   "kind": "rollup",
+   "rollup": {
+    "function": "min",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "r_max",
+   "name": "R max",
+   "kind": "rollup",
+   "rollup": {
+    "function": "max",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "r_rng",
+   "name": "R range",
+   "kind": "rollup",
+   "rollup": {
+    "function": "range",
+    "targetKind": "number"
+   }
+  },
+  {
+   "id": "r_early",
+   "name": "R earliest",
+   "kind": "rollup",
+   "rollup": {
+    "function": "earliest",
+    "targetKind": "date"
+   }
+  },
+  {
+   "id": "r_late",
+   "name": "R latest",
+   "kind": "rollup",
+   "rollup": {
+    "function": "latest",
+    "targetKind": "date"
+   }
+  },
+  {
+   "id": "r_cc",
+   "name": "R checked",
+   "kind": "rollup",
+   "rollup": {
+    "function": "count_checked",
+    "targetKind": "checkbox"
+   }
+  },
+  {
+   "id": "r_prog",
+   "name": "R progress",
+   "kind": "rollup",
+   "rollup": {
+    "function": "checklist_progress",
+    "targetKind": "checklist"
+   }
+  },
+  {
+   "id": "o_url",
+   "name": "O url",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "url"
+   }
+  },
+  {
+   "id": "o_date",
+   "name": "O date",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "date"
+   }
+  },
+  {
+   "id": "o_place",
+   "name": "O place",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "place"
+   }
+  },
+  {
+   "id": "o_steps",
+   "name": "O steps",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "checklist"
+   }
+  },
+  {
+   "id": "o_check",
+   "name": "O checkbox",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "checkbox"
+   }
+  },
+  {
+   "id": "o_text",
+   "name": "O text",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "text"
+   }
+  },
+  {
+   "id": "o_stat",
+   "name": "O status",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": "status"
+   },
+   "options": [
+    {
+     "id": "s1",
+     "name": "Open"
+    },
+    {
+     "id": "s2",
+     "name": "Closed"
+    }
+   ]
+  },
+  {
+   "id": "o_title",
+   "name": "O title",
+   "kind": "rollup",
+   "rollup": {
+    "function": "show_original",
+    "targetKind": null
+   }
+  },
+  {
+   "id": "f_label",
+   "name": "F label",
+   "kind": "formula",
+   "expression": "prop(\"Name\") + \" (\" + prop(\"Pick\") + \")\""
+  },
+  {
+   "id": "f_twice",
+   "name": "F twice",
+   "kind": "formula",
+   "expression": "prop(\"Num\") * 2"
+  },
+  {
+   "id": "f_rel",
+   "name": "F rel",
+   "kind": "formula",
+   "expression": "prop(\"Rel\").map(current.prop(\"F twice\")).sum()"
+  },
+  {
+   "id": "f_deep",
+   "name": "F deep",
+   "kind": "formula",
+   "expression": "prop(\"Rel\").first().prop(\"F rel\")"
+  }
+ ],
+ "pages": [
+  {
+   "id": "p1",
+   "title": "Main",
+   "created": "2026-10-01T09:00",
+   "edited": "2026-10-02T10:30",
+   "values": {
+    "num": {
+     "kind": "number",
+     "value": 3
+    },
+    "txt": {
+     "kind": "text",
+     "value": "Hello"
+    },
+    "link": {
+     "kind": "url",
+     "value": "https://x.test"
+    },
+    "mail": {
+     "kind": "email",
+     "value": "a@x.test"
+    },
+    "tel": {
+     "kind": "phone",
+     "value": "555 0100"
+    },
+    "pick": {
+     "kind": "select",
+     "value": "pb"
+    },
+    "stat": {
+     "kind": "status",
+     "value": "s2"
+    },
+    "multi": {
+     "kind": "multi_select",
+     "value": [
+      "m3",
+      "m1",
+      "gone"
+     ]
+    },
+    "when": {
+     "kind": "date",
+     "value": {
+      "date": "2026-10-25",
+      "time": "09:00"
+     }
+    },
+    "chk": {
+     "kind": "checkbox",
+     "value": false
+    },
+    "files": {
+     "kind": "files",
+     "value": [
+      "f2",
+      "f9",
+      "f1"
+     ]
+    },
+    "steps": {
+     "kind": "checklist",
+     "value": [
+      {
+       "id": "i1",
+       "text": "a",
+       "done": true
+      },
+      {
+       "id": "i2",
+       "text": "b",
+       "done": false
+      },
+      {
+       "id": "i3",
+       "text": "c",
+       "done": true
+      }
+     ]
+    },
+    "where": {
+     "kind": "place",
+     "value": {
+      "name": "Café",
+      "lat": 48.85,
+      "lon": 2.35
+     }
+    },
+    "who": {
+     "kind": "person",
+     "value": [
+      "ada",
+      "ghost"
+     ]
+    },
+    "rel": {
+     "kind": "relation",
+     "value": [
+      "r1",
+      "r2"
+     ]
+    },
+    "r_cnt": {
+     "kind": "rollup",
+     "value": {
+      "function": "count_all",
+      "result": {
+       "type": "number",
+       "data": 2
+      }
+     }
+    },
+    "r_unique": {
+     "kind": "rollup",
+     "value": {
+      "function": "count_unique",
+      "result": {
+       "type": "number",
+       "data": 2
+      }
+     }
+    },
+    "r_empty": {
+     "kind": "rollup",
+     "value": {
+      "function": "count_empty",
+      "result": {
+       "type": "number",
+       "data": 1
+      }
+     }
+    },
+    "r_pe": {
+     "kind": "rollup",
+     "value": {
+      "function": "percent_empty",
+      "result": {
+       "type": "number",
+       "data": 50
+      }
+     }
+    },
+    "r_avg": {
+     "kind": "rollup",
+     "value": {
+      "function": "average",
+      "result": {
+       "type": "number",
+       "data": 4.5
+      }
+     }
+    },
+    "r_med": {
+     "kind": "rollup",
+     "value": {
+      "function": "median",
+      "result": {
+       "type": "number",
+       "data": 4.5
+      }
+     }
+    },
+    "r_min": {
+     "kind": "rollup",
+     "value": {
+      "function": "min",
+      "result": {
+       "type": "number",
+       "data": 2
+      }
+     }
+    },
+    "r_max": {
+     "kind": "rollup",
+     "value": {
+      "function": "max",
+      "result": {
+       "type": "number",
+       "data": 7
+      }
+     }
+    },
+    "r_rng": {
+     "kind": "rollup",
+     "value": {
+      "function": "range",
+      "result": {
+       "type": "number",
+       "data": 5
+      }
+     }
+    },
+    "r_early": {
+     "kind": "rollup",
+     "value": {
+      "function": "earliest",
+      "result": {
+       "type": "date",
+       "data": {
+        "date": "2026-03-01"
+       }
+      }
+     }
+    },
+    "r_late": {
+     "kind": "rollup",
+     "value": {
+      "function": "latest",
+      "result": {
+       "type": "date",
+       "data": {
+        "date": "2026-09-30",
+        "time": "17:45"
+       }
+      }
+     }
+    },
+    "r_cc": {
+     "kind": "rollup",
+     "value": {
+      "function": "count_checked",
+      "result": {
+       "type": "number",
+       "data": 1
+      }
+     }
+    },
+    "r_prog": {
+     "kind": "rollup",
+     "value": {
+      "function": "checklist_progress",
+      "result": {
+       "type": "progress",
+       "data": {
+        "done": 2,
+        "total": 3
+       }
+      }
+     }
+    },
+    "o_url": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "url",
+         "value": "https://a.test"
+        },
+        {
+         "kind": "url",
+         "value": "https://b.test"
+        }
+       ]
+      }
+     }
+    },
+    "o_date": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "date",
+         "value": {
+          "date": "2026-01-02"
+         }
+        },
+        {
+         "kind": "date",
+         "value": {
+          "date": "2026-01-03",
+          "time": "08:15"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "o_place": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "place",
+         "value": {
+          "name": "Home"
+         }
+        },
+        {
+         "kind": "place",
+         "value": {
+          "name": "Work"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "o_steps": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "checklist",
+         "value": [
+          {
+           "id": "x1",
+           "text": "",
+           "done": true
+          },
+          {
+           "id": "x2",
+           "text": "",
+           "done": false
+          }
+         ]
+        },
+        {
+         "kind": "checklist",
+         "value": [
+          {
+           "id": "x3",
+           "text": "",
+           "done": true
+          }
+         ]
+        }
+       ]
+      }
+     }
+    },
+    "o_check": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "checkbox",
+         "value": true
+        },
+        {
+         "kind": "checkbox",
+         "value": false
+        }
+       ]
+      }
+     }
+    },
+    "o_text": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "text",
+         "value": "one"
+        },
+        {
+         "kind": "text",
+         "value": ""
+        },
+        {
+         "kind": "text",
+         "value": "three"
+        }
+       ]
+      }
+     }
+    },
+    "o_stat": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "status",
+         "value": "s1"
+        },
+        {
+         "kind": "status",
+         "value": "s2"
+        },
+        {
+         "kind": "status",
+         "value": "s1"
+        }
+       ]
+      }
+     }
+    },
+    "o_title": {
+     "kind": "rollup",
+     "value": {
+      "function": "show_original",
+      "result": {
+       "type": "values",
+       "data": [
+        {
+         "kind": "text",
+         "value": "R One"
+        },
+        {
+         "kind": "text",
+         "value": "R Two"
+        }
+       ]
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "r1",
+   "title": "R One",
+   "created": "2026-03-01T08:00",
+   "edited": "2026-03-02T09:00",
+   "values": {
+    "num": {
+     "kind": "number",
+     "value": 10
+    },
+    "txt": {
+     "kind": "text",
+     "value": "R"
+    },
+    "pick": {
+     "kind": "select",
+     "value": "pa"
+    },
+    "stat": {
+     "kind": "status",
+     "value": "s1"
+    },
+    "multi": {
+     "kind": "multi_select",
+     "value": [
+      "m1",
+      "m3"
+     ]
+    },
+    "when": {
+     "kind": "date",
+     "value": {
+      "date": "2026-03-01"
+     }
+    },
+    "chk": {
+     "kind": "checkbox",
+     "value": true
+    },
+    "files": {
+     "kind": "files",
+     "value": [
+      "f1"
+     ]
+    },
+    "steps": {
+     "kind": "checklist",
+     "value": [
+      {
+       "id": "i1",
+       "text": "a",
+       "done": true
+      }
+     ]
+    },
+    "where": {
+     "kind": "place",
+     "value": {
+      "name": "Home"
+     }
+    },
+    "who": {
+     "kind": "person",
+     "value": [
+      "ada"
+     ]
+    },
+    "rel": {
+     "kind": "relation",
+     "value": [
+      "p1",
+      "r2"
+     ]
+    }
+   }
+  },
+  {
+   "id": "r2",
+   "title": "R Two",
+   "created": "2026-04-01T08:00",
+   "edited": "2026-04-01T08:00",
+   "values": {}
+  },
+  {
+   "id": "p4",
+   "title": "",
+   "values": {}
+  }
+ ],
+ "people": [
+  {
+   "id": "ada",
+   "name": "Ada",
+   "email": "ada@example.com"
+  }
+ ],
+ "files": [
+  {
+   "id": "f1",
+   "name": "plan.pdf"
+  },
+  {
+   "id": "f2",
+   "name": "notes.txt"
+  }
+ ],
+ "titleLabel": "Name",
+ "env": {
+  "now": "2026-10-18T09:30",
+  "offsetMinutes": 120
+ },
+ "cases": [
+  {
+   "name": "a number",
+   "expression": "prop(\"Num\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "a text",
+   "expression": "prop(\"Txt\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Hello"
+   }
+  },
+  {
+   "name": "a url",
+   "expression": "prop(\"Link\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "https://x.test"
+   }
+  },
+  {
+   "name": "an email",
+   "expression": "prop(\"Mail\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "a@x.test"
+   }
+  },
+  {
+   "name": "a phone",
+   "expression": "prop(\"Tel\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "555 0100"
+   }
+  },
+  {
+   "name": "a select is its option's name",
+   "expression": "prop(\"Pick\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Beta"
+   }
+  },
+  {
+   "name": "a status is its option's name",
+   "expression": "prop(\"Stat\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Closed"
+   }
+  },
+  {
+   "name": "a multi-select keeps the stored order and skips unknown options",
+   "expression": "prop(\"Multi\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Three"
+     },
+     {
+      "type": "text",
+      "data": "One"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a date with a time",
+   "expression": "prop(\"When\")",
+   "page": "p1",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-10-25",
+     "time": "09:00"
+    }
+   }
+  },
+  {
+   "name": "a checkbox",
+   "expression": "prop(\"Chk\")",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": false
+   },
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "files are their names, unknown ones skipped",
+   "expression": "prop(\"Files\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "notes.txt"
+     },
+     {
+      "type": "text",
+      "data": "plan.pdf"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a checklist is its done flags",
+   "expression": "prop(\"Steps\")",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "a place is its name",
+   "expression": "prop(\"Where\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Café"
+   }
+  },
+  {
+   "name": "people keep unknown accounts",
+   "expression": "prop(\"Who\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "people are a list of people",
+   "expression": "prop(\"Who\").first()",
+   "page": "p1",
+   "type": {
+    "base": "person",
+    "list": false
+   },
+   "result": {
+    "type": "person",
+    "data": "ada"
+   }
+  },
+  {
+   "name": "people as a result",
+   "expression": "prop(\"Who\")",
+   "page": "r2",
+   "type": {
+    "base": "person",
+    "list": true
+   },
+   "result": null
+  },
+  {
+   "name": "the name of an unknown account is empty",
+   "expression": "prop(\"Who\").map(name(current)).length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "the e-mail of an unknown account is empty",
+   "expression": "prop(\"Who\").map(email(current)).join(\"|\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "ada@example.com|"
+   }
+  },
+  {
+   "name": "the title",
+   "expression": "prop(\"Name\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Main"
+   }
+  },
+  {
+   "name": "an unset text is the empty text",
+   "expression": "prop(\"Txt\") == \"\"",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset select is the empty text",
+   "expression": "prop(\"Pick\") == \"\"",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset status is the empty text",
+   "expression": "prop(\"Stat\") == \"\"",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset place is the empty text",
+   "expression": "prop(\"Where\") == \"\"",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset checkbox is false",
+   "expression": "prop(\"Chk\")",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an unset checkbox counts as empty for empty()",
+   "expression": "empty(prop(\"Chk\"))",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "unset lists are lists",
+   "expression": "prop(\"Multi\").length() + prop(\"Files\").length() + prop(\"Steps\").length() + prop(\"Who\").length() + prop(\"Rel\").length()",
+   "page": "r2",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an unset number is empty",
+   "expression": "prop(\"Num\")",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "an unset date is empty",
+   "expression": "prop(\"When\")",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "an unset number is not zero",
+   "expression": "prop(\"Num\") == 0",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": false
+   }
+  },
+  {
+   "name": "an unset number is empty for empty()",
+   "expression": "empty(prop(\"Num\"))",
+   "page": "r2",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a blank title is no value",
+   "expression": "prop(\"Name\")",
+   "page": "p4",
+   "result": null
+  },
+  {
+   "name": "a blank title is the empty text",
+   "expression": "prop(\"Name\") == \"\"",
+   "page": "p4",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a blank title has no length",
+   "expression": "length(prop(\"Name\"))",
+   "page": "p4",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "count_all",
+   "expression": "prop(\"R count\")",
+   "page": "p1",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "count_unique",
+   "expression": "prop(\"R unique\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "count_empty",
+   "expression": "prop(\"R empty\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "percent_empty is a number",
+   "expression": "prop(\"R percent empty\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 50
+   }
+  },
+  {
+   "name": "average",
+   "expression": "prop(\"R average\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 4.5
+   }
+  },
+  {
+   "name": "median",
+   "expression": "prop(\"R median\") * 2",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 9
+   }
+  },
+  {
+   "name": "min",
+   "expression": "prop(\"R min\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "max",
+   "expression": "prop(\"R max\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 7
+   }
+  },
+  {
+   "name": "range",
+   "expression": "prop(\"R range\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 5
+   }
+  },
+  {
+   "name": "count_checked",
+   "expression": "prop(\"R checked\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 1
+   }
+  },
+  {
+   "name": "earliest is a date",
+   "expression": "prop(\"R earliest\")",
+   "page": "p1",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-03-01"
+    }
+   }
+  },
+  {
+   "name": "latest keeps its time",
+   "expression": "prop(\"R latest\")",
+   "page": "p1",
+   "type": {
+    "base": "date",
+    "list": false
+   },
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-09-30",
+     "time": "17:45"
+    }
+   }
+  },
+  {
+   "name": "a date rollup in arithmetic",
+   "expression": "dateBetween(prop(\"R latest\"), prop(\"R earliest\"), \"days\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 213
+   }
+  },
+  {
+   "name": "checklist progress is done over total",
+   "expression": "prop(\"R progress\")",
+   "page": "p1",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 0.6666666666666666
+   }
+  },
+  {
+   "name": "a rollup that is unset is empty",
+   "expression": "prop(\"R average\")",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "an unset rollup in arithmetic",
+   "expression": "prop(\"R average\") + 1",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "an unset count rollup is empty",
+   "expression": "prop(\"R count\")",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "show_original of urls",
+   "expression": "prop(\"O url\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "https://a.test"
+     },
+     {
+      "type": "text",
+      "data": "https://b.test"
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of dates",
+   "expression": "prop(\"O date\")",
+   "page": "p1",
+   "type": {
+    "base": "date",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-01-02"
+      }
+     },
+     {
+      "type": "date",
+      "data": {
+       "date": "2026-01-03",
+       "time": "08:15"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of places is their names",
+   "expression": "prop(\"O place\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Home"
+     },
+     {
+      "type": "text",
+      "data": "Work"
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of checklists is flattened",
+   "expression": "prop(\"O steps\")",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     },
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of checkboxes",
+   "expression": "prop(\"O checkbox\")",
+   "page": "p1",
+   "type": {
+    "base": "boolean",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of texts keeps empty items inside",
+   "expression": "prop(\"O text\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 3
+   }
+  },
+  {
+   "name": "show_original of texts drops them from a result",
+   "expression": "prop(\"O text\")",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "one"
+     },
+     {
+      "type": "text",
+      "data": "three"
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of statuses reads the options of the rollup",
+   "expression": "prop(\"O status\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "Open"
+     },
+     {
+      "type": "text",
+      "data": "Closed"
+     },
+     {
+      "type": "text",
+      "data": "Open"
+     }
+    ]
+   }
+  },
+  {
+   "name": "show_original of titles",
+   "expression": "prop(\"O title\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": true
+   },
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "R One"
+     },
+     {
+      "type": "text",
+      "data": "R Two"
+     }
+    ]
+   }
+  },
+  {
+   "name": "every checked",
+   "expression": "prop(\"O checkbox\").some(current)",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "an unset show_original is an empty list",
+   "expression": "prop(\"O url\").length()",
+   "page": "r2",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "an unset show_original has no value",
+   "expression": "prop(\"O url\")",
+   "page": "r2",
+   "result": null
+  },
+  {
+   "name": "a number of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Num\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "a text of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Txt\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "R"
+   }
+  },
+  {
+   "name": "a select of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Pick\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Alpha"
+   }
+  },
+  {
+   "name": "a status of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Stat\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Open"
+   }
+  },
+  {
+   "name": "a multi-select of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Multi\")",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "One"
+     },
+     {
+      "type": "text",
+      "data": "Three"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a date of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"When\")",
+   "page": "p1",
+   "result": {
+    "type": "date",
+    "data": {
+     "date": "2026-03-01"
+    }
+   }
+  },
+  {
+   "name": "a checkbox of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Chk\")",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "files of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Files\")",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "text",
+      "data": "plan.pdf"
+     }
+    ]
+   }
+  },
+  {
+   "name": "a checklist of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Steps\")",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "a place of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Where\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Home"
+   }
+  },
+  {
+   "name": "people of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Who\")",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "person",
+      "data": "ada"
+     }
+    ]
+   }
+  },
+  {
+   "name": "the title of a related page",
+   "expression": "prop(\"Rel\").first().prop(\"Name\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "R One"
+   }
+  },
+  {
+   "name": "the creation time of a related page",
+   "expression": "formatDate(prop(\"Rel\").first().prop(\"Created\"), \"YYYY-MM-DD HH:mm\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "2026-03-01 08:00"
+   }
+  },
+  {
+   "name": "the edit time of a related page",
+   "expression": "formatDate(prop(\"Rel\").first().prop(\"Edited\"), \"YYYY-MM-DD HH:mm\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "2026-03-02 09:00"
+   }
+  },
+  {
+   "name": "an unset number of a related page is empty",
+   "expression": "prop(\"Rel\").at(1).prop(\"Num\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "an unset checkbox of a related page is false",
+   "expression": "prop(\"Rel\").map(current.prop(\"Chk\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "boolean",
+      "data": true
+     },
+     {
+      "type": "boolean",
+      "data": false
+     }
+    ]
+   }
+  },
+  {
+   "name": "empty items stay inside a mapped list",
+   "expression": "prop(\"Rel\").map(current.prop(\"Num\")).length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "empty items are dropped from a result",
+   "expression": "prop(\"Rel\").map(current.prop(\"Num\"))",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 10
+     }
+    ]
+   }
+  },
+  {
+   "name": "sum skips the empty items",
+   "expression": "prop(\"Rel\").map(current.prop(\"Num\")).sum()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "mean skips the empty items",
+   "expression": "prop(\"Rel\").map(current.prop(\"Num\")).mean()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 10
+   }
+  },
+  {
+   "name": "the number of tags per related page",
+   "expression": "prop(\"Rel\").map(current.prop(\"Multi\").length())",
+   "page": "p1",
+   "result": {
+    "type": "list",
+    "data": [
+     {
+      "type": "number",
+      "data": 2
+     },
+     {
+      "type": "number",
+      "data": 0
+     }
+    ]
+   }
+  },
+  {
+   "name": "a related page that has no rollup value reads empty",
+   "expression": "prop(\"Rel\").first().prop(\"R count\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "a page reads itself through a relation",
+   "expression": "prop(\"Rel\").first().prop(\"Rel\").first().prop(\"Num\")",
+   "page": "p1",
+   "result": null
+  },
+  {
+   "name": "a related page's relation lists its pages",
+   "expression": "prop(\"Rel\").first().prop(\"Rel\").length()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 2
+   }
+  },
+  {
+   "name": "a related page's relation formats their titles",
+   "expression": "format(prop(\"Rel\").first().prop(\"Rel\"))",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "Main, R Two"
+   }
+  },
+  {
+   "name": "pages two hops away compare by id",
+   "expression": "prop(\"Rel\").first().prop(\"Rel\").first() == prop(\"Rel\").first().prop(\"Rel\").first()",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "this page seen through a relation equals this page's id",
+   "expression": "id(prop(\"Rel\").first().prop(\"Rel\").first()) == id()",
+   "page": "p1",
+   "result": {
+    "type": "boolean",
+    "data": true
+   }
+  },
+  {
+   "name": "a formula over text and a select",
+   "expression": "prop(\"F label\")",
+   "page": "p1",
+   "type": {
+    "base": "text",
+    "list": false
+   },
+   "result": {
+    "type": "text",
+    "data": "Main (Beta)"
+   }
+  },
+  {
+   "name": "a formula over an unset select",
+   "expression": "prop(\"F label\")",
+   "page": "r2",
+   "result": {
+    "type": "text",
+    "data": "R Two ()"
+   }
+  },
+  {
+   "name": "a formula over a number",
+   "expression": "prop(\"F twice\")",
+   "page": "p1",
+   "type": {
+    "base": "number",
+    "list": false
+   },
+   "result": {
+    "type": "number",
+    "data": 6
+   }
+  },
+  {
+   "name": "a formula over a related page's formula",
+   "expression": "prop(\"Rel\").map(current.prop(\"F twice\")).sum()",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 20
+   }
+  },
+  {
+   "name": "a formula over the related formulas",
+   "expression": "prop(\"F rel\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 20
+   }
+  },
+  {
+   "name": "a related formula that reads through its own relation sums nothing",
+   "expression": "prop(\"F deep\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a related formula over a relation reads its pages one hop further and finds nothing",
+   "expression": "prop(\"Rel\").first().prop(\"F rel\")",
+   "page": "p1",
+   "result": {
+    "type": "number",
+    "data": 0
+   }
+  },
+  {
+   "name": "a related formula is evaluated on its page",
+   "expression": "prop(\"Rel\").first().prop(\"F label\")",
+   "page": "p1",
+   "result": {
+    "type": "text",
+    "data": "R One (Alpha)"
+   }
+  }
+ ]
+}

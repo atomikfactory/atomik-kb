@@ -1,0 +1,21 @@
+[package]
+name = "kb-ai"
+description = "Local AI rules of atomik-kb (ADR-0037): Ollama wire types and stream decoder, prompts, page chunking, vectors, rank fusion, transcript cleanup, endpoint policy. Pure; no I/O."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kb-types = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+blake3 = { workspace = true }
+base64 = { workspace = true }
+
+[dev-dependencies]
+kb-types = { workspace = true, features = ["testing"] }
+
+[lints]
+workspace = true
