@@ -1,0 +1,124 @@
+# Nightly build: the Windows installer, the Linux .deb and the kb-server tarball of the tip of main,
+# published as the rolling "Nightly" prerelease (tag `nightly`, moved to the new commit each time).
+#
+# - Runs daily at 03:00 UTC and on demand (workflow_dispatch; `force` builds even without a new commit).
+# - Skips the whole build when the `nightly` tag already points at the commit to build.
+# - Only the publish job can write to the repository; the builds are read-only (_build.yml).
+# - Assets: atomik-kb-nightly-<YYYYMMDD>-<shortsha>-<platform>.<ext> and SHA256SUMS, with build provenance
+#   (verify with `gh attestation verify <file> --repo <owner>/<repo>`).
+#
+# GitHub disables scheduled workflows of a repository with no activity for 60 days; re-enable it in the Actions tab.
+name: Nightly
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Build even when there is no commit since the last nightly"
+        type: boolean
+        default: false
+
+# Never run two nightlies at once, and never cancel one that is publishing.
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Is there a new commit?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+      stem: ${{ steps.decide.outputs.stem }}
+    steps:
+      - id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          # The commit the existing nightly tag points at (empty when there is none yet).
+          last=$(gh api "repos/${GH_REPO}/git/ref/tags/nightly" --jq '.object.sha' 2>/dev/null || true)
+          echo "HEAD:         $SHA"
+          echo "Last nightly: ${last:-none}"
+          if [ "$last" = "$SHA" ] && [ "$FORCE" != "true" ]; then
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "No new commit since the last nightly: nothing to build."
+          else
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "stem=atomik-kb-nightly-$(date -u +%Y%m%d)-${SHA:0:7}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: Build
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    uses: ./.github/workflows/_build.yml
+    with:
+      stem: ${{ needs.check.outputs.stem }}
+    secrets: inherit # only the optional KB_GOOGLE_CLIENT_* secrets are read
+
+  publish:
+    name: Publish the Nightly prerelease
+    needs: [check, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # move the tag, replace the release
+      id-token: write # build provenance
+      attestations: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: dist-*
+          path: out
+          merge-multiple: true
+
+      - name: Checksums
+        run: |
+          cd out
+          ls -l
+          sha256sum -- * > SHA256SUMS
+          cat SHA256SUMS
+
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: out/*
+
+      # Move the rolling tag to the built commit (create it the first time), then replace the release.
+      - name: Move the nightly tag
+        run: |
+          if gh api "repos/${GH_REPO}/git/ref/tags/nightly" >/dev/null 2>&1; then
+            gh api -X PATCH "repos/${GH_REPO}/git/refs/tags/nightly" -f sha="$SHA" -F force=true >/dev/null
+          else
+            gh api -X POST "repos/${GH_REPO}/git/refs" -f ref="refs/tags/nightly" -f sha="$SHA" >/dev/null
+          fi
+
+      - name: Replace the Nightly prerelease
+        run: |
+          # Delete the release only; the tag was just moved and stays.
+          gh release delete nightly --yes 2>/dev/null || true
+          {
+            echo "Automatic build of commit ${SHA:0:7} ($(date -u +%Y-%m-%d))."
+            echo
+            echo "Unsigned development build: expect rough edges. Verify a download with SHA256SUMS or"
+            echo "\`gh attestation verify <file> --repo ${GH_REPO}\`."
+            echo
+            echo "Commit: https://github.com/${GH_REPO}/commit/${SHA}"
+          } > notes.md
+          gh release create nightly out/* \
+            --verify-tag \
+            --prerelease \
+            --title "Nightly" \
+            --notes-file notes.md

@@ -1,0 +1,171 @@
+# Continuous integration: the hosted twin of scripts/check.ps1 (keep the two in step).
+#
+#   rust     fmt, clippy (-D warnings), test, wasm32 check, ts-rs output up to date   (Linux)
+#   web      pnpm lint / typecheck / test / build                                     (Linux)
+#   deny     cargo deny (advisories, licences, bans, sources)
+#   windows  build + test of the whole workspace, the platform the desktop app ships on
+#
+# Third-party actions are pinned to full commit SHAs; Dependabot keeps them current.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same PR / branch makes the older run pointless.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+  CARGO_NET_RETRY: "10"
+  RUST_BACKTRACE: "1"
+
+jobs:
+  rust:
+    name: Rust (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # What the Tauri 2 shell needs to compile on Linux, plus clang for the full
+      # `cargo check-wasm` (SQLCipher / OpenSSL are built from source: perl, make, cc).
+      - name: Install system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential pkg-config perl make clang curl file \
+            libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev \
+            libayatana-appindicator3-dev libxdo-dev
+
+      # rust-toolchain.toml pins the version, components and the wasm32 target.
+      - name: Install the pinned Rust toolchain
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+
+      - name: cargo fmt
+        run: cargo fmt --all --check
+
+      - name: cargo clippy (warnings denied)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --workspace
+
+      - name: wasm32 check (all core crates)
+        run: cargo check-wasm
+
+      # Regenerate the TypeScript the Rust types describe; the committed copy must match.
+      - name: ts-rs output is up to date
+        run: |
+          cargo test -p kb-types -p kb-speech --features ts --quiet
+          dir=packages/core-client/src/generated
+          if [ -n "$(git status --porcelain -- "$dir")" ]; then
+            echo "::error::The generated TypeScript in $dir is stale; regenerate it and commit the result."
+            git status --short -- "$dir"
+            git --no-pager diff --stat -- "$dir"
+            exit 1
+          fi
+
+  web:
+    name: Web (pnpm)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The pnpm version comes from "packageManager" in package.json.
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "25.5.0"
+          cache: pnpm
+
+      # apps/viewer builds crates/kb-wasm with cargo and wasm-bindgen-cli (no clang needed).
+      - name: Install the pinned Rust toolchain
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+
+      # Exactly the version of the wasm-bindgen crate in Cargo.lock (the viewer script checks it).
+      - name: Install wasm-bindgen-cli
+        run: |
+          version=$(awk '/^name = "wasm-bindgen"$/ {getline; gsub(/[^0-9.]/, "", $0); print; exit}' Cargo.lock)
+          echo "wasm-bindgen $version"
+          cargo install wasm-bindgen-cli --version "$version" --locked
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  deny:
+    name: cargo deny
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+        with:
+          command: check
+          # deny.toml holds the policy; the runner has no extra arguments to add.
+
+  windows:
+    name: Build and test (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 90
+    env:
+      # The workspace .cargo/config.toml sets the same flag; RUSTFLAGS overrides that file, so it is repeated here.
+      RUSTFLAGS: "-C link-arg=/ignore:4099"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned Rust toolchain
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+
+      # SQLCipher builds OpenSSL from source: it needs perl and NASM (both are on the runner image;
+      # the NASM install is only a fallback).
+      - name: Check perl and NASM
+        shell: pwsh
+        run: |
+          perl --version | Select-Object -First 2
+          if (-not (Get-Command nasm -ErrorAction SilentlyContinue)) {
+            choco install nasm -y --no-progress
+            "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          }
+
+      # The sherpa-onnx libraries and the VAD model of dictation (SHA-256 checked by the script),
+      # then the two variables dev-env.ps1 would set locally.
+      - name: Fetch the speech dependencies
+        shell: pwsh
+        run: |
+          ./scripts/fetch-speech-deps.ps1
+          $lib = (Resolve-Path ".build/speech/sherpa-onnx-v*-win-x64-shared-MT-Release-lib/lib").Path
+          "SHERPA_ONNX_LIB_DIR=$lib" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          $vad = (Resolve-Path ".build/speech/silero_vad.onnx").Path
+          "KB_SPEECH_VAD=$vad" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "$lib" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+
+      - name: cargo test
+        run: cargo test --workspace

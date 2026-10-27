@@ -1,0 +1,45 @@
+# Weekly dependency updates. Minor and patch bumps are grouped into one PR per ecosystem to limit noise;
+# major bumps arrive as their own PRs. GitHub Actions are pinned by SHA, Dependabot updates the SHA and the comment.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        update-types: [minor, patch]
+
+  # The Cargo workspace (vendor/sherpa-onnx-sys is a path member of it, covered by the root).
+  - package-ecosystem: cargo
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      cargo:
+        update-types: [minor, patch]
+
+  # The pnpm workspace (pnpm-lock.yaml at the root).
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      npm:
+        update-types: [minor, patch]
+
+  - package-ecosystem: docker
+    directory: "/deploy/kb-server"
+    schedule:
+      interval: weekly
+    groups:
+      docker-kb-server:
+        update-types: [minor, patch]
+
+  - package-ecosystem: docker
+    directory: "/scripts/package/linux"
+    schedule:
+      interval: weekly
+    groups:
+      docker-linux-build:
+        update-types: [minor, patch]
