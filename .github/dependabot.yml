@@ -40,6 +40,10 @@ updates:
     directory: "/scripts/package/linux"
     schedule:
       interval: weekly
+    ignore:
+      # Pinned to 22.04 on purpose: the .deb is built against its glibc for wide compatibility.
+      - dependency-name: "ubuntu"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
     groups:
       docker-linux-build:
         update-types: [minor, patch]
