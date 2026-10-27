@@ -65,7 +65,7 @@ web-time = "1"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 
 # CRDT engine (ADR-0011); only kb-doc and kb-model may depend on it
-loro = "=1.16.2"
+loro = "=1.17.1"
 
 # import and export (ADR-0036); pure Rust, wasm32-capable (the zip crate is for the shell only)
 pulldown-cmark = { version = "0.13.4", default-features = false }
