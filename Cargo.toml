@@ -93,7 +93,7 @@ wasm-bindgen = "=0.2.129"
 
 # local dictation (ADR-0053, kb-speech-native only): the sherpa-onnx recognizer and voice activity detector, as DLLs
 # (`shared`) so the sidecar needs no `+crt-static`. Its `-sys` crate is vendored (`[patch.crates-io]` below).
-sherpa-onnx = { version = "=1.13.8", default-features = false, features = ["shared"] }
+sherpa-onnx = { version = "=2.0.0", default-features = false, features = ["shared"] }
 
 # codegen
 ts-rs = { version = "12", features = ["serde-json-impl"] }
