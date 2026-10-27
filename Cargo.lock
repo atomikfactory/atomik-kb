@@ -2843,7 +2843,7 @@ dependencies = [
 name = "kb-ai"
 version = "0.1.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "blake3",
  "kb-types",
  "serde",
@@ -2855,7 +2855,7 @@ dependencies = [
 name = "kb-core"
 version = "0.1.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "kb-ai",
  "kb-crypto",
  "kb-doc",
@@ -2908,7 +2908,7 @@ dependencies = [
 name = "kb-drive"
 version = "0.1.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "percent-encoding",
  "serde",
  "serde_json",

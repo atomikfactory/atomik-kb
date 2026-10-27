@@ -84,7 +84,7 @@ uuid = { version = "1", default-features = false, features = ["v5"] }
 regex = "1.13"
 
 # local AI and MCP (ADR-0037): the WAV segments sent to Ollama and the MCP tokens
-base64 = { version = "0.22", default-features = false, features = ["alloc"] }
+base64 = { version = "0.23", default-features = false, features = ["alloc"] }
 
 # the web viewer's WebAssembly module (ADR-0051, kb-wasm only). Pinned to the exact version the lockfile
 # already held (released 2026-09-25): the wasm-bindgen CLI that makes the JavaScript glue
