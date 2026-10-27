@@ -36,7 +36,7 @@
     "@tiptap/react": "3.31.4",
     "@tiptap/starter-kit": "3.31.4",
     "@tiptap/suggestion": "3.31.4",
-    "katex": "0.16.47",
+    "katex": "0.18.2",
     "lib0": "^0.2.119",
     "loro-crdt": "1.16.2",
     "lowlight": "^3.3.0",
