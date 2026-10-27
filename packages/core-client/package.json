@@ -19,14 +19,14 @@
     "wordlist": "node scripts/wordlist.js"
   },
   "dependencies": {
-    "@tauri-apps/api": "~2.12.1",
-    "loro-crdt": "1.16.2"
+    "@tauri-apps/api": "~2.12.4",
+    "loro-crdt": "1.17.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.11.0",
+    "eslint": "^10.13.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.71.0",
+    "typescript-eslint": "^8.72.0",
     "vitest": "^4.1.11"
   }
 }
