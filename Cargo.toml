@@ -71,7 +71,7 @@ loro = "=1.17.1"
 pulldown-cmark = { version = "0.13.4", default-features = false }
 scraper = { version = "0.27.0", default-features = false }
 # The version scraper builds on: kb-import feeds its parser in pieces to bound the nesting it builds.
-html5ever = "0.39"
+html5ever = "0.40"
 csv = "1.4.0"
 yaml-rust2 = "0.13.0"
 percent-encoding = "2.3.2"
