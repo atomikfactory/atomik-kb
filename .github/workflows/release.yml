@@ -1,5 +1,5 @@
 # Release: pushing a tag vMAJOR.MINOR.PATCH builds the Windows installer, the Linux .deb and the kb-server
-# tarball, and publishes a normal (non-pre) release with generated notes, SHA256SUMS and build provenance.
+# tarball, and publishes a release (a pre-release for an -rc tag; installers carry the numeric version) with generated notes, SHA256SUMS and build provenance.
 #
 #   git tag v0.2.0 && git push origin v0.2.0
 #
@@ -10,6 +10,7 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"
 
 concurrency:
   group: release-${{ github.ref_name }}
@@ -25,6 +26,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       version: ${{ steps.v.outputs.version }}
+      stem: ${{ steps.v.outputs.stem }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,7 +37,9 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+          name="${TAG#v}"
+          echo "version=${name%%-*}" >> "$GITHUB_OUTPUT"
+          echo "stem=atomik-kb-${name}" >> "$GITHUB_OUTPUT"
           git fetch --no-tags origin main
           if ! git merge-base --is-ancestor "$GITHUB_SHA" FETCH_HEAD; then
             echo "::error::Tag $TAG is not on main; release from a commit that is merged."
@@ -47,7 +51,7 @@ jobs:
     needs: prepare
     uses: ./.github/workflows/_build.yml
     with:
-      stem: atomik-kb-${{ needs.prepare.outputs.version }}
+      stem: ${{ needs.prepare.outputs.stem }}
       version: ${{ needs.prepare.outputs.version }}
     secrets: inherit # only the optional KB_GOOGLE_CLIENT_* secrets are read
 
@@ -89,9 +93,13 @@ jobs:
             echo "Unsigned build. Verify a download with SHA256SUMS or"
             echo "\`gh attestation verify <file> --repo ${GH_REPO}\`."
           } > notes.md
+          case "$TAG" in
+            *-*) channel="--prerelease" ;;
+            *) channel="--latest" ;;
+          esac
           gh release create "$TAG" out/* \
             --verify-tag \
-            --latest \
-            --title "atomik-kb ${VERSION}" \
+            "$channel" \
+            --title "atomik-kb ${TAG#v}" \
             --generate-notes \
             --notes-file notes.md

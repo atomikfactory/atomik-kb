@@ -18,7 +18,7 @@ pnpm install --frozen-lockfile
 
 # The stdio bridge of the MCP server (ADR-0037) ships next to the app as a sidecar (/usr/bin/kb-mcp-bridge).
 # It is built here and copied where tauri expects it (binaries/kb-mcp-bridge-<target triple>); the merge
-# file tauri.bridge.conf.json adds bundle.externalBin and is NOT part of tauri.conf.json, because tauri-build
+# file tauri.bridge-linux.conf.json (the Windows one also lists the dictation sidecar, not staged on Linux yet) adds bundle.externalBin and is NOT part of tauri.conf.json, because tauri-build
 # checks the sidecar's path at compile time, which would break every dev build and test run.
 cargo build -p kb-mcp --bin kb-mcp-bridge --release
 TRIPLE=$(rustc -vV | sed -n 's/^host: //p')
@@ -28,7 +28,7 @@ cp "$CARGO_TARGET_DIR/release/kb-mcp-bridge" "apps/desktop/src-tauri/binaries/kb
 cd apps/desktop
 # `tauri build` runs `pnpm build` (beforeBuildCommand), then cargo build --release, then
 # bundles. tauri.linux.conf.json is merged on top of tauri.conf.json automatically.
-pnpm tauri build --bundles deb --config src-tauri/tauri.bridge.conf.json
+pnpm tauri build --bundles deb --config src-tauri/tauri.bridge-linux.conf.json
 
 rm -rf /build/out
 mkdir -p /build/out
