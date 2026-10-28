@@ -74,9 +74,13 @@ fn call(webview: &WebviewWindow<MockRuntime>, command: &str, args: Value) -> Res
             cmd: command.into(),
             callback: CallbackFn(0),
             error: CallbackFn(1),
-            url: (if cfg!(windows) { "http://tauri.localhost" } else { "tauri://localhost" })
-                .parse()
-                .unwrap(),
+            url: (if cfg!(windows) {
+                "http://tauri.localhost"
+            } else {
+                "tauri://localhost"
+            })
+            .parse()
+            .unwrap(),
             body: InvokeBody::Json(args),
             headers: HeaderMap::new(),
             invoke_key: INVOKE_KEY.to_string(),
