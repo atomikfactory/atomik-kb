@@ -445,6 +445,10 @@ fn tray_or_skip(harness: &Harness) -> Option<()> {
 }
 
 #[test]
+#[cfg_attr(
+    target_os = "linux",
+    ignore = "builds a GTK menu, which a headless runner has not initialised"
+)]
 fn the_tray_takes_its_labels_from_the_store_and_follows_the_ui() {
     let harness = harness();
     let webview = main_webview(&harness.app);
@@ -687,6 +691,10 @@ fn wait_until(what: &str, condition: impl Fn() -> bool) {
 }
 
 #[test]
+#[cfg_attr(
+    target_os = "linux",
+    ignore = "builds a GTK menu, which a headless runner has not initialised"
+)]
 fn a_setting_written_through_the_webview_reaches_the_worker_through_the_core_s_event() {
     // The whole chain on the mock runtime: `dispatch` of a `SettingsSet` -> the core's `SettingChanged` ->
     // the listener `desktop::start` registered -> the worker thread -> `DesktopPrefs` and the shortcut's
@@ -745,6 +753,10 @@ fn a_setting_written_through_the_webview_reaches_the_worker_through_the_core_s_e
 }
 
 #[test]
+#[cfg_attr(
+    target_os = "linux",
+    ignore = "builds a GTK menu, which a headless runner has not initialised"
+)]
 fn other_settings_do_not_wake_the_worker() {
     let harness = harness();
     let webview = main_webview(&harness.app);
