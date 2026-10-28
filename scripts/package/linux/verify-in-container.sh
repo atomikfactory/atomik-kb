@@ -25,6 +25,10 @@ step "dpkg -L"
 dpkg -L atomik-kb | grep -v '^/usr/share/icons/hicolor/[0-9x@]*$' 
 check test -x /usr/bin/atomik-kb-desktop
 check test -x /usr/bin/kb-mcp-bridge
+check test -x /usr/bin/kb-speech
+check test -f /usr/lib/atomik-kb/silero_vad.onnx
+check test -f /usr/lib/atomik-kb/libsherpa-onnx-c-api.so
+check test -f /usr/lib/atomik-kb/libonnxruntime.so
 check test -f /usr/share/applications/atomik-kb.desktop
 cat /usr/share/applications/atomik-kb.desktop
 check grep -q '^Categories=.*Office' /usr/share/applications/atomik-kb.desktop
@@ -34,6 +38,11 @@ step "ldd: unresolved libraries"
 ldd /usr/bin/atomik-kb-desktop | grep -E 'not found' || echo "(no 'not found' entries)"
 check test "$(ldd /usr/bin/atomik-kb-desktop | grep -c 'not found')" -eq 0
 echo "linked libs: $(ldd /usr/bin/atomik-kb-desktop | wc -l)"
+
+step "dictation sidecar runs from the installed layout (no LD_LIBRARY_PATH)"
+ldd /usr/bin/kb-speech | grep -E 'not found' || echo "(no 'not found' entries)"
+check test "$(ldd /usr/bin/kb-speech | grep -c 'not found')" -eq 0
+check env -u LD_LIBRARY_PATH /usr/bin/kb-speech --version
 
 step "install the test tools (xvfb, dbus; no keyring yet)"
 apt-get install -y --no-install-recommends xvfb xauth dbus dbus-x11 binutils >/tmp/tools.log 2>&1 || tail -5 /tmp/tools.log

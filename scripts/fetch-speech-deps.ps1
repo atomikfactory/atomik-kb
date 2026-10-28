@@ -11,7 +11,7 @@
 # *models* (Parakeet, Moonshine) are not fetched here: the app downloads them on first use.
 #
 # curl.exe is used for the downloads: on this machine Rust-built executables can fail to connect (os error
-# 10013, see CLAUDE.md) while curl.exe does not. Windows x64 only.
+# 10013) while curl.exe does not. Windows x64 only.
 
 [CmdletBinding()]
 param(

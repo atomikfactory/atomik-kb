@@ -6,7 +6,7 @@
       "deb": {
         "section": "utils",
         "priority": "optional",
-        "depends": ["libayatana-appindicator3-1"],
+        "depends": ["libayatana-appindicator3-1", "libstdc++6"],
         "recommends": ["gnome-keyring"]
       }
     }

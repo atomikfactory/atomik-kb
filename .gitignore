@@ -24,7 +24,3 @@ scripts/smoke/out/
 
 # The JavaScript glue wasm-bindgen makes from crates/kb-wasm for the web viewer (M13 slice 4)
 /apps/viewer/src/wasm/
-
-# Local assistant config
-CLAUDE.md
-.claude/

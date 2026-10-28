@@ -66,9 +66,8 @@ confirmation), or you can point to model files you already have (**Use model fil
 The first time you use the microphone your system asks for permission; on Windows the
 privacy setting that lets desktop apps use the microphone must also be on.
 
-The built-in engines come with the Windows installer. On Linux, where this component is
-not bundled, they show as unavailable in this version, but the **Ollama** engine can still
-be used.
+The built-in engines come with both the Windows installer and the Linux `.deb` package.
+The **Ollama** engine works everywhere.
 
 ## MCP server (let other AI tools read your notes)
 
