@@ -2,8 +2,7 @@
 
 ## Install
 
-atomik-kb for desktop runs on **Windows** and **Linux**. macOS is not packaged yet, and
-there is no Android or full web version yet.
+atomik-kb for desktop runs on **Windows**, **Linux** and **macOS** (Apple Silicon). There is no Android or full web version yet.
 
 - **Windows:** run the setup program (`atomik-kb_<version>_x64-setup.exe`). It installs for
   your user only, without administrator rights. The installer is not code-signed, so
@@ -12,6 +11,13 @@ there is no Android or full web version yet.
 - **Linux (Debian/Ubuntu):** `sudo apt install ./atomik-kb_<version>_amd64.deb`. The app
   keeps its keys in your desktop's secret store, so a Secret Service such as
   gnome-keyring or KWallet must be running and unlocked in your session.
+- **macOS (Apple Silicon, macOS 12 or newer):** open the `.dmg` and drag atomik-kb to
+  **Applications**. The app is not signed or notarized by Apple, so macOS refuses to open it
+  the first time ("cannot be opened because the developer cannot be verified", or "is damaged"
+  for a downloaded file). To allow it, either right-click (or Control-click) the app and choose
+  **Open**, then **Open** again; or choose **System Settings > Privacy & Security > Open
+  Anyway**; or run `xattr -dr com.apple.quarantine /Applications/atomik-kb.app` in Terminal
+  once. Intel Macs are not supported. Dictation is included (see AI and dictation).
 
 There are no published downloads yet; the installers are built from the source code
 (see the project README). Uninstalling does not delete your notes.

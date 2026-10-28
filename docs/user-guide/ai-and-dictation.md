@@ -64,9 +64,10 @@ anywhere. Choose and download an engine in **Settings > Dictation**:
 Model files are downloaded by the app only when you ask (with a progress indicator and a
 confirmation), or you can point to model files you already have (**Use model files...**).
 The first time you use the microphone your system asks for permission; on Windows the
-privacy setting that lets desktop apps use the microphone must also be on.
+privacy setting that lets desktop apps use the microphone must also be on, and on macOS
+the permission is under **System Settings > Privacy & Security > Microphone**.
 
-The built-in engines come with both the Windows installer and the Linux `.deb` package.
+The built-in engines come with the Windows installer, the Linux `.deb` package and the macOS app (Apple Silicon).
 The **Ollama** engine works everywhere.
 
 ## MCP server (let other AI tools read your notes)

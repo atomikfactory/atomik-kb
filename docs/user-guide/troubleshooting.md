@@ -13,6 +13,11 @@ in your desktop session, then start the app again.
 **Windows warns when I run the installer.** The installer is not code-signed. Choose
 **More info > Run anyway** if you built or downloaded it from a source you trust.
 
+**macOS says the app is damaged or cannot be opened.** The app is not signed or notarized by
+Apple. Right-click the app and choose **Open**, or run
+`xattr -dr com.apple.quarantine /Applications/atomik-kb.app` once, if you downloaded it from a
+source you trust.
+
 **"A workspace already exists on this device."** Restoring a backup, recovering, or
 joining an account works only on a new installation with no workspace.
 

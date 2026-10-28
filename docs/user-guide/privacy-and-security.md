@@ -85,7 +85,7 @@ Removing a device rotates your keys so that it cannot read anything new.
 - **Deniability** and Signal-style forward secrecy for stored notes: stored data must be
   readable later, so it cannot have per-message forward secrecy.
 
-The Windows installer is not code-signed yet, and the software is early (version 0.1) and
+The Windows installer and the macOS app are not code-signed yet, and the software is early (version 0.1) and
 has not had an independent security audit. Keep backups, and treat it accordingly.
 
 ## Good habits

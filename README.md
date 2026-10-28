@@ -57,10 +57,10 @@ development; expect rough edges and keep backups.
 
 | Component | State |
 |---|---|
-| Desktop app (Tauri + React) | Working: Windows installer and Linux `.deb` can be built from this repository |
+| Desktop app (Tauri + React) | Working: Windows installer, Linux `.deb` and an unsigned macOS (Apple Silicon) `.dmg` can be built from this repository |
 | Sync server (`kb-server`) | Working, self-hosted (Docker or a plain binary) |
 | Web viewer | Read-only viewer for view links; not a full web client |
-| macOS | Not packaged or tested |
+| macOS | Apple Silicon `.dmg` built by CI, unsigned (ad-hoc signed only); not yet tested on a real Mac by the maintainers |
 | Android | Not started in this repository |
 
 ## Install
@@ -68,7 +68,8 @@ development; expect rough edges and keep backups.
 There are no published release builds yet. Build from source (below) to get the app.
 The Windows installer is unsigned, so SmartScreen shows a warning on first run. On
 Linux the app needs a Secret Service (for example gnome-keyring or KWallet) running in
-your session.
+your session. The macOS `.dmg` (Apple Silicon only) is not signed or notarized: macOS blocks it
+the first time, see "Getting started" in the user guide for how to open it.
 
 Start with the [user guide](docs/user-guide/README.md).
 
@@ -105,7 +106,7 @@ cd apps/desktop && pnpm tauri dev
 ```
 
 Installers are produced with `pnpm tauri build` in `apps/desktop`. The helper scripts in
-`scripts/package` (`windows.ps1`, `linux.ps1`) wrap that, including the dictation helper
+`scripts/package` (`windows.ps1`, `linux.ps1`, `macos/build.sh`) wrap that, including the dictation helper
 program and its libraries.
 
 ## Repository layout
