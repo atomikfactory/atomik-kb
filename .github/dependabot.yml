@@ -15,6 +15,13 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    ignore:
+      # loro 1.17 leaks deleted tree-node data into shallow snapshots (kb-doc privacy test).
+      - dependency-name: "loro*"
+        versions: [">=1.17.0"]
+      # Major bump needs matching native libraries and API work.
+      - dependency-name: "sherpa-onnx*"
+        update-types: ["version-update:semver-major"]
     groups:
       cargo:
         update-types: [minor, patch]
