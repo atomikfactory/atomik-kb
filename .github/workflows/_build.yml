@@ -3,8 +3,9 @@
 #   windows  the unsigned per-user NSIS installer         (scripts/package/windows.ps1)
 #   linux    the .deb and the kb-server binary tarball    (the repo's Ubuntu 22.04 Docker image,
 #                                                          scripts/package/linux/, so the glibc floor is 2.35)
+#   macos    the unsigned, ad-hoc signed Apple Silicon .dmg (scripts/package/macos/build.sh)
 #
-# Output: two workflow artifacts, "dist-windows" and "dist-linux", with files named
+# Output: three workflow artifacts, "dist-windows", "dist-linux" and "dist-macos", with files named
 # <stem>-<platform>.<ext>. The caller publishes them. No secrets are required: when the repository
 # secrets KB_GOOGLE_CLIENT_ID / KB_GOOGLE_CLIENT_SECRET exist (callers pass `secrets: inherit`), they become the
 # built-in Google Drive client (ADR-0059); without them the build has no built-in client and the user supplies
@@ -203,6 +204,75 @@ jobs:
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dist-linux
+          path: out/*
+          if-no-files-found: error
+          retention-days: 3
+
+  macos:
+    name: macOS .dmg
+    runs-on: macos-latest # Apple Silicon
+    timeout-minutes: 120
+    env:
+      STEM: ${{ inputs.stem }}
+      INPUT_VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "25.5.0"
+          cache: pnpm
+
+      - name: Install the pinned Rust toolchain
+        run: rustup toolchain install
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+
+      - name: Google Drive client (optional)
+        env:
+          GOOGLE_ID: ${{ secrets.KB_GOOGLE_CLIENT_ID }}
+          GOOGLE_SECRET: ${{ secrets.KB_GOOGLE_CLIENT_SECRET }}
+        run: |
+          if [ -n "$GOOGLE_ID" ] && [ -n "$GOOGLE_SECRET" ]; then
+            echo "KB_GOOGLE_CLIENT_ID=$GOOGLE_ID" >> "$GITHUB_ENV"
+            echo "KB_GOOGLE_CLIENT_SECRET=$GOOGLE_SECRET" >> "$GITHUB_ENV"
+            echo "Built-in Google client: present"
+          else
+            echo "Built-in Google client: absent (the build works without it)"
+          fi
+
+      # The tauri config has no version of its own; set it in this checkout (never committed) so the app carries it.
+      - name: Set the version
+        run: |
+          version="$INPUT_VERSION"
+          [ -n "$version" ] || version="0.1.$(git rev-list --count HEAD)"
+          echo "Version $version"
+          conf=apps/desktop/src-tauri/tauri.conf.json
+          jq --arg v "$version" '.version = $v' "$conf" > "$RUNNER_TEMP/tauri.conf.json"
+          cp "$RUNNER_TEMP/tauri.conf.json" "$conf"
+
+      - run: pnpm install --frozen-lockfile
+
+      # Builds the two sidecars (MCP bridge, dictation) with the sherpa-onnx libraries, then `tauri build` (ad-hoc signed).
+      - name: Build the .dmg
+        run: bash scripts/package/macos/build.sh
+
+      - name: Name the file
+        run: |
+          mkdir -p out
+          dmgs=(dist/macos/*.dmg)
+          [ "${#dmgs[@]}" -eq 1 ] || { echo "::error::expected exactly one .dmg, found ${#dmgs[@]}"; exit 1; }
+          cp "${dmgs[0]}" "out/${STEM}-macos-arm64.dmg"
+          ls -l out
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist-macos
           path: out/*
           if-no-files-found: error
           retention-days: 3

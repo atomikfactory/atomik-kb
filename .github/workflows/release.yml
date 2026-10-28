@@ -1,5 +1,5 @@
-# Release: pushing a tag vMAJOR.MINOR.PATCH builds the Windows installer, the Linux .deb and the kb-server
-# tarball, and publishes a release (a pre-release for an -rc tag; installers carry the numeric version) with generated notes, SHA256SUMS and build provenance.
+# Release: pushing a tag vMAJOR.MINOR.PATCH builds the Windows installer, the macOS (Apple Silicon) .dmg, the Linux .deb and the
+# kb-server tarball, and publishes a release (a pre-release for an -rc tag; installers carry the numeric version) with generated notes, SHA256SUMS and build provenance.
 #
 #   git tag v0.2.0 && git push origin v0.2.0
 #

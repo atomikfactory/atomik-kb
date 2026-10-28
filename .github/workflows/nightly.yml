@@ -1,4 +1,4 @@
-# Nightly build: the Windows installer, the Linux .deb and the kb-server tarball of the tip of main,
+# Nightly build: the Windows installer, the macOS (Apple Silicon) .dmg, the Linux .deb and the kb-server tarball of the tip of main,
 # published as the rolling "Nightly" prerelease (tag `nightly`, moved to the new commit each time).
 #
 # - Runs daily at 03:00 UTC and on demand (workflow_dispatch; `force` builds even without a new commit).

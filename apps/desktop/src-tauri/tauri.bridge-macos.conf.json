@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "externalBin": [
+      "binaries/kb-mcp-bridge",
+      "binaries/kb-speech"
+    ],
+    "macOS": {
+      "frameworks": [
+        "binaries/libsherpa-onnx-c-api.dylib",
+        "binaries/libonnxruntime.dylib"
+      ]
+    },
+    "resources": {
+      "binaries/silero_vad.onnx": "silero_vad.onnx",
+      "THIRD-PARTY-NOTICES.txt": "THIRD-PARTY-NOTICES.txt"
+    }
+  }
+}

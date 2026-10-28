@@ -1,19 +1,34 @@
 #!/usr/bin/env bash
-# Fetches what the dictation sidecar needs to build and run on Linux x64 (ADR-0053, docs/architecture/dictation.md):
-# the sherpa-onnx native libraries (libsherpa-onnx-c-api.so, libonnxruntime.so) and the Silero voice activity
-# model. Both land in .build/speech/ (ignored by git), checked against the SHA-256 of the pinned release asset.
+# Fetches what the dictation sidecar needs to build and run on Linux x64 or macOS Apple Silicon (ADR-0053,
+# docs/architecture/dictation.md): the sherpa-onnx native libraries (libsherpa-onnx-c-api and libonnxruntime, .so or
+# .dylib) and the Silero voice activity model. Both land in .build/speech/ (ignored by git), checked against the SHA-256 of the pinned release asset.
 # Idempotent. The Linux counterpart of scripts/fetch-speech-deps.ps1.
 #
 #   scripts/fetch-speech-deps.sh              # prints the two variables
 #   eval "$(scripts/fetch-speech-deps.sh --env)"   # exports SHERPA_ONNX_LIB_DIR and KB_SPEECH_VAD
 #
-# Run it from a bash with curl, tar and bzip2 (the Linux build image has them).
+# Run it from a bash with curl, tar and bzip2 (the Linux build image and the macOS runner have them).
 set -euo pipefail
 
-ARCHIVE_NAME="sherpa-onnx-v1.13.8-linux-x64-shared-lib.tar.bz2"
+case "$(uname -s)-$(uname -m)" in
+  Linux-x86_64)
+    PLATFORM="linux-x64"
+    LIB_EXT="so"
+    ARCHIVE_SHA256="3892d184be41027e18165e67f549cd4e4cdd8dcd73ac5579e97afd55e14e30b6"
+    ;;
+  Darwin-arm64)
+    PLATFORM="osx-arm64"
+    LIB_EXT="dylib"
+    ARCHIVE_SHA256="ae77050cdae565496059d96f5ab33d77b397a0864282a4e4a26e3b3b3effb948"
+    ;;
+  *)
+    echo "no pinned sherpa-onnx build for $(uname -s) $(uname -m)" >&2
+    exit 1
+    ;;
+esac
+EXTRACTED_DIR="sherpa-onnx-v1.13.8-$PLATFORM-shared-lib"
+ARCHIVE_NAME="$EXTRACTED_DIR.tar.bz2"
 ARCHIVE_URL="https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/$ARCHIVE_NAME"
-ARCHIVE_SHA256="3892d184be41027e18165e67f549cd4e4cdd8dcd73ac5579e97afd55e14e30b6"
-EXTRACTED_DIR="sherpa-onnx-v1.13.8-linux-x64-shared-lib"
 
 # Silero VAD (MIT). The release tag is mutable, so the file is pinned by its hash only.
 VAD_NAME="silero_vad.onnx"
@@ -25,8 +40,13 @@ ROOT="$REPO/.build/speech"
 LIB_DIR="$ROOT/$EXTRACTED_DIR/lib"
 VAD_PATH="$ROOT/$VAD_NAME"
 
-sha_ok() { [ -f "$1" ] && [ "$(sha256sum "$1" | cut -d' ' -f1)" = "$2" ]; }
-libs_ok() { [ -f "$LIB_DIR/libsherpa-onnx-c-api.so" ] && [ -f "$LIB_DIR/libonnxruntime.so" ]; }
+if command -v sha256sum >/dev/null 2>&1; then
+  sha256_of() { sha256sum "$1" | cut -d' ' -f1; }
+else
+  sha256_of() { shasum -a 256 "$1" | cut -d' ' -f1; }
+fi
+sha_ok() { [ -f "$1" ] && [ "$(sha256_of "$1")" = "$2" ]; }
+libs_ok() { [ -f "$LIB_DIR/libsherpa-onnx-c-api.$LIB_EXT" ] && [ -f "$LIB_DIR/libonnxruntime.$LIB_EXT" ]; }
 
 download() { # url path sha256
   echo "Downloading $1" >&2
