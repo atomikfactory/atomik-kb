@@ -21,7 +21,7 @@ setMathRenderer(() => '<span class="katex" data-stand-in-math=""></span>');
 setEmojiData(STAND_IN_EMOJI);
 
 // Generous: CI runners and busy machines are slow, and a test should only fail for a real reason.
-configure({ asyncUtilTimeout: 4000 });
+configure({ asyncUtilTimeout: 8000 });
 
 // jsdom has no DragEvent. A MouseEvent that also carries `dataTransfer` lets drag tests give
 // events a position (`clientY`) and a data store, which is all the UI reads from them.

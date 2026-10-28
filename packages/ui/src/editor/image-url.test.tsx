@@ -107,6 +107,16 @@ async function chooseImageFromUrl(editor: Editor): Promise<HTMLElement> {
   return screen.findByRole("dialog", { name: t("attachment.url.title") });
 }
 
+/**
+ * Puts a link in the dialog's field and presses Enter. Pasted, not typed: typing a 40-character link is 40 rounds of the event loop
+ * (and of React), which a loaded machine stretches into seconds, and these tests are about what Enter does with the whole link.
+ */
+async function submitLink(user: ReturnType<typeof userEvent.setup>, dialog: HTMLElement, link: string): Promise<void> {
+  await user.click(within(dialog).getByLabelText(t("attachment.url.label")));
+  await user.paste(link);
+  await user.keyboard("{Enter}");
+}
+
 // ----- the store ---------------------------------------------------------------------------------
 
 describe("the store", () => {
@@ -343,7 +353,7 @@ describe("inserting an image from a link", () => {
     expect(within(document.body).queryByRole("progressbar")).toBeNull();
 
     const release = recording.hold();
-    await user.type(within(dialog).getByLabelText(t("attachment.url.label")), `${DEMO_URL}{Enter}`);
+    await submitLink(user, dialog, DEMO_URL);
 
     // The dialog is gone, the card says the picture is downloading.
     await waitFor(() => {
@@ -385,7 +395,7 @@ describe("inserting an image from a link", () => {
     const editor = await openPage(user, "Notes");
     placeCursor(editor, startOf(editor, 1));
     const dialog = await chooseImageFromUrl(editor);
-    await user.type(within(dialog).getByLabelText(t("attachment.url.label")), `${DEMO_URL}{Enter}`);
+    await submitLink(user, dialog, DEMO_URL);
     await waitFor(() => {
       expect(kinds(editor)).toEqual(["paragraph", "image", "paragraph"]);
     });
@@ -412,7 +422,7 @@ describe("inserting an image from a link", () => {
   it("makes no request for a link the dialog refuses", async () => {
     const { user, editor, memory } = await pageWithEditor();
     const dialog = await chooseImageFromUrl(editor);
-    await user.type(within(dialog).getByLabelText(t("attachment.url.label")), "http://example.com/photos/demo.png{Enter}");
+    await submitLink(user, dialog, "http://example.com/photos/demo.png");
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(t("attachment.url.error.scheme"));
     expect(screen.getByRole("dialog", { name: t("attachment.url.title") })).toBeInTheDocument();
     const { space } = await idsOf(memory);
@@ -425,7 +435,7 @@ describe("inserting an image from a link", () => {
   it("leaves an error card that says why, until it is dismissed, when the link is not a picture", async () => {
     const { user, editor, memory } = await pageWithEditor();
     const dialog = await chooseImageFromUrl(editor);
-    await user.type(within(dialog).getByLabelText(t("attachment.url.label")), "https://example.com/page.html{Enter}");
+    await submitLink(user, dialog, "https://example.com/page.html");
 
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent(t("attachment.url.error.notImage"));
@@ -451,7 +461,7 @@ describe("inserting an image from a link", () => {
     for (const [details, message] of failures) {
       memory.failNextAttachments({ code: "InvalidInput", message: "the server said no", details: details as never });
       const dialog = await chooseImageFromUrl(editor);
-      await user.type(within(dialog).getByLabelText(t("attachment.url.label")), `${DEMO_URL}{Enter}`);
+      await submitLink(user, dialog, DEMO_URL);
       expect(await screen.findByRole("alert")).toHaveTextContent(message);
       fireEvent.click(screen.getByRole("button", { name: t("attachment.dismiss") }));
       expect(editor.view.dom.querySelector(".attachment-upload")).toBeNull();

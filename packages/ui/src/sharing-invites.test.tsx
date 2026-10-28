@@ -37,7 +37,8 @@ function groupsOf(group: HTMLElement): string[] {
 
 describe("an invitation by code, the Owner's side", () => {
   async function openInvite(role = "owner" as const) {
-    const app = await renderSharing({ role });
+    // A step of 200 ms: the test reads the code and the server address, which the next step replaces with the digits.
+    const app = await renderSharing({ role, sharing: { stepMs: 200 } });
     await openSpace(app.user, "Work");
     const panel = await openMembers(app.user);
     await app.user.click(within(panel).getByRole("button", { name: t("sharing.invites.code") }));
@@ -51,10 +52,13 @@ describe("an invitation by code, the Owner's side", () => {
     await user.selectOptions(within(dialog).getByRole("combobox", { name: t("sharing.invites.roleLabel") }), "viewer");
     await user.click(within(dialog).getByRole("button", { name: t("sharing.inviteCode.start") }));
 
-    const code = await within(dialog).findByRole("group", { name: t("sharing.codeLabel") });
-    expect(groupsOf(code)).toEqual(MEMORY_INVITE_CODE.split(" "));
-    expect(dialog).toHaveTextContent(SERVER);
-    expect(dialog).toHaveTextContent(t("sharing.inviteCode.intro"));
+    // One read of the step that shows the code: the next step (the person typed it) replaces it with the digits.
+    await waitFor(() => {
+      const code = within(dialog).getByRole("group", { name: t("sharing.codeLabel") });
+      expect(groupsOf(code)).toEqual(MEMORY_INVITE_CODE.split(" "));
+      expect(dialog).toHaveTextContent(SERVER);
+      expect(dialog).toHaveTextContent(t("sharing.inviteCode.intro"));
+    });
 
     const digits = await within(dialog).findByRole("group", { name: t("pair.digitsLabel") });
     expect(groupsOf(digits)).toEqual([MEMORY_INVITE_SAS.slice(0, 3), MEMORY_INVITE_SAS.slice(3)]);
@@ -230,7 +234,7 @@ describe("joining a space with a code", () => {
     expect(
       await within(dialog).findByText(t("sharing.join.joiningSpace", { space: "Project X", role: roleLabel("editor") })),
     ).toBeInTheDocument();
-    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }), undefined, { timeout: 10_000 })).toBeInTheDocument();
+    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }))).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: t("sharing.join.open") }));
     await waitFor(() => {
       expect(screen.getByRole("button", { description: t("spaces.switchTitle") })).toHaveTextContent("Project X");
@@ -268,7 +272,7 @@ describe("joining a space with a code", () => {
     await fill(user, dialog, SERVER, "7kqm-x2tv-r9hd");
     await within(dialog).findByRole("group", { name: t("pair.digitsLabel") });
     await user.click(within(dialog).getByRole("button", { name: t("pair.confirm") }));
-    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }), undefined, { timeout: 10_000 })).toBeInTheDocument();
+    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }))).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: t("sharing.join.open") }));
     // The row is not in the list: the dialog stays and says it is opening.
     expect(await within(dialog).findByRole("button", { name: t("sharing.join.opening") })).toBeDisabled();
@@ -354,6 +358,19 @@ describe("the preview of an invitation link", () => {
 
   const preview = (): Promise<HTMLElement> => screen.findByRole("dialog", { name: t("sharing.preview.title") });
 
+  /**
+   * "Join the space", once it can be pressed. The button is there from the first step ("Opening the invitation...") but disabled
+   * until the core has opened the invitation, and a click on a disabled button does nothing: waiting for the button alone raced
+   * that step, which a slow machine loses.
+   */
+  async function accept(dialog: HTMLElement): Promise<HTMLElement> {
+    const button = await within(dialog).findByRole("button", { name: t("sharing.preview.accept") });
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
+    return button;
+  }
+
   it("shows who invites you, to what, as which role, that you receive the whole history and that it is not verified", async () => {
     const { shell } = await withShellLinks();
     act(() => {
@@ -373,8 +390,8 @@ describe("the preview of an invitation link", () => {
       shell.emit(INVITE_LINK);
     });
     const dialog = await preview();
-    await user.click(await within(dialog).findByRole("button", { name: t("sharing.preview.accept") }));
-    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }), undefined, { timeout: 10_000 })).toBeInTheDocument();
+    await user.click(await accept(dialog));
+    expect(await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }))).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: t("sharing.join.open") }));
     await waitFor(() => {
       expect(screen.getByRole("button", { description: t("spaces.switchTitle") })).toHaveTextContent("Project X");
@@ -390,7 +407,7 @@ describe("the preview of an invitation link", () => {
       shell.emit(INVITE_LINK);
     });
     const dialog = await preview();
-    await within(dialog).findByRole("button", { name: t("sharing.preview.accept") });
+    await accept(dialog);
     await user.click(within(dialog).getByRole("button", { name: t("sharing.preview.decline") }));
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -415,8 +432,8 @@ describe("the preview of an invitation link", () => {
       shell.emit(INVITE_LINK);
     });
     const dialog = await preview();
-    await user.click(await within(dialog).findByRole("button", { name: t("sharing.preview.accept") }));
-    await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }), undefined, { timeout: 10_000 });
+    await user.click(await accept(dialog));
+    await within(dialog).findByText(t("sharing.join.done", { space: "Project X" }));
     await user.click(within(dialog).getByRole("button", { name: t("dialog.close") }));
     act(() => {
       shell.emit(INVITE_LINK);

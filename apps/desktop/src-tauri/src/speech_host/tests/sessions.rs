@@ -603,8 +603,13 @@ fn more_than_sixty_seconds_waiting_for_a_stuck_sidecar_ends_the_session() {
                 break;
             }
         }
-        // The pushes up to 60 s are taken (a little of the first may already have been written).
-        assert!(matches!(refused_at, Some(60..=61)), "{refused_at:?}");
+        // The queue holds 60 s, so the 61st push at the latest is refused. The writer may already have moved some
+        // seconds into the OS pipe before it blocked on the deaf sidecar: 4 KiB on Windows, 64 KiB (two frames of a
+        // second) on Linux. That buffer is the only slack, and 4 s is far above any default pipe size.
+        assert!(
+            matches!(refused_at, Some(60..=64)),
+            "refused at {refused_at:?}"
+        );
         assert_eq!(
             events.ended().await,
             [
