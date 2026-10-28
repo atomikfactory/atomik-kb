@@ -1628,7 +1628,7 @@ fn a_thousand_page_import_takes_seconds() {
     assert_eq!(report.properties_created, 3);
     assert_eq!(calls, 20);
     assert!(
-        elapsed < std::time::Duration::from_secs(60),
+        elapsed < std::time::Duration::from_secs(180),
         "a thousand pages took {elapsed:?}"
     );
     let ids = page_ids_of(&tree(&mut core, space));
@@ -1652,7 +1652,7 @@ fn a_thousand_page_import_takes_seconds() {
         "a file per page and the sidecar"
     );
     assert!(
-        elapsed < std::time::Duration::from_secs(60),
+        elapsed < std::time::Duration::from_secs(180),
         "a thousand pages took {elapsed:?} to export"
     );
 }

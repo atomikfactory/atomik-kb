@@ -78,7 +78,9 @@ fn invoke(
             cmd: command.into(),
             callback: CallbackFn(0),
             error: CallbackFn(1),
-            url: "http://tauri.localhost".parse().unwrap(),
+            url: (if cfg!(windows) { "http://tauri.localhost" } else { "tauri://localhost" })
+                .parse()
+                .unwrap(),
             body,
             headers: map,
             invoke_key: INVOKE_KEY.to_string(),
