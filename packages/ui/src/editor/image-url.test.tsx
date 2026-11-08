@@ -441,8 +441,7 @@ describe("inserting an image from a link", () => {
     try {
       alert = await screen.findByRole("alert", {}, { timeout: 3000 });
     } catch (e) {
-      process.stderr.write("DEBUGX " + editor.view.dom.outerHTML + " DIALOGS " + document.body.querySelectorAll("[role=dialog]").length + " UPLOAD " + document.body.querySelector(".attachment-upload")?.outerHTML + "
-");
+      console.error("DEBUGX " + editor.view.dom.outerHTML + " DIALOGS " + document.body.querySelectorAll("[role=dialog]").length + " UPLOAD " + document.body.querySelector(".attachment-upload")?.outerHTML);
       throw e;
     }
     expect(alert).toHaveTextContent(t("attachment.url.error.notImage"));
