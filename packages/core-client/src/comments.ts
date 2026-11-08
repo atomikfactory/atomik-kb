@@ -15,6 +15,7 @@ import type { CommentBodyItem } from "./generated/CommentBodyItem";
 import type { NotificationKind } from "./generated/NotificationKind";
 import type { PageId } from "./generated/PageId";
 import { canonicalId } from "./page-doc";
+import { trimEndChars } from "./trim-end";
 
 /** The most a serialised comment body may weigh, in bytes (`COMMENT_BODY_MAX_BYTES`: 10 KB). */
 export const COMMENT_BODY_MAX_BYTES = 10_240;
@@ -31,7 +32,7 @@ const utf8 = new TextEncoder();
 
 /** Whether `text` is non-empty standard base64 with correct padding (`kb-model`'s `is_base64`). */
 export function isBase64(text: string): boolean {
-  const body = text.replace(/=+$/u, "");
+  const body = trimEndChars(text, "=");
   const padding = text.length - body.length;
   return text.length > 0 && text.length % 4 === 0 && padding <= 2 && /^[A-Za-z0-9+/]*$/u.test(body);
 }
