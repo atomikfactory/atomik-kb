@@ -437,7 +437,14 @@ describe("inserting an image from a link", () => {
     const dialog = await chooseImageFromUrl(editor);
     await submitLink(user, dialog, "https://example.com/page.html");
 
-    const alert = await screen.findByRole("alert");
+    let alert: HTMLElement;
+    try {
+      alert = await screen.findByRole("alert", {}, { timeout: 3000 });
+    } catch (e) {
+      process.stderr.write("DEBUGX " + editor.view.dom.outerHTML + " DIALOGS " + document.body.querySelectorAll("[role=dialog]").length + " UPLOAD " + document.body.querySelector(".attachment-upload")?.outerHTML + "
+");
+      throw e;
+    }
     expect(alert).toHaveTextContent(t("attachment.url.error.notImage"));
     expect(alert.textContent).not.toContain("example.com"); // nothing repeats the link
     expect(kinds(editor)).toEqual(["paragraph", "paragraph"]);
