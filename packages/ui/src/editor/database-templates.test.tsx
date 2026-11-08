@@ -33,7 +33,7 @@ import { idsOf, openPage } from "../test/page";
 import { findMainNavigation, NOW, renderWith } from "../test/render";
 import { DashboardHostContext } from "./dashboard/dashboard-host";
 import { PageDashboardView } from "./dashboard/PageDashboardView";
-import { fullDate } from "./dates";
+import { fullDate, todayIso } from "./dates";
 import { DatabaseTemplatesContext, hiddenTemplatePageIds, resolveDefaultTemplate, splitTemplates, tagValueFor } from "./database-templates";
 import type { DatabaseTemplateActions } from "./database-templates";
 import { loroSyncPluginKey } from "./loro-binding";
@@ -786,7 +786,7 @@ describe("New", () => {
 
   it("makes the page of a calendar day from the default template, dated that day", async () => {
     const { user, core, ids } = await openHub((known) => ({ layout: "calendar", view: { dateBy: PROP.due, defaultTemplate: known.page("Brief") } }));
-    const day = "2026-10-20";
+    const day = `${todayIso().slice(0, 7)}-20`; // the grid opens on the real current month
     const cell = blockElement().querySelector<HTMLElement>(`[data-day="${day}"]`);
     expect(cell).not.toBeNull();
     await user.click(within(cell as HTMLElement).getByRole("button", { name: t("pageCalendar.newOn", { date: fullDate(day, activeLocale()) }) }));
@@ -800,7 +800,7 @@ describe("New", () => {
 
   it("offers the menu on a calendar day, and the click that chooses does not also make a page for the day", async () => {
     const { user, core, ids } = await openHub(() => ({ layout: "calendar", view: { dateBy: PROP.due } }));
-    const day = "2026-10-21";
+    const day = `${todayIso().slice(0, 7)}-21`;
     const cell = blockElement().querySelector<HTMLElement>(`[data-day="${day}"]`) as HTMLElement;
     await user.click(within(cell).getByRole("button", { name: t("databaseTemplate.menuOn", { date: fullDate(day, activeLocale()) }) }));
     await user.click(within(await openedMenu()).getByRole("menuitem", { name: "Weekly" }));

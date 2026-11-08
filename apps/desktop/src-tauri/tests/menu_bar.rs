@@ -113,9 +113,17 @@ fn menu_bar_of(app: &App<MockRuntime>) -> tauri::State<'_, MenuBar<MockRuntime>>
     app.state::<MenuBar<MockRuntime>>()
 }
 
-/// Installs the menu bar on the main window the way `setup` does. On Windows (the built platform) this must work; a
-/// session that has no windowing system to build a menu in (a Linux run without a display) skips instead.
+/// Installs the menu bar on the main window the way `setup` does. On Windows (the built platform) this must work.
+/// On Linux the mock runtime has no GTK window to put a menu on (`gtk_window` is `unimplemented!` there, with or
+/// without a display), so those runs skip instead; so does any other session where no menu bar can be built.
 fn installed_or_skip(harness: &Harness) -> Option<()> {
+    #[cfg(target_os = "linux")]
+    {
+        let _ = harness;
+        eprintln!("skipped: the mock runtime cannot put a menu on a GTK window");
+        None
+    }
+    #[cfg(not(target_os = "linux"))]
     if menu_bar::install(harness.app.handle()) {
         Some(())
     } else {

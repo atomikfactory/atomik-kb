@@ -106,6 +106,15 @@ fn blob_error(action: &str, id: &ChunkId, err: &io::Error) -> StorageError {
     StorageError::Blob(format!("cannot {action} chunk {}: {err}", &hex[..8]))
 }
 
+/// Whether the error says that there is nothing at the path: not found, or (on Unix, where Windows says
+/// not found) a file where a directory of the path should be, so nothing can be under it either.
+fn is_absent(err: &io::Error) -> bool {
+    matches!(
+        err.kind(),
+        io::ErrorKind::NotFound | io::ErrorKind::NotADirectory
+    )
+}
+
 /// Writes `bytes` to `path` (replacing what is there) and flushes them to disk.
 fn write_synced(path: &Path, bytes: &[u8]) -> io::Result<()> {
     let mut file = File::create(path)?;
@@ -147,7 +156,7 @@ impl BlobStore for FsBlobStore {
         let (_, chunk, _) = self.paths_of(id);
         match fs::read(&chunk) {
             Ok(bytes) => Ok(Some(bytes)),
-            Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(None),
+            Err(err) if is_absent(&err) => Ok(None),
             Err(err) => Err(blob_error("read", id, &err)),
         }
     }
@@ -156,7 +165,7 @@ impl BlobStore for FsBlobStore {
         let (_, chunk, _) = self.paths_of(id);
         match fs::metadata(&chunk) {
             Ok(meta) => Ok(meta.is_file()),
-            Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(false),
+            Err(err) if is_absent(&err) => Ok(false),
             Err(err) => Err(blob_error("look for", id, &err)),
         }
     }
@@ -167,7 +176,7 @@ impl BlobStore for FsBlobStore {
         for path in [&temp, &chunk] {
             match fs::remove_file(path) {
                 Ok(()) => {}
-                Err(err) if err.kind() == io::ErrorKind::NotFound => {}
+                Err(err) if is_absent(&err) => {}
                 Err(err) => return Err(blob_error("delete", id, &err)),
             }
         }
