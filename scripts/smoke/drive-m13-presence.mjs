@@ -2405,7 +2405,7 @@ const scrub = (text) => String(text).replace(/#[A-Za-z0-9_-]{16,}/g, "#<key>").r
 async function openEdge() {
   const profile = join(OUT, "m13-edge-profile");
   rmSync(profile, { recursive: true, force: true });
-  const child = spawn(EDGE_EXE, ["--headless=new", `--remote-debugging-port=${EDGE_PORT}`, "--remote-allow-origins=*", `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--disable-extensions", "--disable-sync", "about:blank"], { stdio: "ignore", windowsHide: true });
+  const child = spawn(EDGE_EXE, ["--headless=new", `--remote-debugging-port=${EDGE_PORT}`, `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--disable-extensions", "--disable-sync", "about:blank"], { stdio: "ignore", windowsHide: true });
   writeState({ edge: { pid: child.pid, profile } });
   let target;
   for (let k = 0; k < 60 && target === undefined; k++) {
