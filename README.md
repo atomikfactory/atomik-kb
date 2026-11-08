@@ -1,5 +1,7 @@
 # atomik-kb
 
+[![Watch the atomik-kb video on YouTube](https://img.youtube.com/vi/QmkVqvYsgEc/maxresdefault.jpg)](https://youtu.be/QmkVqvYsgEc)
+
 A privacy-first, local-first knowledge base: a Notion-style workspace whose pages are
 encrypted on your own devices and synchronised, if you want, through a server that
 cannot read them.
