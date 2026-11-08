@@ -112,7 +112,12 @@ async function chooseImageFromUrl(editor: Editor): Promise<HTMLElement> {
  * (and of React), which a loaded machine stretches into seconds, and these tests are about what Enter does with the whole link.
  */
 async function submitLink(user: ReturnType<typeof userEvent.setup>, dialog: HTMLElement, link: string): Promise<void> {
-  await user.click(within(dialog).getByLabelText(t("attachment.url.label")));
+  // The editor may still take the focus back (tiptap's `focus()` is deferred by a frame, and a loaded machine runs it late), so click until the field has it: a paste goes where the focus is.
+  const field = within(dialog).getByLabelText(t("attachment.url.label"));
+  await waitFor(async () => {
+    await user.click(field);
+    expect(field).toHaveFocus();
+  });
   await user.paste(link);
   await user.keyboard("{Enter}");
 }

@@ -318,6 +318,19 @@ describe("the other entry points", () => {
     return { ...app, menu };
   }
 
+  /**
+   * Types in the prompt of the panel a `/` command opened. The editor may still take the focus back (tiptap's `focus()` is deferred by a frame, and a
+   * loaded machine runs it late), and typed keys go where the focus is, so click until the field has it.
+   */
+  async function typeInCursorPrompt(app: Awaited<ReturnType<typeof openNotes>>, panel: HTMLElement, keys: string) {
+    const field = within(panel).getByRole("textbox", { name: t("aiWriter.prompt.cursor") });
+    await waitFor(async () => {
+      await app.user.click(field);
+      expect(field).toHaveFocus();
+    });
+    await app.user.keyboard(keys);
+  }
+
   it("/ai opens the panel at the cursor with a field; an empty request continues the text", async () => {
     const app = await runSlash("/ai", t("slash.ai"), ["Once upon a time", ""]);
     await app.user.click(within(app.menu).getByText(t("slash.ai")));
@@ -327,7 +340,7 @@ describe("the other entry points", () => {
     // At the cursor there is nothing to improve: only the actions that work without a selection.
     expect(within(panel).queryByRole("menuitem", { name: t("aiWriter.action.improve") })).toBeNull();
     expect(within(panel).queryByRole("button", { name: t("aiWriter.replace") })).toBeNull();
-    await app.user.type(within(panel).getByRole("textbox", { name: t("aiWriter.prompt.cursor") }), "{Enter}");
+    await typeInCursorPrompt(app, panel, "{Enter}");
     await within(panel).findByRole("button", { name: t("aiWriter.insertBelow") });
 
     const [request] = requests(app.ai);
@@ -343,7 +356,7 @@ describe("the other entry points", () => {
     const app = await runSlash("/ai", t("slash.ai"), ["Notes about cats", ""]);
     await app.user.click(within(app.menu).getByText(t("slash.ai")));
     const panel = await screen.findByRole("dialog", { name: t("aiWriter.label") });
-    await app.user.type(within(panel).getByRole("textbox", { name: t("aiWriter.prompt.cursor") }), "Write a title{Enter}");
+    await typeInCursorPrompt(app, panel, "Write a title{Enter}");
     await within(panel).findByRole("button", { name: t("aiWriter.insertBelow") });
     expect(requests(app.ai)[0]).toMatchObject({ action: "custom", prompt: "Write a title", text: "" });
   });
