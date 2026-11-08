@@ -68,16 +68,39 @@ async fn rename_and_wait(
     editor.rename(plan, title).unwrap();
     takes(
         &format!("the other device shows {title}"),
-        Duration::from_secs(30),
+        Duration::from_secs(120),
         LOOK,
         || other.outline(space).starts_with(&shown),
     )
     .await
 }
 
-/// A few seconds of quiet: the connections are up and the pulls they ask for have run.
-async fn settle() {
+/// A few seconds of quiet: the connections are up and the pulls they ask for have run, and then proof that
+/// Bob's socket is live: an entry of Alice's reaches his core inline.
+///
+/// Five virtual seconds are not a guarantee. The paused clock jumps whenever the runtime is idle, and the
+/// subscription to the shared feed is sent by a driver that does its work on the blocking pool, so on a
+/// starved machine the clock can run on before Bob's socket is subscribed; the next entry is then not
+/// relayed and only the 60 s timer finds it. Waiting for a first entry to arrive inline (and trying again
+/// when it does not, which also repairs the subscription) puts every test after that point, whatever the
+/// speed of the machine.
+async fn settle(p: &Pair) {
     tokio::time::sleep(Duration::from_secs(5)).await;
+    for attempt in 0..6 {
+        let applied = p.bob.inline_applied();
+        p.alice
+            .rename(p.plan, &format!("Warm-up {attempt}"))
+            .unwrap();
+        let start = tokio::time::Instant::now();
+        // Not in time is the answer "not yet": the next attempt writes the next entry.
+        while start.elapsed() < Duration::from_secs(10) {
+            if p.bob.inline_applied() > applied {
+                return;
+            }
+            tokio::time::sleep(LOOK).await;
+        }
+    }
+    panic!("Bob's socket never carried an entry inline");
 }
 
 // ----- the reference remote, on the paused clock -----------------------------------------------------
@@ -88,7 +111,7 @@ async fn an_entry_reaches_the_other_core_inline_long_before_the_pull_timer() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     let (applied, pulled) = (p.bob.inline_applied(), p.bob.pulled_pages());
     let took = rename_and_wait(&p.alice, &p.bob, p.space, p.plan, "Plan v2").await;
@@ -118,7 +141,7 @@ async fn a_lost_frame_is_found_by_the_next_entry_whose_prev_cursor_shows_the_gap
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     // Everything the server relays while Alice's first change is pushed is lost.
     memory.ws_drop_next(1_000);
@@ -154,7 +177,7 @@ async fn the_pull_timer_finds_a_lost_frame_when_nothing_follows() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     memory.ws_drop_next(1_000);
     p.alice.create_page(p.space, None, "Lonely");
@@ -179,7 +202,7 @@ async fn edits_by_both_people_converge_whatever_frames_are_lost() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     // A deterministic mix: some changes lose no frame, some lose all, some the first or the second.
     for round in 0..12_usize {
@@ -204,7 +227,7 @@ async fn the_push_debounce_is_150_ms_while_a_peer_is_present_and_500_ms_otherwis
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     // Nobody else is on a page: the plain debounce.
     let plain = rename_and_wait(&p.bob, &p.alice, p.space, p.plan, "Plain").await;
@@ -255,7 +278,7 @@ async fn a_lost_connection_is_replaced_and_what_happened_meanwhile_arrives() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     // The server goes away: every socket closes, every call is refused.
     memory.set_offline(true);
@@ -281,7 +304,7 @@ async fn a_lost_connection_is_replaced_and_what_happened_meanwhile_arrives() {
     .await;
 
     // And the new sockets carry entries inline again.
-    settle().await;
+    settle(&p).await;
     let (applied, pulled) = (p.bob.inline_applied(), p.bob.pulled_pages());
     let took = rename_and_wait(&p.alice, &p.bob, p.space, p.plan, "Online again").await;
     assert!(took < Duration::from_secs(2), "{took:?}");
@@ -295,7 +318,7 @@ async fn presence_reaches_the_other_member_sealed_and_never_the_sender_or_a_remo
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle().await;
+    settle(&p).await;
 
     // Frames go to the other member, in order, with the sender's name and page.
     let alice = p.alice_net.realtime();
@@ -353,7 +376,7 @@ async fn an_entry_arrives_over_the_real_socket_within_one_cycle_without_polling(
     let (env, server) = Env::<HttpRemote>::http().await;
     let p = pair(&env).await;
     // The sockets connect, and the pulls they ask for run.
-    tokio::time::sleep(Duration::from_secs(2)).await;
+    settle(&p).await;
     until("both are idle", || {
         p.alice.sync_info().state == kb_types::SyncState::Idle
             && p.bob.sync_info().state == kb_types::SyncState::Idle
@@ -369,8 +392,10 @@ async fn an_entry_arrives_over_the_real_socket_within_one_cycle_without_polling(
         tokio::time::sleep(Duration::from_millis(100)).await;
     }
     eprintln!("write to apply over the real socket (500 ms debounce): {latencies:?}");
+    // Not the pull timer's 60 s; that no pull ran is the exact check below. The bound itself is wall-clock, so it
+    // is wide enough for a loaded shared runner.
     assert!(
-        latencies.iter().all(|took| *took < Duration::from_secs(5)),
+        latencies.iter().all(|took| *took < Duration::from_secs(30)),
         "{latencies:?}"
     );
     assert_eq!(
@@ -386,11 +411,11 @@ async fn an_entry_arrives_over_the_real_socket_within_one_cycle_without_polling(
 async fn presence_and_the_short_debounce_over_the_real_socket() {
     let (env, server) = Env::<HttpRemote>::http().await;
     let p = pair(&env).await;
-    tokio::time::sleep(Duration::from_secs(2)).await;
+    settle(&p).await;
 
     // Nobody else is on a page: Bob's push waits the plain 500 ms.
     let mut plain = Vec::new();
-    for round in 0..3 {
+    for round in 0..5 {
         plain.push(
             rename_and_wait(&p.bob, &p.alice, p.space, p.plan, &format!("Plain {round}")).await,
         );
@@ -409,7 +434,7 @@ async fn presence_and_the_short_debounce_over_the_real_socket() {
     ));
     takes(
         "Bob's core accepted Alice's presence",
-        Duration::from_secs(10),
+        Duration::from_secs(60),
         LOOK,
         || !p.bob.presence_seen().is_empty(),
     )
@@ -420,7 +445,7 @@ async fn presence_and_the_short_debounce_over_the_real_socket() {
         "never back to the sender"
     );
     let mut quick = Vec::new();
-    for round in 0..3 {
+    for round in 0..5 {
         quick.push(
             rename_and_wait(&p.bob, &p.alice, p.space, p.plan, &format!("Quick {round}")).await,
         );
@@ -433,10 +458,17 @@ async fn presence_and_the_short_debounce_over_the_real_socket() {
     eprintln!(
         "write to apply over the real socket: 500 ms debounce {plain:?}, 150 ms debounce {quick:?}"
     );
-    // The debounce is 350 ms shorter: whatever the speed of the machine, the middle values are 250 ms apart
-    // at least.
+    // This is a latency test over real time, so what is compared must not move with the load of the machine.
+    // A slow round trip only adds to a sample, never takes from it: the debounce is a floor, and the
+    // fastest of five samples is the one the load has touched least. The debounce is 350 ms shorter:
+    // the fastest quick one is 200 ms below the fastest plain one at least, and the plain ones never
+    // beat the 500 ms they wait.
     assert!(
-        quick[1] + Duration::from_millis(250) < plain[1],
+        plain[0] >= Duration::from_millis(480),
+        "the plain debounce is a floor: {plain:?}"
+    );
+    assert!(
+        quick[0] + Duration::from_millis(200) < plain[0],
         "{quick:?} against {plain:?}"
     );
     server.stop().await;

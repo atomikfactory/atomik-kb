@@ -16,6 +16,7 @@ import { t } from "../i18n";
 import { createAppStore } from "../store";
 import { stubObjectUrls } from "../test/attachments";
 import { paragraphs } from "../test/editor";
+import { focusField } from "../test/focus";
 import { contentOf, idsOf, openPage, renderPages } from "../test/page";
 import { NOW, findMainNavigation, recordingTransport, renderWith } from "../test/render";
 import { describeUrlError, importImageFromUrl } from "./attachments";
@@ -114,10 +115,7 @@ async function chooseImageFromUrl(editor: Editor): Promise<HTMLElement> {
 async function submitLink(user: ReturnType<typeof userEvent.setup>, dialog: HTMLElement, link: string): Promise<void> {
   // The editor may still take the focus back (tiptap's `focus()` is deferred by a frame, and a loaded machine runs it late), so click until the field has it: a paste goes where the focus is.
   const field = within(dialog).getByLabelText(t("attachment.url.label"));
-  await waitFor(async () => {
-    await user.click(field);
-    expect(field).toHaveFocus();
-  });
+  await focusField(user, field);
   await user.paste(link);
   await user.keyboard("{Enter}");
 }
