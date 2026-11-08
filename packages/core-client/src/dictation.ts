@@ -116,10 +116,16 @@ export function dictationReasonOf(error: unknown): DictationErrorCode | undefine
   return DICTATION_ERROR_CODES.find((code) => code === reason);
 }
 
+/** `bytes` random bytes from the platform's secure generator, as hex. */
+function randomHex(crypto: Crypto, bytes: number): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(bytes)), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 /** A session id: 1 to 64 of `[A-Za-z0-9_-]`, what `dictation_start` takes. */
 export function newSessionId(): string {
-  const uuid = (globalThis.crypto as Crypto | undefined)?.randomUUID?.();
-  const body = uuid ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  const crypto = globalThis.crypto;
+  const uuid = crypto.randomUUID?.();
+  const body = uuid ?? `${Date.now().toString(36)}-${randomHex(crypto, 8)}`;
   return `dict-${body}`.slice(0, 64);
 }
 
