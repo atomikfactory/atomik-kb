@@ -119,7 +119,7 @@ export function parseBool(text: string): boolean | undefined {
 /** `parse_number`: a plain decimal number (sign, digits, fraction, exponent); no thousands separators. */
 export function parseNumber(text: string): number | undefined {
   const trimmed = text.trim();
-  if (!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/u.test(trimmed)) {
+  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/u.test(trimmed)) {
     return undefined;
   }
   const value = Number(trimmed);
@@ -382,6 +382,84 @@ export interface HtmlText {
   dropped: boolean;
 }
 
+const DROPPED_ELEMENTS_PATTERN = /<(script|style|iframe|object|embed|noscript|template|svg|canvas|form)\b/gu;
+
+/** `html` without its `<!-- ... -->` comments (an unclosed one stays), in linear time. */
+function removeComments(html: string): string {
+  let out = "";
+  let from = 0;
+  for (;;) {
+    const open = html.indexOf("<!--", from);
+    const close = open < 0 ? -1 : html.indexOf("-->", open + 4);
+    if (close < 0) {
+      return out + html.slice(from);
+    }
+    out += html.slice(from, open);
+    from = close + 3;
+  }
+}
+
+/** `html` without the elements the page schema cannot hold, content included (`<script ...>...</script >`); `onDrop` is called for each. */
+function removeDroppedElements(html: string, onDrop: () => void): string {
+  const lower = html.toLowerCase();
+  const opener = new RegExp(DROPPED_ELEMENTS_PATTERN.source, "gu");
+  const exhausted = new Set<string>();
+  let out = "";
+  let from = 0;
+  for (;;) {
+    opener.lastIndex = from;
+    const found = opener.exec(lower);
+    if (found === null) {
+      return out + html.slice(from);
+    }
+    const name = found[1] ?? "";
+    const openEnd = found.index + found[0].length;
+    let end = -1;
+    if (!exhausted.has(name)) {
+      let search = openEnd;
+      for (;;) {
+        const close = lower.indexOf(`</${name}`, search);
+        if (close < 0) {
+          break;
+        }
+        let after = close + name.length + 2;
+        while (after < lower.length && /\s/u.test(lower.charAt(after))) {
+          after += 1;
+        }
+        if (lower.charAt(after) === ">") {
+          end = after + 1;
+          break;
+        }
+        search = close + 1;
+      }
+    }
+    if (end < 0) {
+      exhausted.add(name);
+      out += html.slice(from, openEnd);
+      from = openEnd;
+      continue;
+    }
+    onDrop();
+    out += html.slice(from, found.index);
+    from = end;
+  }
+}
+
+/** `markup` without `<...>` tags (a `<` with no `>` after it stays), in linear time. */
+function stripTags(markup: string): string {
+  let out = "";
+  let from = 0;
+  for (;;) {
+    const open = markup.indexOf("<", from);
+    const close = open < 0 ? -1 : markup.indexOf(">", open + 1);
+    if (close < 0) {
+      return out + markup.slice(from);
+    }
+    out += markup.slice(from, open);
+    from = close + 1;
+  }
+}
+
 /**
  * The text of an HTML file: the title (`h1.page-title`, else `<title>`, else the first `<h1>`; an
  * `<h1>` that gave it is not part of the text) and the icon (`.page-header-icon`), then the body's
@@ -390,13 +468,20 @@ export interface HtmlText {
  */
 export function htmlText(html: string): HtmlText {
   let dropped = false;
-  let source = html.replace(/<!--[\s\S]*?-->/gu, "");
-  source = source.replace(/<(script|style|iframe|object|embed|noscript|template|svg|canvas|form)\b[\s\S]*?<\/\1\s*>/giu, () => {
-    dropped = true;
-    return "";
-  });
+  let source = html;
+  // Until nothing changes: taking one thing out must not join its neighbours into another (`<!-<!-- x -->- y -->`).
+  for (;;) {
+    const before = source;
+    source = removeComments(source);
+    source = removeDroppedElements(source, () => {
+      dropped = true;
+    });
+    if (source === before) {
+      break;
+    }
+  }
   const plain = (markup: string | undefined): string | undefined =>
-    markup === undefined ? undefined : decodeEntities(markup.replace(/<[^>]*>/gu, "")).replace(/\s+/gu, " ").trim();
+    markup === undefined ? undefined : decodeEntities(stripTags(markup)).replace(/\s+/gu, " ").trim();
   /** The inner text of the first match of `pattern` (its last group), which is taken out of the source. */
   const take = (pattern: RegExp): string | undefined => {
     const match = pattern.exec(source);
@@ -418,7 +503,7 @@ export function htmlText(html: string): HtmlText {
       /<\/?(?:p|div|h[1-6]|li|ul|ol|tr|table|blockquote|pre|section|article|header|footer|main|aside|details|summary|figure|figcaption|hr|nav)\b[^>]*>/giu,
       "\n",
     );
-  const paragraphs = decodeEntities(body.replace(/<[^>]*>/gu, ""))
+  const paragraphs = decodeEntities(stripTags(body))
     .split(/\n/u)
     .map((line) => line.replace(/\s+/gu, " ").trim())
     .filter((line) => line !== "");
