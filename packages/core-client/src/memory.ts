@@ -9,6 +9,7 @@ import type { BackupHeader, BackupState } from "./backup";
 import { MemoryComments } from "./comments-mirror";
 import type { CommentChange } from "./comments";
 import { MemoryContent } from "./content";
+import { trimEndChars } from "./trim-end";
 import { MemoryDictation } from "./dictation-memory";
 import type { MemoryDictationOptions } from "./dictation-memory";
 import { MemoryDrive, driveFailure } from "./drive-memory";
@@ -1861,7 +1862,7 @@ export class MemoryTransport implements Transport {
       chosen = absolutePath(path);
     }
     // Without a trailing separator, whichever one the platform's paths use.
-    const folder = chosen.replace(/[\\/]+$/u, "");
+    const folder = trimEndChars(chosen, "\\/");
     const found: { id: string; name: string; size: number; modifiedAt: number; position: number }[] = [];
     let position = 0;
     for (const [filePath, bytes] of this.files) {

@@ -4,6 +4,7 @@
 // and the files "Open" refuses to hand to the system.
 
 import { MAX_NAME_BYTES } from "./attachments";
+import { trimEndChars } from "./trim-end";
 import type { AttachmentId } from "./generated/AttachmentId";
 
 /** What an imported file is called when its file name leaves nothing usable. */
@@ -139,7 +140,7 @@ export function mimeForName(name: string): string {
 
 /** Whether Windows would read the name as a device (`CON`, `COM1.txt`, `lpt9 .log`, ...). */
 function isDeviceName(name: string): boolean {
-  const stem = (name.split(".")[0] ?? "").replace(/ +$/u, "").toUpperCase();
+  const stem = trimEndChars(name.split(".")[0] ?? "", " ").toUpperCase();
   return /^(?:CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|(?:COM|LPT)[0-9¹²³])$/u.test(stem);
 }
 
@@ -162,7 +163,7 @@ export function sanitisedName(name: string): string | undefined {
   const cleaned = name
     .replace(/[\p{Cc}/\\\u00ad\u061c\u180e\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u206f\ufeff]/gu, "")
     .replace(/[<>:"|?*]/gu, "_");
-  const trimEnd = (text: string): string => text.replace(/[. ]+$/u, "");
+  const trimEnd = (text: string): string => trimEndChars(text, ". ");
   let safe = trimEnd(capBytes(trimEnd(cleaned), MAX_NAME_BYTES));
   if (safe === "") {
     return undefined;

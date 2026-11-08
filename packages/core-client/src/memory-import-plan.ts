@@ -516,7 +516,7 @@ function preprocess(body: string, source: Source, ctx: Context): string {
       continue;
     }
     const trimmed = raw.trim();
-    if (/^<!--.*-->$/u.test(trimmed)) {
+    if (/^<!--[\s\S]*-->$/u.test(trimmed)) {
       continue;
     }
     if (/^<aside>$/iu.test(trimmed)) {
