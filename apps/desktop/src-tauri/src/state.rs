@@ -2586,6 +2586,10 @@ mod tests {
                 expires_at: None,
             })
         }
+        fn invite_generation(&mut self) -> Result<u64, ApiError> {
+            self.sync_calls.push("invite_generation");
+            Ok(0)
+        }
         fn invite_mailbox_id(&mut self) -> Result<Option<[u8; 6]>, ApiError> {
             self.sync_calls.push("invite_mailbox_id");
             Ok(self.invite.and_then(|(_, _, mailbox)| mailbox))

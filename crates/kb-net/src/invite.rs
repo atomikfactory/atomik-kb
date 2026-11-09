@@ -93,7 +93,7 @@ pub trait InviteHost: Send + Sync + 'static {
     /// The session as the dialogs show it.
     fn invite_info(&self) -> Result<InviteSessionInfo, ApiError>;
     /// The identity of the current session (`0` when there is none).
-    fn invite_generation(&self) -> u64;
+    fn invite_generation(&self) -> Result<u64, ApiError>;
     /// The mailbox of the session.
     fn invite_mailbox_id(&self) -> Result<Option<[u8; 6]>, ApiError>;
     /// The mailbox is open (inviter) or found (invitee), and when it expires (Unix ms).
@@ -269,7 +269,7 @@ macro_rules! authed {
 async fn session_now(host: &Arc<dyn InviteHost>) -> Result<(InviteSessionInfo, u64), Failure> {
     host_call(host, |host| {
         let info = host.invite_info()?;
-        Ok((info, host.invite_generation()))
+        Ok((info, host.invite_generation()?))
     })
     .await
 }
