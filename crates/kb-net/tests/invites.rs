@@ -7,10 +7,11 @@
 
 mod support;
 
+use std::sync::Arc;
 use std::time::Duration;
 
 use kb_net::devices::{CODE_EXPIRED, PEER_LEFT};
-use kb_net::invite::{INVALID_INVITE, PREVIEW_TIMEOUT_MESSAGE};
+use kb_net::invite::{INVALID_INVITE, InviteHost, InviteTask, PREVIEW_TIMEOUT_MESSAGE};
 use kb_sync::v2::MemoryRemote;
 use kb_types::{InviteSessionState, InviteStatus, MemberRole, Request};
 use support::{Env, link_on_the_server, shared, until};
@@ -313,6 +314,47 @@ async fn the_invitee_can_cancel_the_preview_and_the_invite_stays_open() {
         carol.space(space).is_some() && carol.outline(space) == alice.outline(space)
     })
     .await;
+}
+
+/// The task of a cancelled session may still be winding down when the invitee opens the link again
+/// (it wakes on the cancellation, after the new session exists): it must leave the new session alone.
+/// Here the old task is the only one running, so that the interleaving is the test's, not the
+/// scheduler's.
+#[tokio::test(start_paused = true)]
+async fn the_task_of_a_cancelled_session_leaves_the_next_session_alone() {
+    support::init_logging();
+    let env = Env::memory();
+    let (alice, _alice_net, space, _) = env.alice_with_a_project();
+    let (carol, carol_net) = env.newcomer("carol", 3, "Carol");
+    drop(carol_net); // no listener: the tasks below are started by hand
+    shared(&alice, space).await;
+    let link = link_on_the_server(&alice, space, MemberRole::Viewer, None).await;
+    carol
+        .request(Request::InviteLinkOpen {
+            link: link.link.clone(),
+        })
+        .unwrap();
+    let host: Arc<dyn InviteHost> = Arc::clone(&carol) as Arc<dyn InviteHost>;
+    let _old = InviteTask::spawn(
+        host,
+        Arc::clone(&env.factory),
+        &tokio::runtime::Handle::current(),
+    );
+    until("Carol sees the preview", || {
+        carol.invite_state() == InviteSessionState::Previewing
+    })
+    .await;
+    // Cancelled and opened again without the old task getting a turn in between.
+    carol.request(Request::InviteCancel).unwrap();
+    carol
+        .request(Request::InviteLinkOpen { link: link.link })
+        .unwrap();
+    // Minutes of virtual time: the old task has every chance to act.
+    for _ in 0..60 {
+        tokio::time::sleep(Duration::from_secs(1)).await;
+        let info = carol.invite();
+        assert_eq!(info.state, InviteSessionState::Starting, "{:?}", info.error);
+    }
 }
 
 /// Keeps the type of the reference remote in view for the helpers above.

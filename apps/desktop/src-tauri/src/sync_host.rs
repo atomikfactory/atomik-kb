@@ -226,6 +226,7 @@ pub trait DevicesCoreApi {
 /// `sync_foreign_log_received`) come from [`SyncCoreApi`].
 pub trait InviteCoreApi {
     fn invite_info(&mut self) -> Result<InviteSessionInfo, ApiError>;
+    fn invite_generation(&mut self) -> Result<u64, ApiError>;
     fn invite_mailbox_id(&mut self) -> Result<Option<[u8; 6]>, ApiError>;
     fn invite_mailbox_opened(
         &mut self,
@@ -603,6 +604,10 @@ impl DevicesCoreApi for kb_core::Core {
 impl InviteCoreApi for kb_core::Core {
     fn invite_info(&mut self) -> Result<InviteSessionInfo, ApiError> {
         kb_core::Core::invite_info(self)
+    }
+
+    fn invite_generation(&mut self) -> Result<u64, ApiError> {
+        Ok(kb_core::Core::invite_generation(self))
     }
 
     fn invite_mailbox_id(&mut self) -> Result<Option<[u8; 6]>, ApiError> {
@@ -1006,6 +1011,10 @@ impl<C: CoreApi + SyncCoreApi> SyncHost for AppState<C> {
 impl<C: CoreApi + SyncCoreApi + InviteCoreApi> InviteHost for AppState<C> {
     fn invite_info(&self) -> Result<InviteSessionInfo, ApiError> {
         self.sync_call("invite_info", InviteCoreApi::invite_info)
+    }
+
+    fn invite_generation(&self) -> Result<u64, ApiError> {
+        self.sync_call("invite_generation", InviteCoreApi::invite_generation)
     }
 
     fn invite_mailbox_id(&self) -> Result<Option<[u8; 6]>, ApiError> {

@@ -64,8 +64,14 @@ const DAY_MS: i64 = 86_400_000;
 /// What a message or bundle that fails to open ends the session with.
 const UNVERIFIED_MESSAGE: &str = "the other device could not be verified";
 
+/// Hands out the identity of each session (see [`InviteSession::generation`]).
+static SESSION_GENERATIONS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+
 /// The invite session this core runs, if any (either flow, either side).
 pub(crate) struct InviteSession {
+    /// Which session this is: never reused, so that a task that was started for an earlier session
+    /// can tell that the one it finds is not its own.
+    pub(crate) generation: u64,
     pub(crate) flow: InviteFlow,
     pub(crate) side: InviteSide,
     pub(crate) state: InviteSessionState,
@@ -116,6 +122,7 @@ pub(crate) struct InviteSession {
 impl InviteSession {
     fn new(flow: InviteFlow, side: InviteSide, server_url: String) -> Self {
         Self {
+            generation: SESSION_GENERATIONS.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
             flow,
             side,
             state: InviteSessionState::Starting,
@@ -954,6 +961,12 @@ impl Core {
             error: session.error.clone(),
             expires_at: session.expires_at,
         })
+    }
+
+    /// The identity of the current session (`0` when there is none): a task started for one session
+    /// must not act on the next.
+    pub fn invite_generation(&self) -> u64 {
+        self.invite.as_ref().map_or(0, |s| s.generation)
     }
 
     /// The mailbox of the session: the invitee's from the typed code, the inviter's once
