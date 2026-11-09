@@ -643,6 +643,9 @@ impl InviteHost for Peer {
     fn invite_info(&self) -> Result<InviteSessionInfo, ApiError> {
         self.with(|core| core.invite_info())
     }
+    fn invite_generation(&self) -> u64 {
+        self.with(|core| core.invite_generation())
+    }
     fn invite_mailbox_id(&self) -> Result<Option<[u8; 6]>, ApiError> {
         self.with(|core| core.invite_mailbox_id())
     }

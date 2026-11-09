@@ -92,6 +92,8 @@ const MAX_LOG_ROUNDS: usize = 8;
 pub trait InviteHost: Send + Sync + 'static {
     /// The session as the dialogs show it.
     fn invite_info(&self) -> Result<InviteSessionInfo, ApiError>;
+    /// The identity of the current session (`0` when there is none).
+    fn invite_generation(&self) -> u64;
     /// The mailbox of the session.
     fn invite_mailbox_id(&self) -> Result<Option<[u8; 6]>, ApiError>;
     /// The mailbox is open (inviter) or found (invitee), and when it expires (Unix ms).
@@ -262,12 +264,22 @@ macro_rules! authed {
     };
 }
 
+/// The session as the dialogs show it, and its identity (read after the session, so that a session
+/// that replaced the task's own in between is noticed).
+async fn session_now(host: &Arc<dyn InviteHost>) -> Result<(InviteSessionInfo, u64), Failure> {
+    host_call(host, |host| {
+        let info = host.invite_info()?;
+        Ok((info, host.invite_generation()))
+    })
+    .await
+}
+
 async fn run_invite<R: SyncRemote>(
     host: Arc<dyn InviteHost>,
     factory: RemoteFactory<R>,
     changed: Arc<Notify>,
 ) {
-    let Ok(info) = host_call(&host, |host| host.invite_info()).await else {
+    let Ok((info, generation)) = session_now(&host).await else {
         return;
     };
     if over(info.state) {
@@ -293,6 +305,7 @@ async fn run_invite<R: SyncRemote>(
         changed,
         authed: false,
         conflicts: 0,
+        generation,
     };
     let outcome = session.run().await;
     let close = match &outcome {
@@ -306,9 +319,10 @@ async fn run_invite<R: SyncRemote>(
         Err(failure) => {
             tracing::info!(side = ?info.side, flow = ?info.flow, "invite failed");
             // The core may have ended the session itself (a message that did not open).
-            let ended = host_call(&host, |host| host.invite_info())
+            // Or another session took its place: this task's failure is not that session's.
+            let ended = session_now(&host)
                 .await
-                .is_ok_and(|info| over(info.state));
+                .is_ok_and(|(info, now)| over(info.state) || now != generation);
             if !ended {
                 fail(&host, &failure.message()).await;
             }
@@ -345,9 +359,18 @@ struct Invite<R> {
     authed: bool,
     /// Lost compare-and-swaps in a row (the inviter's `Invite` entry).
     conflicts: u32,
+    /// The session this task was started for.
+    generation: u64,
 }
 
 impl<R: SyncRemote> Invite<R> {
+    /// The session, or `None` when another one replaced the task's own (a cancelled session's task
+    /// that is still winding down must leave the new one alone).
+    async fn session(&self) -> Result<Option<InviteSessionInfo>, Failure> {
+        let (info, generation) = session_now(&self.host).await?;
+        Ok((generation == self.generation).then_some(info))
+    }
+
     /// Runs the session to its end; answers the final state.
     async fn run(&mut self) -> Result<InviteSessionState, Failure> {
         match (self.flow, self.side) {
@@ -372,7 +395,9 @@ impl<R: SyncRemote> Invite<R> {
             tokio::pin!(changed);
             changed.as_mut().enable();
 
-            let info = host_call(&self.host, |host| host.invite_info()).await?;
+            let Some(info) = self.session().await? else {
+                return Ok(InviteSessionState::Cancelled);
+            };
             if over(info.state) {
                 self.flush_abort(id, info.state).await;
                 return Ok(info.state);
@@ -601,7 +626,9 @@ impl<R: SyncRemote> Invite<R> {
             tokio::pin!(changed);
             changed.as_mut().enable();
 
-            let info = host_call(&self.host, |host| host.invite_info()).await?;
+            let Some(info) = self.session().await? else {
+                return Ok(InviteSessionState::Cancelled);
+            };
             if over(info.state) {
                 return Ok(info.state);
             }
@@ -656,9 +683,9 @@ impl<R: SyncRemote> Invite<R> {
         let mut join = None;
         if open {
             join = self.open_and_verify(epoch).await?;
-            let info = host_call(&self.host, |host| host.invite_info()).await?;
-            if over(info.state) {
-                return Ok(());
+            match self.session().await? {
+                Some(info) if !over(info.state) => {}
+                _ => return Ok(()),
             }
         }
         let join = match join {
@@ -736,7 +763,9 @@ impl<R: SyncRemote> Invite<R> {
         for _ in 0..MAX_LOG_ROUNDS {
             let answer = opened.clone();
             host_call(&self.host, move |host| host.invite_opened(&answer)).await?;
-            let info = host_call(&self.host, |host| host.invite_info()).await?;
+            let Some(info) = self.session().await? else {
+                return Ok(None);
+            };
             if over(info.state) {
                 return Ok(None);
             }
