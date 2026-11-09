@@ -141,6 +141,40 @@ fn download_url(archive_name: &str) -> String {
     }
 }
 
+/// GET `url`, retrying with a growing pause: GitHub release downloads now and then answer 5xx (or drop the
+/// connection) for a few seconds to minutes, and a build must not fail on that. Client errors (4xx) are final.
+fn get_with_retries(url: &str) -> Result<ureq::Response, DynError> {
+    const ATTEMPTS: u32 = 6;
+    let agent = ureq::builder().try_proxy_from_env(true).build();
+    let mut attempt = 1;
+    loop {
+        match agent.get(url).call() {
+            Ok(response) => return Ok(response),
+            Err(ureq::Error::Status(code, _)) if code < 500 && code != 429 => {
+                return Err(format!(
+                    "Failed to download sherpa-onnx archive from {url}: HTTP {code}"
+                )
+                .into());
+            }
+            Err(err) if attempt >= ATTEMPTS => {
+                return Err(format!(
+                    "Failed to download sherpa-onnx archive from {url} after {ATTEMPTS} attempts: {err}"
+                )
+                .into());
+            }
+            Err(err) => {
+                let pause = std::time::Duration::from_secs(5 * u64::from(attempt));
+                eprintln!(
+                    "Download attempt {attempt}/{ATTEMPTS} failed ({err}); retrying in {}s",
+                    pause.as_secs()
+                );
+                std::thread::sleep(pause);
+                attempt += 1;
+            }
+        }
+    }
+}
+
 fn download_prebuilt_libs(
     link_mode: LinkMode,
     target_os: &str,
@@ -208,12 +242,7 @@ fn download_prebuilt_libs(
             let url = download_url(&archive_name);
             eprintln!("Downloading sherpa-onnx libs from {url}");
 
-            let response = ureq::builder()
-                .try_proxy_from_env(true)
-                .build()
-                .get(&url)
-                .call()
-                .map_err(|e| format!("Failed to download sherpa-onnx archive from {url}: {e}"))?;
+            let response = get_with_retries(&url)?;
             let mut reader = response.into_reader();
             write_reader_atomically(&mut reader, &archive_path)?;
         }

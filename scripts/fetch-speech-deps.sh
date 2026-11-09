@@ -51,7 +51,7 @@ libs_ok() { [ -f "$LIB_DIR/libsherpa-onnx-c-api.$LIB_EXT" ] && [ -f "$LIB_DIR/li
 download() { # url path sha256
   echo "Downloading $1" >&2
   rm -f "$2.part"
-  curl -fsSL --retry 3 -o "$2.part" "$1"
+  curl -fsSL --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 30 -o "$2.part" "$1"
   if ! sha_ok "$2.part" "$3"; then
     rm -f "$2.part"
     echo "$1 is not the pinned file (SHA-256 differs); nothing was kept" >&2
