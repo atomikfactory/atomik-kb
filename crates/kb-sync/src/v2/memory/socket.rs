@@ -368,6 +368,24 @@ impl MemoryRemote {
         self.lock().knobs.ws_swap = WsSwap::Armed;
     }
 
+    /// For every feed at least one open socket is subscribed to, how many sockets are: the readiness
+    /// signal a test waits on (a feed two accounts' sockets share shows `2`; each personal feed shows
+    /// `1`). Behind the `testing` feature.
+    #[cfg(any(test, feature = "testing"))]
+    #[must_use]
+    pub fn ws_subscribers_by_feed(&self) -> std::collections::BTreeMap<FeedId, usize> {
+        let mut inner = self.lock();
+        inner.reap_sockets();
+        let mut counts = std::collections::BTreeMap::new();
+        for slot in inner.sockets.values() {
+            for feed in &slot.subscribed {
+                let count = counts.entry(*feed).or_insert(0_usize);
+                *count = count.saturating_add(1);
+            }
+        }
+        counts
+    }
+
     /// How many sockets are open on the server, through every connection (a socket whose session
     /// ended is not counted). Behind the `testing` feature.
     #[cfg(any(test, feature = "testing"))]
