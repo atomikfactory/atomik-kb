@@ -21,7 +21,15 @@ unmaintained = "workspace"
 # Known transitive "unmaintained" notices at the time of writing (warnings, not errors):
 # proc-macro-error (gtk-rs 0.18 under Tauri on Linux, compile-time only), im and
 # sized-chunks (under loro-internal). Re-check when Tauri and Loro update.
-ignore = []
+ignore = [
+  # SQLite before 3.54.0 can return uninitialised page-cache memory when it opens a database with a
+  # crafted sibling -wal file of a different page size (local; needs files a less trusted party wrote).
+  # The app and the server only open SQLite files they created themselves; no importer opens SQLite.
+  # No release fixes our build yet: rusqlite 0.41 (libsqlite3-sys 0.39) is blocked on a
+  # rusqlite_migration release, and libsqlite3-sys 0.39's bundled-sqlcipher still bundles SQLite 3.53.4.
+  # Remove when a libsqlite3-sys whose bundled SQLCipher has SQLite >= 3.54 (sqlcipher-src >= 420) is usable.
+  { id = "RUSTSEC-2026-0459", reason = "SQLite WAL page-size bug; only self-written databases are opened; no fixed SQLCipher build released" },
+]
 
 [licenses]
 version = 2
