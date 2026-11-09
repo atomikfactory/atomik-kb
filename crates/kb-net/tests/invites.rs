@@ -307,8 +307,10 @@ async fn the_invitee_can_cancel_the_preview_and_the_invite_stays_open() {
         carol.invite_state() == InviteSessionState::Done
     })
     .await;
+    // `Done` is the join folded; the space itself shows up with the pull that follows, and the tree of a
+    // space that is not there yet is an error, not an empty tree.
     until("Carol has the pages", || {
-        carol.outline(space) == alice.outline(space)
+        carol.space(space).is_some() && carol.outline(space) == alice.outline(space)
     })
     .await;
 }

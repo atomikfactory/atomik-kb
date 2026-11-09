@@ -9,6 +9,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { t } from "../../i18n";
 import { paragraphs, pid } from "../../test/editor";
+import { focusField } from "../../test/focus";
 import { openPage } from "../../test/page";
 import { undo } from "../loro-binding";
 import { AI_ON, outline, placeCursor, renderAiPages, resetAi, selectText } from "./ai-test-kit";
@@ -324,10 +325,7 @@ describe("the other entry points", () => {
    */
   async function typeInCursorPrompt(app: Awaited<ReturnType<typeof openNotes>>, panel: HTMLElement, keys: string) {
     const field = within(panel).getByRole("textbox", { name: t("aiWriter.prompt.cursor") });
-    await waitFor(async () => {
-      await app.user.click(field);
-      expect(field).toHaveFocus();
-    });
+    await focusField(app.user, field);
     await app.user.keyboard(keys);
   }
 

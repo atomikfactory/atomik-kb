@@ -164,8 +164,17 @@ fn download_prebuilt_libs(
     let lib_dir_name = if is_ios_sim { "lib-sim" } else { "lib" };
     let lib_dir = extracted_dir.join(lib_dir_name);
 
+    // A restored build cache can hold the extracted directory without the libraries (a partial
+    // restore, or an extraction that was cut short): such a directory is incomplete, not usable,
+    // and is extracted again below.
     if lib_dir.is_dir() {
-        return Ok((lib_dir, archive_stem.to_string()));
+        if dir_has_libs(&lib_dir) {
+            return Ok((lib_dir, archive_stem.to_string()));
+        }
+        eprintln!(
+            "Cached sherpa-onnx directory {} holds no libraries: extracting it again",
+            lib_dir.display()
+        );
     }
 
     // Android archives use jniLibs/{abi}/ instead of lib/. Check both
@@ -284,9 +293,32 @@ fn download_prebuilt_libs(
         .into());
     }
 
+    if !dir_has_libs(&lib_dir) {
+        // A fresh extraction has none either: the archive itself is wrong, so say so.
+        let _ = fs::remove_file(&archive_path);
+        let _ = fs::remove_dir_all(&extracted_dir);
+        return Err(format!(
+            "The sherpa-onnx archive {} was extracted but {} holds no libraries",
+            archive_path.display(),
+            lib_dir.display()
+        )
+        .into());
+    }
+
     eprintln!("Downloaded sherpa-onnx libs to {}", extracted_dir.display());
 
     Ok((lib_dir, archive_stem.to_string()))
+}
+
+/// Whether `dir` holds at least one library file (shared, static or import).
+fn dir_has_libs(dir: &Path) -> bool {
+    fs::read_dir(dir).is_ok_and(|entries| {
+        entries.filter_map(|entry| entry.ok()).any(|entry| {
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            name.contains(".so") || name.ends_with(".dylib") || name.ends_with(".dll") || name.ends_with(".a") || name.ends_with(".lib")
+        })
+    })
 }
 
 

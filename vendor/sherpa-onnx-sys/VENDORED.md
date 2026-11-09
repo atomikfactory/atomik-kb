@@ -7,8 +7,9 @@ used through `[patch.crates-io]` in the workspace `Cargo.toml`. It is excluded f
 
 - **Upstream:** `sherpa-onnx-sys` 1.13.8 (the newest release when this was vendored, 2026-10-16;
   upstream master was checked and still says `zip = "2"`).
+- **Second change** (`build.rs`): a cached `lib/` directory with no library files in it (a partly restored CI build cache) is extracted again instead of used, and a fresh extraction with no libraries is an error.
 - **The one change** (to the `zip` build-dependency, in `Cargo.toml`): `[build-dependencies.zip]` `version = "2"`
-  became `version = "9"`, and `default-features = false` was added. Nothing else differs: `build.rs`, `src/` and
+  became `version = "9"`, and `default-features = false` was added. Nothing else differs but the `build.rs` change above: `build.rs`, `src/` and
   `LICENSE` are the published files; `Cargo.lock`, `Cargo.toml.orig` and `.cargo_vcs_info.json` are not copied.
   Without `default-features = false` the build script would pull zip's default compression crates (zstd, bzip2,
   lzma, AES and more) into the lockfile, and `cargo deny` rejects the `bzip2-1.0.6` licence of one of them.
