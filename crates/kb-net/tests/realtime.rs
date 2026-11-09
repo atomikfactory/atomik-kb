@@ -111,7 +111,9 @@ async fn settle(p: &Pair, memory: Option<&MemoryRemote>) {
             if p.bob.inline_applied() > applied {
                 return;
             }
-            std::thread::sleep(Duration::from_millis(1));
+            if memory.is_some() {
+                std::thread::sleep(Duration::from_millis(1));
+            }
             tokio::time::sleep(LOOK).await;
         }
     }
