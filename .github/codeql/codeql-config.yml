@@ -1,0 +1,45 @@
+# CodeQL configuration for .github/workflows/codeql.yml.
+#
+# Test code, test fixtures and developer-only smoke scripts do not ship, so findings in them
+# (hard-coded test keys, cleartext logging in assertions, ...) are noise. Every pattern below was
+# checked to be test- or dev-only; do not add anything that ends up in a release build.
+#
+# Rust unit tests written inline (`#[cfg(test)] mod tests { ... }` inside a src file) cannot be
+# excluded by path; those alerts are dismissed in the code-scanning UI instead.
+name: atomik-kb CodeQL config
+
+paths-ignore:
+  # Rust integration tests (crates/*/tests, apps/desktop/src-tauri/tests, adapters/*/tests) and
+  # out-of-line unit-test modules, all declared behind #[cfg(test)].
+  - "**/tests/**"
+  - "**/tests.rs"
+  - "**/*_tests.rs"
+  - "**/testkit.rs"
+  - "crates/kb-import/src/testing.rs"
+  # The kb-sync v2 conformance suite: compiled only for `cfg(test)` or the `testing` feature, which
+  # other crates enable in [dev-dependencies] only.
+  - "crates/kb-sync/src/v2/conformance.rs"
+  - "crates/kb-sync/src/v2/conformance/**"
+  # Cargo examples are never part of a build artefact.
+  - "**/examples/**"
+  # TypeScript tests and their helpers (also excluded from the packages' tsconfig.build.json).
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.fixture.ts"
+  - "**/*.fixtures.ts"
+  - "**/*-test-kit.ts"
+  - "**/*-test-kit.tsx"
+  - "packages/ui/src/test/**"
+  - "packages/core-client/src/testing/**"
+  - "apps/viewer/src/testing.ts"
+  # Golden files and test data.
+  - "fixtures/**"
+  - "apps/viewer/fixtures/**"
+  # Developer-only Windows smoke scripts (UI Automation / DevTools-port drivers).
+  - "scripts/smoke/**"
+  # Vendored third-party code, build output and dependencies.
+  - "vendor/**"
+  - "target/**"
+  - "node_modules/**"
+  - "**/node_modules/**"
+  - "**/dist/**"
