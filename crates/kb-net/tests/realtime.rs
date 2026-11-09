@@ -23,6 +23,7 @@ use std::time::Duration;
 
 use kb_net::HttpRemote;
 use kb_net::v2::SyncRemote;
+use kb_sync::v2::memory::MemoryRemote;
 use kb_types::sharing::PRESENCE_TIMEOUT_SECONDS;
 use kb_types::{PageId, PresenceState, SpaceId};
 use support::{Env, Network, Peer, join_by_link, shared, takes, until};
@@ -75,17 +76,30 @@ async fn rename_and_wait(
     .await
 }
 
-/// A few seconds of quiet: the connections are up and the pulls they ask for have run, and then proof that
-/// Bob's socket is live: an entry of Alice's reaches his core inline.
+/// Real time a test may wait for something that happens off the paused clock.
+const REAL_PATIENCE: std::time::Duration = std::time::Duration::from_secs(120);
+
+/// Five quiet seconds, and (on the reference remote) until the server shows a feed that two sockets are subscribed to (Alice's and Bob's, on the shared
+/// space; each personal feed has one), then proof that Bob's socket is live: an entry of Alice's reaches his
+/// core inline.
 ///
-/// Five virtual seconds are not a guarantee. The paused clock jumps whenever the runtime is idle, and the
-/// subscription to the shared feed is sent by a driver that does its work on the blocking pool, so on a
-/// starved machine the clock can run on before Bob's socket is subscribed; the next entry is then not
-/// relayed and only the 60 s timer finds it. Waiting for a first entry to arrive inline (and trying again
-/// when it does not, which also repairs the subscription) puts every test after that point, whatever the
-/// speed of the machine.
-async fn settle(p: &Pair) {
+/// The paused clock jumps whenever the runtime is idle, and the driver sends the subscription from the
+/// blocking pool, which the clock cannot see: on a starved machine virtual time can run past several
+/// seconds, and past the 60 s pull timer, before Bob's socket is subscribed. So the wait is on the
+/// server's own record of the subscription, bounded by real time, and each look yields real time to the
+/// driver instead of only virtual time. After that the first entry is relayed, and the warm-up below
+/// only confirms it.
+async fn settle(p: &Pair, memory: Option<&MemoryRemote>) {
     tokio::time::sleep(Duration::from_secs(5)).await;
+    let real = std::time::Instant::now();
+    while memory.is_some_and(|m| !m.ws_subscribers_by_feed().values().any(|n| *n >= 2)) {
+        assert!(
+            real.elapsed() < REAL_PATIENCE,
+            "Bob's socket never subscribed to the shared feed"
+        );
+        std::thread::sleep(Duration::from_millis(1));
+        tokio::time::sleep(LOOK).await;
+    }
     for attempt in 0..6 {
         let applied = p.bob.inline_applied();
         p.alice
@@ -97,6 +111,7 @@ async fn settle(p: &Pair) {
             if p.bob.inline_applied() > applied {
                 return;
             }
+            std::thread::sleep(Duration::from_millis(1));
             tokio::time::sleep(LOOK).await;
         }
     }
@@ -111,7 +126,7 @@ async fn an_entry_reaches_the_other_core_inline_long_before_the_pull_timer() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     let (applied, pulled) = (p.bob.inline_applied(), p.bob.pulled_pages());
     let took = rename_and_wait(&p.alice, &p.bob, p.space, p.plan, "Plan v2").await;
@@ -141,7 +156,7 @@ async fn a_lost_frame_is_found_by_the_next_entry_whose_prev_cursor_shows_the_gap
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // Everything the server relays while Alice's first change is pushed is lost.
     memory.ws_drop_next(1_000);
@@ -177,7 +192,7 @@ async fn the_pull_timer_finds_a_lost_frame_when_nothing_follows() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     memory.ws_drop_next(1_000);
     p.alice.create_page(p.space, None, "Lonely");
@@ -202,7 +217,7 @@ async fn edits_by_both_people_converge_whatever_frames_are_lost() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // A deterministic mix: some changes lose no frame, some lose all, some the first or the second.
     for round in 0..12_usize {
@@ -227,7 +242,7 @@ async fn the_push_debounce_is_150_ms_while_a_peer_is_present_and_500_ms_otherwis
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // Nobody else is on a page: the plain debounce.
     let plain = rename_and_wait(&p.bob, &p.alice, p.space, p.plan, "Plain").await;
@@ -278,7 +293,7 @@ async fn a_lost_connection_is_replaced_and_what_happened_meanwhile_arrives() {
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // The server goes away: every socket closes, every call is refused.
     memory.set_offline(true);
@@ -304,7 +319,7 @@ async fn a_lost_connection_is_replaced_and_what_happened_meanwhile_arrives() {
     .await;
 
     // And the new sockets carry entries inline again.
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
     let (applied, pulled) = (p.bob.inline_applied(), p.bob.pulled_pages());
     let took = rename_and_wait(&p.alice, &p.bob, p.space, p.plan, "Online again").await;
     assert!(took < Duration::from_secs(2), "{took:?}");
@@ -318,7 +333,7 @@ async fn presence_reaches_the_other_member_sealed_and_never_the_sender_or_a_remo
     let p = pair(&env).await;
     let memory = env.memory.as_ref().unwrap();
     until("both sockets are up", || memory.ws_open_count() == 2).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // Frames go to the other member, in order, with the sender's name and page.
     let alice = p.alice_net.realtime();
@@ -376,7 +391,7 @@ async fn an_entry_arrives_over_the_real_socket_within_one_cycle_without_polling(
     let (env, server) = Env::<HttpRemote>::http().await;
     let p = pair(&env).await;
     // The sockets connect, and the pulls they ask for run.
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
     until("both are idle", || {
         p.alice.sync_info().state == kb_types::SyncState::Idle
             && p.bob.sync_info().state == kb_types::SyncState::Idle
@@ -411,7 +426,7 @@ async fn an_entry_arrives_over_the_real_socket_within_one_cycle_without_polling(
 async fn presence_and_the_short_debounce_over_the_real_socket() {
     let (env, server) = Env::<HttpRemote>::http().await;
     let p = pair(&env).await;
-    settle(&p).await;
+    settle(&p, env.memory.as_ref()).await;
 
     // Nobody else is on a page: Bob's push waits the plain 500 ms.
     let mut plain = Vec::new();
