@@ -71,7 +71,7 @@ function Get-Download([string]$Url, [string]$Path, [long]$Bytes, [string]$Sha256
   Write-Host "Downloading $Url"
   $part = "$Path.part"
   if (Test-Path -LiteralPath $part) { Remove-Item -LiteralPath $part -Force }
-  & curl.exe -L --fail --silent --show-error --retry 3 -o $part $Url
+  & curl.exe -L --fail --silent --show-error --retry 8 --retry-delay 5 --retry-all-errors --connect-timeout 30 -o $part $Url
   if ($LASTEXITCODE -ne 0) { throw "curl.exe failed ($LASTEXITCODE) downloading $Url" }
   if (-not (Test-File $part $Bytes $Sha256)) {
     Remove-Item -LiteralPath $part -Force

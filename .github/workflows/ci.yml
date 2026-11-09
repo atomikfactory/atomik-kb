@@ -53,6 +53,20 @@ jobs:
 
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
 
+      # The sherpa-onnx libraries and the VAD model, from a cache (keyed on the pinned versions and hashes in the
+      # script) and otherwise fetched with retries and SHA-256 checked, so a GitHub releases outage does not fail
+      # the build. SHERPA_ONNX_LIB_DIR keeps the sys crate's build.rs from downloading them itself.
+      - name: Cache the speech dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/speech
+          key: speech-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-speech-deps.sh') }}
+
+      - name: Fetch the speech dependencies
+        run: |
+          eval "$(scripts/fetch-speech-deps.sh --env)"
+          echo "SHERPA_ONNX_LIB_DIR=$SHERPA_ONNX_LIB_DIR" >> "$GITHUB_ENV"
+
       - name: cargo fmt
         run: cargo fmt --all --check
 
@@ -154,6 +168,12 @@ jobs:
             choco install nasm -y --no-progress
             "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
           }
+
+      - name: Cache the speech dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/speech
+          key: speech-deps-${{ runner.os }}-${{ hashFiles('scripts/fetch-speech-deps.ps1') }}
 
       # The sherpa-onnx libraries and the VAD model of dictation (SHA-256 checked by the script),
       # then the two variables dev-env.ps1 would set locally.
