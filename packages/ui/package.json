@@ -40,11 +40,11 @@
     "lib0": "^0.2.119",
     "loro-crdt": "1.17.1",
     "lowlight": "^3.3.0",
-    "lucide-react": "1.69.0",
+    "lucide-react": "1.70.0",
     "mermaid": "12.3.0",
     "pdfjs-dist": "6.5.438",
     "unicode-emoji-json": "0.9.0",
-    "zustand": "^5.0.16"
+    "zustand": "^5.1.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
