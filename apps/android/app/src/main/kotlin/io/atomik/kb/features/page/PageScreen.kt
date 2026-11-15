@@ -23,7 +23,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -62,6 +64,7 @@ fun PageScreen(
     onBack: (() -> Unit)?,
     onOpenPage: (String) -> Unit,
     onClosed: () -> Unit,
+    onOpenSettings: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: PageViewModel = hiltViewModel(key = pageId),
 ) {
@@ -108,19 +111,29 @@ fun PageScreen(
         }
     }
 
+    val settingsLabel = stringResource(R.string.dictation_open_settings)
     val dictationMessage = state.dictationProblem?.let {
         stringResource(
             when (it) {
                 DictationProblem.Unavailable -> R.string.dictation_unavailable
                 DictationProblem.OfflineNotInstalled -> R.string.dictation_offline_missing
+                DictationProblem.OnlineRequired -> R.string.dictation_online_required
                 DictationProblem.Failed -> R.string.dictation_failed
             },
         )
     }
     LaunchedEffect(dictationMessage) {
         if (dictationMessage != null) {
-            snackbar.showSnackbar(dictationMessage)
+            val needsOptIn = state.dictationProblem == DictationProblem.OnlineRequired ||
+                state.dictationProblem == DictationProblem.OfflineNotInstalled
+            val result = snackbar.showSnackbar(
+                message = dictationMessage,
+                actionLabel = if (needsOptIn) settingsLabel else null,
+                withDismissAction = needsOptIn,
+                duration = if (needsOptIn) SnackbarDuration.Long else SnackbarDuration.Short,
+            )
             viewModel.dismissDictationProblem()
+            if (result == SnackbarResult.ActionPerformed) onOpenSettings()
         }
     }
     val crashedMessage = if (state.editorCrashed) stringResource(R.string.editor_crashed) else null

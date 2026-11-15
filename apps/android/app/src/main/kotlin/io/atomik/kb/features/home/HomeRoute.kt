@@ -73,6 +73,7 @@ fun HomeRoute(
                             { scope.launch { navigator.navigateBack() } }
                         } else null,
                         onOpenPage = { open(it, null) },
+                        onOpenSettings = onSettings,
                         onClosed = {
                             selected = null
                             scope.launch { navigator.navigateBack() }

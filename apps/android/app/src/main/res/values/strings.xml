@@ -125,6 +125,8 @@
     <string name="dictation_permission_body">Dictation needs the microphone to turn your speech into text. Speech is recognised on your device unless you allow online dictation in Settings.</string>
     <string name="dictation_unavailable">Dictation is not available.</string>
     <string name="dictation_offline_missing">Offline speech recognition is not installed. Install an offline language in the system settings, or allow online dictation.</string>
+    <string name="dictation_online_required">Dictation needs online recognition on this Android version: it cannot be kept on this device. Allow online dictation in Settings to use it; your phone\'s speech service may then send audio to its provider.</string>
+    <string name="dictation_open_settings">Open Settings</string>
     <string name="dictation_failed">Dictation stopped unexpectedly.</string>
     <string name="welcome_title">Your notes, on your terms</string>
     <string name="welcome_body">atomik keeps your notes private. Connect this phone to your own server, or start with a fresh workspace.</string>

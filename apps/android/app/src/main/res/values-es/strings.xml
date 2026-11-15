@@ -125,6 +125,8 @@
     <string name="dictation_permission_body">El dictado necesita el micrófono para convertir tu voz en texto. El reconocimiento se hace en tu dispositivo salvo que permitas el dictado en línea en Ajustes.</string>
     <string name="dictation_unavailable">El dictado no está disponible.</string>
     <string name="dictation_offline_missing">El reconocimiento de voz sin conexión no está instalado. Instala un idioma sin conexión en los ajustes del sistema o permite el dictado en línea.</string>
+    <string name="dictation_online_required">En esta versión de Android el dictado necesita el reconocimiento en línea: no puede quedarse en este dispositivo. Permite el dictado en línea en Ajustes para usarlo; el servicio de voz del teléfono podría enviar el audio a su proveedor.</string>
+    <string name="dictation_open_settings">Ajustes</string>
     <string name="dictation_failed">El dictado se detuvo inesperadamente.</string>
     <string name="welcome_title">Tus notas, a tu manera</string>
     <string name="welcome_body">atomik mantiene tus notas privadas. Conecta este teléfono a tu propio servidor o empieza con un espacio de trabajo nuevo.</string>

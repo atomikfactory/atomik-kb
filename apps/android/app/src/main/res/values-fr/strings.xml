@@ -125,6 +125,8 @@
     <string name="dictation_permission_body">La dictée a besoin du microphone pour transformer votre voix en texte. La reconnaissance se fait sur votre appareil sauf si vous autorisez la dictée en ligne dans les paramètres.</string>
     <string name="dictation_unavailable">La dictée n\'est pas disponible.</string>
     <string name="dictation_offline_missing">La reconnaissance vocale hors ligne n\'est pas installée. Installez une langue hors ligne dans les réglages système ou autorisez la dictée en ligne.</string>
+    <string name="dictation_online_required">Sur cette version d\'Android, la dictée doit passer par la reconnaissance en ligne : elle ne peut pas rester sur cet appareil. Autorisez la dictée en ligne dans les réglages pour l\'utiliser ; le service vocal de votre téléphone peut alors envoyer l\'audio à son fournisseur.</string>
+    <string name="dictation_open_settings">Réglages</string>
     <string name="dictation_failed">La dictée s\'est arrêtée de façon inattendue.</string>
     <string name="welcome_title">Vos notes, à votre façon</string>
     <string name="welcome_body">atomik garde vos notes privées. Connectez ce téléphone à votre propre serveur ou démarrez avec un espace de travail vierge.</string>
