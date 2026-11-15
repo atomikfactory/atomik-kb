@@ -11,6 +11,12 @@ android {
         minSdk = 28
         consumerProguardFiles("consumer-rules.pro")
     }
+    lint {
+        // Only the generated UniFFI bindings trip this: they call java.lang.ref.Cleaner (API 33) behind a
+        // Class.forName check and fall back to JNA's cleaner on older devices. Nothing hand-written is affected
+        // (the app module still runs NewApi).
+        disable += "NewApi"
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
