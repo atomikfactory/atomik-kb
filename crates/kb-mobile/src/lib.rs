@@ -77,10 +77,10 @@ pub enum EngineError {
         json: String,
     },
     /// An unexpected failure (a panic that was caught, an encoding error).
-    #[error("{message}")]
+    #[error("{reason}")]
     Internal {
-        /// What happened, without user content.
-        message: String,
+        /// What happened, without user content. Not called `message`: Kotlin's `Exception.message` would clash.
+        reason: String,
     },
 }
 
@@ -106,7 +106,7 @@ fn engine_error(error: &ApiError) -> EngineError {
 
 fn internal(message: &str) -> EngineError {
     EngineError::Internal {
-        message: message.to_owned(),
+        reason: message.to_owned(),
     }
 }
 

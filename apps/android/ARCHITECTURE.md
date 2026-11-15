@@ -61,7 +61,7 @@ pub trait EventSink: Send + Sync {
 #[derive(uniffi::Record)] pub struct EngineConfig { pub data_dir: String, pub platform: String /* "android" */ }
 #[derive(uniffi::Enum)] pub enum EngineState { Opening, Ready, Locked, Failed { message: String } }
 #[derive(Debug, thiserror::Error, uniffi::Error)]
-pub enum EngineError { #[error("not ready")] NotReady, #[error("locked")] Locked, #[error("{json}")] Api { json: String } /* ApiError JSON */, #[error("{message}")] Internal { message: String } }
+pub enum EngineError { #[error("not ready")] NotReady, #[error("locked")] Locked, #[error("{json}")] Api { json: String } /* ApiError JSON */, #[error("{reason}")] Internal { reason: String } }
 
 #[derive(uniffi::Object)] pub struct KbEngine { .. }
 #[uniffi::export]
