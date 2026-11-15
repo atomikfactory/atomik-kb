@@ -19,8 +19,26 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Release signing comes from the user's ~/.gradle/gradle.properties (never the repo):
+    // kb.release.storeFile, kb.release.storePassword, kb.release.keyAlias, kb.release.keyPassword.
+    // Without them, assembleRelease produces an unsigned APK.
+    val releaseStore = providers.gradleProperty("kb.release.storeFile").orNull
+    signingConfigs {
+        if (releaseStore != null) {
+            create("release") {
+                storeFile = file(releaseStore)
+                storePassword = providers.gradleProperty("kb.release.storePassword").get()
+                keyAlias = providers.gradleProperty("kb.release.keyAlias").get()
+                keyPassword = providers.gradleProperty("kb.release.keyPassword").get()
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (releaseStore != null) signingConfig = signingConfigs.getByName("release")
+            // Phones only; the emulator's x86_64 engine stays out of release APKs.
+            ndk { abiFilters += "arm64-v8a" }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
