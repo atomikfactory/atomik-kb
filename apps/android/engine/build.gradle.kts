@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.atomik.kb.engine"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 28

@@ -45,3 +45,16 @@ suspend fun Engine.syncInfo(): SyncInfo = dispatch(SyncStatusRequest, SyncInfo.s
 suspend fun Engine.pairingInfo(): PairingInfo = dispatch(PairingStatus, PairingInfo.serializer())
 suspend fun Engine.security(): SecurityInfo = dispatch(SecurityStatus, SecurityInfo.serializer())
 suspend fun Engine.devices(): List<DeviceEntry> = dispatch(DeviceList, ListSerializer(DeviceEntry.serializer()))
+
+/** Writes [bytes] as a new attachment of [spaceId] and returns its id (begin, bytes, finish). */
+suspend fun Engine.writeAttachment(spaceId: String, name: String, mime: String, bytes: ByteArray): String {
+    val id = dispatch(AttachmentBegin(spaceId, name, mime), String.serializer())
+    try {
+        attachmentWrite(id, bytes)
+        send(AttachmentFinish(id))
+    } catch (e: Exception) {
+        runCatching { send(AttachmentAbort(id)) }
+        throw e
+    }
+    return id
+}

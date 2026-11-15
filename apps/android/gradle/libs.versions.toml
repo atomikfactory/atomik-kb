@@ -45,6 +45,7 @@ androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltAn
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltAndroidx" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-fragment = { module = "androidx.fragment:fragment-ktx", version = "1.9.1" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }

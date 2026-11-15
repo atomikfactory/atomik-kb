@@ -235,6 +235,8 @@ class FakeEngine(
                 unit()
             }
             "Search" -> ok("Search", ListSerializer(SearchHit.serializer()), search(req("query"), str("spaceId"), d?.get("limit")?.jsonPrimitive?.contentOrNull?.toIntOrNull() ?: 20))
+            "AttachmentBegin" -> envelope("AttachmentStarted", JsonPrimitive("a${++counter}"))
+            "AttachmentFinish", "AttachmentAbort" -> unit()
             "SyncConfigure" -> {
                 syncServer = str("serverUrl")
                 syncState = if (syncServer == null) SyncState.Disabled else SyncState.Idle

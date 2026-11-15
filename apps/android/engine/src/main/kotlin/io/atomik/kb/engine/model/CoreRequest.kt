@@ -164,3 +164,21 @@ data class AppLockChange(val current: String, val new: String) : CoreRequest {
     override val type get() = "AppLockChange"
     override fun data() = encode()
 }
+
+@Serializable
+data class AttachmentBegin(val spaceId: String, val name: String, val mime: String) : CoreRequest {
+    override val type get() = "AttachmentBegin"
+    override fun data() = encode()
+}
+
+@Serializable
+data class AttachmentFinish(val attachmentId: String) : CoreRequest {
+    override val type get() = "AttachmentFinish"
+    override fun data() = encode()
+}
+
+@Serializable
+data class AttachmentAbort(val attachmentId: String) : CoreRequest {
+    override val type get() = "AttachmentAbort"
+    override fun data() = encode()
+}
