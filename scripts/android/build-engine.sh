@@ -47,6 +47,9 @@ mkdir -p "$jni" "$out"
 cd "$root"
 targets=()
 for abi in "${abis[@]}"; do targets+=(-t "$abi"); done
+# Release keeps symbols here (the bindings are read from the library's metadata, which strip removes); the copies
+# in jniLibs are stripped afterwards with the NDK's llvm-strip.
+export CARGO_PROFILE_RELEASE_STRIP=none
 cargo ndk "${targets[@]}" --platform 28 -o "$jni" build -p kb-mobile ${profile_flag[@]+"${profile_flag[@]}"}
 
 # Kotlin bindings, read from the library's own metadata (an Android .so parses on any host).
@@ -71,6 +74,16 @@ if [ "${KB_ANDROID_ENV:-}" != "skip" ]; then
     "PATH=$HOME/.cargo/bin:$progs/StrawberryPerl/perl/bin:$progs/StrawberryPerl/c/bin:$progs/NASM:$orig_path")
 fi
 CARGO_TARGET_DIR="$host_target" ${host_env[@]+"${host_env[@]}"}   cargo run -p kb-mobile --features bindgen --bin uniffi-bindgen -- generate   --library "$lib" --language kotlin --out-dir "$out"
+
+if [ "$profile" = release ]; then
+  ndk="${ANDROID_NDK_HOME:-${ANDROID_NDK_ROOT:-}}"
+  strip_bin="$(ls "$ndk"/toolchains/llvm/prebuilt/*/bin/llvm-strip* 2>/dev/null | head -n 1)"
+  if [ -n "$strip_bin" ]; then
+    for abi in "${abis[@]}"; do "$strip_bin" --strip-unneeded "$jni/$abi/libkb_mobile.so"; done
+  else
+    echo "llvm-strip not found: jniLibs keep their symbols" >&2
+  fi
+fi
 
 echo "engine built: $jni"
 echo "bindings:     $out"
