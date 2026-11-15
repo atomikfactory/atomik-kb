@@ -127,6 +127,11 @@ fun EditorWebView(
                         }
                     }
                 }
+                // Not root-caused beyond this: the page is requested here, inside `factory`, before AndroidView has
+                // measured the view, so the first document layout can see a 0-px-high viewport and `height: 100%`
+                // collapses (seen on the API 36 emulator). Loading after the first non-zero layout would avoid it
+                // but delays the first paint on every open; the editor bundle follows `visualViewport` instead
+                // (apps/mobile-editor/src/main.tsx, pinHeight), which is right whatever the first measure was.
                 loadUrl(EDITOR_URL)
             }
         },

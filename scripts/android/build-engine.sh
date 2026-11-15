@@ -50,7 +50,8 @@ for abi in "${abis[@]}"; do targets+=(-t "$abi"); done
 # Release keeps symbols here (the bindings are read from the library's metadata, which strip removes); the copies
 # in jniLibs are stripped afterwards with the NDK's llvm-strip.
 export CARGO_PROFILE_RELEASE_STRIP=none
-cargo ndk "${targets[@]}" --platform 28 -o "$jni" build -p kb-mobile ${profile_flag[@]+"${profile_flag[@]}"}
+# At most 4 rustc jobs: each can take ~1 GB.
+cargo ndk "${targets[@]}" --platform 28 -o "$jni" build -j "${KB_ANDROID_JOBS:-4}" -p kb-mobile ${profile_flag[@]+"${profile_flag[@]}"}
 
 # Kotlin bindings, read from the library's own metadata (an Android .so parses on any host).
 case "${abis[0]}" in
