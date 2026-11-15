@@ -18,14 +18,16 @@ import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.automirrored.filled.StickyNote2
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -197,13 +199,20 @@ private fun PageRowItem(
         if (hasChildren) {
             val label = stringResource(if (expanded) R.string.collapse else R.string.expand)
             IconButton(onClick = onToggle, modifier = Modifier.semantics { contentDescription = "$label $title" }) {
-                Icon(if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore, contentDescription = null)
+                Icon(if (expanded) Icons.Filled.ExpandMore else Icons.Filled.ChevronRight, contentDescription = null)
             }
         } else {
             Spacer(Modifier.width(48.dp))
         }
-        Text(page.icon.orEmpty().takeIf { it.isNotBlank() && !it.startsWith("icon:") && !it.startsWith("attachment:") }?.let { "$it " }.orEmpty() + title,
-            style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        // The page's own emoji when it has one; named icons ("icon:...") and attachment covers have no glyph here.
+        val emoji = page.icon.orEmpty().takeIf { it.isNotBlank() && !it.startsWith("icon:") && !it.startsWith("attachment:") }
+        if (emoji != null) {
+            Text(emoji, style = MaterialTheme.typography.titleMedium, modifier = Modifier.width(28.dp))
+        } else {
+            Icon(Icons.Outlined.Description, contentDescription = null, modifier = Modifier.width(28.dp).size(20.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Spacer(Modifier.width(8.dp))
+        Text(title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
         if (favorite) Icon(Icons.Filled.Star, contentDescription = stringResource(R.string.favorite), modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
     }
 }
@@ -212,7 +221,13 @@ private fun PageRowItem(
 private fun SpaceSwitcher(spaces: List<SpaceInfo>, selected: SpaceInfo?, onSelect: (String) -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box {
-        TextButton(onClick = { open = true }, enabled = spaces.size > 1, modifier = Modifier.heightIn(min = 48.dp)) {
+        TextButton(
+            onClick = { open = true },
+            enabled = spaces.size > 1,
+            // A single space is not a switcher, but the name is still the title: keep it readable, not dimmed.
+            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurface, disabledContentColor = MaterialTheme.colorScheme.onSurface),
+            modifier = Modifier.heightIn(min = 48.dp),
+        ) {
             Text(selected?.name ?: stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (spaces.size > 1) {
                 Icon(Icons.Filled.ArrowDropDown, contentDescription = stringResource(R.string.switch_space))
