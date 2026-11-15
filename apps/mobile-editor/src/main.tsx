@@ -11,6 +11,18 @@ import { MobileApp } from "./MobileApp";
 // constructable stylesheet (as in the web viewer).
 installEditorStyles();
 
+// Some WebViews lay the page out against a zero-height viewport (the view is measured before the app gives it a size),
+// which collapses `height: 100%` and paints nothing. The visual viewport is right, so the page height follows it.
+function pinHeight(): void {
+  const height = window.visualViewport?.height ?? window.innerHeight;
+  if (height > 0) {
+    document.documentElement.style.height = `${String(height)}px`;
+  }
+}
+pinHeight();
+window.addEventListener("resize", pinHeight);
+window.visualViewport?.addEventListener("resize", pinHeight);
+
 const container = document.getElementById("root");
 if (container === null) {
   throw new Error("index.html is missing the #root element");
