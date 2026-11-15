@@ -24,3 +24,10 @@ scripts/smoke/out/
 
 # The JavaScript glue wasm-bindgen makes from crates/kb-wasm for the web viewer (M13 slice 4)
 /apps/viewer/src/wasm/
+
+# The editor bundle copied into the Android app by apps/mobile-editor `pnpm sync:android`
+/apps/android/app/src/main/assets/editor/
+
+# The Android engine (scripts/android/build-engine.sh): native libraries and generated Kotlin bindings
+/apps/android/engine/src/main/jniLibs/
+/apps/android/engine/build/

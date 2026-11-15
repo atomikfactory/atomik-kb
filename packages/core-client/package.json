@@ -8,7 +8,8 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
-    "./tauri": "./src/tauri.ts"
+    "./tauri": "./src/tauri.ts",
+    "./android": "./src/android.ts"
   },
   "scripts": {
     "lint": "eslint .",
