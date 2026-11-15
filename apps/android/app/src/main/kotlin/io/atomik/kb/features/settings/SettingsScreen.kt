@@ -254,8 +254,9 @@ private fun SyncSection(state: SettingsUiState, onSyncNow: () -> Unit, onChangeS
                 info.lastError?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error) }
             }
         }
+        val configured = (state.sync as? Loadable.Data)?.value?.configured == true
         val last = state.settings.lastSyncAt
-        if (last > 0) {
+        if (configured && last > 0) {
             Text(
                 stringResource(R.string.sync_last, DateUtils.getRelativeTimeSpanString(last).toString()),
                 style = MaterialTheme.typography.bodySmall,
@@ -263,12 +264,14 @@ private fun SyncSection(state: SettingsUiState, onSyncNow: () -> Unit, onChangeS
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(vertical = 8.dp)) {
-            Button(
-                onClick = onSyncNow,
-                enabled = !state.syncing && (state.sync as? Loadable.Data)?.value?.configured == true,
-                modifier = Modifier.heightIn(min = 48.dp),
-            ) {
-                if (state.syncing) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text(stringResource(R.string.sync_now))
+            if (configured) {
+                Button(
+                    onClick = onSyncNow,
+                    enabled = !state.syncing,
+                    modifier = Modifier.heightIn(min = 48.dp),
+                ) {
+                    if (state.syncing) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text(stringResource(R.string.sync_now))
+                }
             }
             OutlinedButton(onClick = onChangeServer, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.server_change)) }
         }
@@ -277,7 +280,7 @@ private fun SyncSection(state: SettingsUiState, onSyncNow: () -> Unit, onChangeS
 
 @Composable
 private fun syncStatusText(info: SyncInfo): String = when {
-    !info.configured -> stringResource(R.string.sync_state_disabled)
+    !info.configured -> stringResource(R.string.sync_not_connected)
     info.forkDetected -> stringResource(R.string.sync_state_forked)
     else -> when (info.state) {
         SyncState.Disabled -> stringResource(R.string.sync_state_disabled)

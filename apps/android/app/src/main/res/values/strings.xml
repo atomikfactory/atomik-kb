@@ -71,6 +71,7 @@
     <string name="settings_about">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="sync_not_configured">No server configured</string>
+    <string name="sync_not_connected">Not connected</string>
     <string name="sync_now">Sync now</string>
     <string name="sync_done">Up to date</string>
     <string name="sync_timeout">Sync is still running</string>
