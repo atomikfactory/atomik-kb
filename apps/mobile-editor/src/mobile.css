@@ -124,6 +124,22 @@ body {
     visibility 0s linear 120ms;
 }
 
+/* Edge fades: the row scrolls when the phone is narrower than the buttons. */
+.mobile-toolbar.fade-end {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+
+.mobile-toolbar.fade-start {
+  -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+}
+
+.mobile-toolbar.fade-start.fade-end {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+}
+
 .mobile-toolbar::-webkit-scrollbar {
   display: none;
 }

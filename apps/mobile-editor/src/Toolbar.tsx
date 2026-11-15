@@ -2,9 +2,9 @@
 // microphone, undo and redo. Every button is at least 44 px square and keeps the editor's focus (pointer-down is not
 // allowed to move it), so the keyboard stays up while it is used.
 
-import { canRedo, canUndo, redo, undo } from "@atomik-kb/ui/mobile";
+import { canRedo, canUndo, redo, t, undo } from "@atomik-kb/ui/mobile";
 import type { Editor } from "@tiptap/core";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 interface ToolbarProps {
@@ -75,6 +75,26 @@ export function Toolbar({ editor, listening, onDictate, visible }: ToolbarProps)
     };
   }, [editor]);
 
+  // The row scrolls on narrow phones; a fade on the side that has more says so.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [more, setMore] = useState({ start: false, end: false });
+  const measure = useCallback(() => {
+    const row = rowRef.current;
+    if (row === null) {
+      return;
+    }
+    const start = row.scrollLeft > 4;
+    const end = row.scrollLeft + row.clientWidth < row.scrollWidth - 4;
+    setMore((current) => (current.start === start && current.end === end ? current : { start, end }));
+  }, []);
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure, visible]);
+
   const run = (command: (chain: Chain) => Chain) => () => {
     if (editor !== null) {
       command(editor.chain().focus()).run();
@@ -86,23 +106,32 @@ export function Toolbar({ editor, listening, onDictate, visible }: ToolbarProps)
 
   return (
     <div
-      className={visible ? "mobile-toolbar is-visible" : "mobile-toolbar"}
+      ref={rowRef}
+      onScroll={measure}
+      className={[
+        "mobile-toolbar",
+        visible ? "is-visible" : "",
+        more.start ? "fade-start" : "",
+        more.end ? "fade-end" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       role="toolbar"
-      aria-label="Formatting"
+      aria-label={t("format.label")}
       aria-hidden={!visible}
     >
-      <Button label="Bold" active={on("bold")} disabled={!ready} onPress={run((c) => c.toggleBold())}>
+      <Button label={t("format.bold")} active={on("bold")} disabled={!ready} onPress={run((c) => c.toggleBold())}>
         <Icon>
           <path d="M7 5h6a3.5 3.5 0 0 1 0 7H7zM7 12h7a3.5 3.5 0 0 1 0 7H7z" />
         </Icon>
       </Button>
-      <Button label="Italic" active={on("italic")} disabled={!ready} onPress={run((c) => c.toggleItalic())}>
+      <Button label={t("format.italic")} active={on("italic")} disabled={!ready} onPress={run((c) => c.toggleItalic())}>
         <Icon>
           <path d="M19 4h-9M14 20H5M15 4 9 20" />
         </Icon>
       </Button>
       <Button
-        label="Heading"
+        label={t("slash.heading2")}
         active={on("heading")}
         disabled={!ready}
         onPress={run((c) => c.toggleHeading({ level: 2 }))}
@@ -111,29 +140,29 @@ export function Toolbar({ editor, listening, onDictate, visible }: ToolbarProps)
           <path d="M5 5v14M19 5v14M5 12h14" />
         </Icon>
       </Button>
-      <Button label="Bulleted list" active={on("bulletList")} disabled={!ready} onPress={run((c) => c.toggleBulletList())}>
+      <Button label={t("slash.bulletList")} active={on("bulletList")} disabled={!ready} onPress={run((c) => c.toggleBulletList())}>
         <Icon>
           <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
         </Icon>
       </Button>
-      <Button label="Checklist" active={on("taskList")} disabled={!ready} onPress={run((c) => c.toggleTaskList())}>
+      <Button label={t("slash.taskList")} active={on("taskList")} disabled={!ready} onPress={run((c) => c.toggleTaskList())}>
         <Icon>
           <path d="m3.5 6 1.5 1.5L8 4.5M3.5 17l1.5 1.5L8 15.5M12 6h9M12 17h9" />
         </Icon>
       </Button>
-      <Button label="Insert block" disabled={!ready} onPress={run((c) => c.insertContent("/"))}>
+      <Button label={t("slash.label")} disabled={!ready} onPress={run((c) => c.insertContent("/"))}>
         <Icon>
           <path d="M16 4 8 20" />
         </Icon>
       </Button>
-      <Button label="Dictate" active={listening} disabled={!ready} onPress={onDictate}>
+      <Button label={t("slash.microphone")} active={listening} disabled={!ready} onPress={onDictate}>
         <Icon>
           <rect x="9" y="3" width="6" height="11" rx="3" />
           <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
         </Icon>
       </Button>
       <Button
-        label="Undo"
+        label={t("sidebar.undo")}
         disabled={!ready || !canUndo(editor.state)}
         onPress={() => {
           if (live) {
@@ -147,7 +176,7 @@ export function Toolbar({ editor, listening, onDictate, visible }: ToolbarProps)
         </Icon>
       </Button>
       <Button
-        label="Redo"
+        label={t("sidebar.redo")}
         disabled={!ready || !canRedo(editor.state)}
         onPress={() => {
           if (live) {

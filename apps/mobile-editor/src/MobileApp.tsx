@@ -4,7 +4,7 @@
 import { CoreClient } from "@atomik-kb/core-client";
 import type { PageInfo, SpaceInfo } from "@atomik-kb/core-client";
 import type { AndroidTransport } from "@atomik-kb/core-client/android";
-import { createAppStore, loadLanguage, PageEditor, StoreContext } from "@atomik-kb/ui/mobile";
+import { createAppStore, loadLanguage, PageEditor, StoreContext, t } from "@atomik-kb/ui/mobile";
 import type { AppStore } from "@atomik-kb/ui/mobile";
 import type { Editor } from "@tiptap/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -58,6 +58,7 @@ export function MobileApp({ transport }: MobileAppProps) {
   const [dictation, setDictation] = useState<DictationInfo>({ state: "idle" });
   const [editor, setEditor] = useState<Editor | null>(null);
   const [typing, setTyping] = useState(false);
+  const [, setLanguageTick] = useState(0);
   const pendingInserts = useRef<InsertRequest[]>([]);
   const editorRef = useRef<Editor | null>(null);
 
@@ -122,6 +123,21 @@ export function MobileApp({ transport }: MobileAppProps) {
       window.removeEventListener("unhandledrejection", onRejection);
     };
   }, [transport, flushInserts]);
+
+  // The toolbar's labels follow the app's language.
+  const locale = init?.locale;
+  useEffect(() => {
+    if (locale === undefined) {
+      return;
+    }
+    const choice = locale.slice(0, 2);
+    loadLanguage(choice === "fr" || choice === "es" || choice === "en" ? choice : "system")
+      .catch(() => "en")
+      .then(() => {
+        setLanguageTick((n) => n + 1);
+      })
+      .catch(() => undefined);
+  }, [locale]);
 
   // The editor and the title are what the toolbar is for.
   useEffect(() => {
@@ -333,7 +349,7 @@ function PageScreen({ init, client, store, transport, onEditor }: PageScreenProp
                 className="mobile-title-input"
                 rows={1}
                 value={title}
-                placeholder="Untitled"
+                placeholder={t("page.untitled")}
                 aria-label="Title"
                 readOnly={init.readOnly}
                 enterKeyHint="next"
