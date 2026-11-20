@@ -29,6 +29,11 @@ ignore = [
   # rusqlite_migration release, and libsqlite3-sys 0.39's bundled-sqlcipher still bundles SQLite 3.53.4.
   # Remove when a libsqlite3-sys whose bundled SQLCipher has SQLite >= 3.54 (sqlcipher-src >= 420) is usable.
   { id = "RUSTSEC-2026-0459", reason = "SQLite WAL page-size bug; only self-written databases are opened; no fixed SQLCipher build released" },
+  # chrono is unmaintained (all versions affected; no fixed release). The workspace uses it in one
+  # place: kb-storage-native reads the local UTC offset (`chrono::Local::now().offset()`), a small
+  # read-only call with no parsing of untrusted input. Replace with jiff or time when convenient.
+  # Remove when kb-storage-native no longer depends on chrono.
+  { id = "RUSTSEC-2026-0543", reason = "chrono is unmaintained; only used to read the local UTC offset in kb-storage-native" },
 ]
 
 [licenses]
