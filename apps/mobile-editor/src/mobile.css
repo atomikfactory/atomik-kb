@@ -1,0 +1,210 @@
+/*
+ * The phone editor's rules, over `@atomik-kb/ui`'s stylesheet (which draws the page, the blocks and the light and dark palettes
+ * from `data-theme` or `prefers-color-scheme`). A stylesheet file, loaded from the app's own origin: the policy allows no inline
+ * style. Touch first: nothing here depends on hover, and every control is at least 44 px.
+ */
+
+:root {
+  --kb-inset: 0px;
+  --tool-size: 44px;
+  --toolbar-height: calc(var(--tool-size) + 8px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The page fills the window and scrolls inside it; the toolbar and the keyboard take their space at the bottom. */
+.mobile-content {
+  flex: 1 1 auto;
+}
+
+.content-body.mobile-body {
+  padding: calc(12px + var(--safe-top)) calc(16px + var(--safe-right)) calc(var(--toolbar-height) + var(--kb-inset) + var(--safe-bottom) + 24px)
+    calc(16px + var(--safe-left));
+  -webkit-overflow-scrolling: touch;
+}
+
+.content-body.mobile-body > section.page {
+  --page-gutter: 0px;
+  --page-pad-top: 0px;
+  --page-pad-x: 0px;
+  max-width: none;
+  padding-left: 0;
+}
+
+/* The title: a text area that grows with its text, drawn like the page's title. */
+.mobile-title {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-title-input {
+  display: block;
+  width: 100%;
+  min-height: var(--tool-size);
+  padding: 4px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+.mobile-title-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Desktop chrome that is hover- or mouse-only: the app has its own menus, the phone has its toolbar. */
+.mobile-page .block-handle,
+.mobile-page .format-menu,
+.mobile-page .page-editor-tail {
+  display: none;
+}
+
+.mobile-page .page-editor-body {
+  min-height: 40vh;
+}
+
+/* Touch targets: list and task check boxes, links and the buttons of the blocks. */
+.mobile-page .page-editor-content :is(button, [role="button"], [role="checkbox"], summary) {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.mobile-page .page-editor-content li[data-type="taskItem"] > label {
+  min-width: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Blocks that are wider than the screen scroll inside themselves, not the page. */
+.mobile-page .page-editor-content :is(table, pre, .katex-display) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* The toolbar, above the keyboard. */
+.mobile-toolbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--kb-inset);
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  height: var(--toolbar-height);
+  padding: 4px calc(4px + var(--safe-right)) calc(4px + var(--safe-bottom)) calc(4px + var(--safe-left));
+  box-sizing: content-box;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  transform: translateY(calc(100% + 1px));
+  visibility: hidden;
+  transition:
+    transform 120ms ease-out,
+    visibility 0s linear 120ms;
+}
+
+/* Edge fades: the row scrolls when the phone is narrower than the buttons. */
+.mobile-toolbar.fade-end {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+
+.mobile-toolbar.fade-start {
+  -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+}
+
+.mobile-toolbar.fade-start.fade-end {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+}
+
+.mobile-toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-toolbar.is-visible {
+  transform: none;
+  visibility: visible;
+  transition: transform 120ms ease-out;
+}
+
+/* With the keyboard up the home-indicator inset is covered by the keyboard itself. */
+:root:has(.mobile-toolbar.is-visible):not([style*="--kb-inset: 0px"]) .mobile-toolbar {
+  padding-bottom: 4px;
+}
+
+.mobile-tool {
+  flex: 1 0 var(--tool-size);
+  min-width: var(--tool-size);
+  height: var(--tool-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  touch-action: manipulation;
+}
+
+.mobile-tool:disabled {
+  opacity: 0.35;
+}
+
+.mobile-tool.is-active {
+  background: var(--selected);
+  color: var(--accent);
+}
+
+.mobile-tool:active:not(:disabled) {
+  background: var(--selected);
+}
+
+/* The words heard so far while the microphone listens. */
+.mobile-partial {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(var(--kb-inset) + var(--toolbar-height) + var(--safe-bottom) + 8px);
+  z-index: 51;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-muted);
+  box-shadow: var(--shadow);
+}
+
+.mobile-failure {
+  padding: 24px 16px;
+  color: var(--danger);
+}

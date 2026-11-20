@@ -1,0 +1,57 @@
+[package]
+name = "kb-mobile"
+description = "The Rust core on a phone (Android): a UniFFI cdylib that owns kb-core, the sync driver and the pairing and invite tasks behind one JSON door"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "src/bin/uniffi-bindgen.rs"
+# The Kotlin generator is only built when asked for (`--features bindgen`): it is not part of the app.
+required-features = ["bindgen"]
+
+[features]
+bindgen = ["uniffi/cli"]
+
+[dependencies]
+kb-core = { workspace = true }
+kb-crypto = { workspace = true }
+kb-keys = { workspace = true }
+kb-net = { workspace = true }
+kb-storage = { workspace = true }
+kb-storage-native = { workspace = true }
+kb-sync = { workspace = true }
+kb-types = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+zeroize = { workspace = true }
+tokio = { workspace = true, features = ["rt", "rt-multi-thread", "time", "sync"] }
+# The FFI layer (proc-macros, no UDL).
+uniffi = "0.32"
+
+[dev-dependencies]
+kb-doc = { workspace = true }
+kb-model = { workspace = true }
+tempfile = { workspace = true }
+
+# The crate generates `extern "C"` glue, so `unsafe_code` cannot be `forbid` here; every other workspace lint applies.
+[lints.rust]
+unsafe_code = "allow"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+dbg_macro = "warn"
+print_stdout = "warn"
+print_stderr = "warn"

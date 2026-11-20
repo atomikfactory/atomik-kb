@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- UniFFI's generated bindings probe for java.lang.ref.Cleaner with Class.forName and fall back to JNA's. -->
+    <issue id="NewApi">
+        <ignore path="**/generated/uniffi/**" />
+        <ignore path="**/kb_mobile.kt" />
+    </issue>
+</lint>
